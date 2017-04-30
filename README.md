@@ -6,6 +6,10 @@ A minimal three.js ES6 starter project that uses webpack 2.
 * ES6 support via [babel-loader](https://github.com/babel/babel-loader)
 * CSS support via [style-loader](https://github.com/webpack-contrib/style-loader)
 and [css-loader](https://github.com/webpack-contrib/css-loader)
+* SASS support via [sass-loader](https://github.com/jtangelder/sass-loader)
+* ES6 linting via [eslint](https://www.npmjs.com/package/eslint) and
+[eslint-config-airbnb](https://www.npmjs.com/package/eslint-config-airbnb)
+* SASS linting via [sass-lint](https://www.npmjs.com/package/sass-lint)
 
 ### Installation
 

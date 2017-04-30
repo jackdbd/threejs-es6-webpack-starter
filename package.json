@@ -17,6 +17,8 @@
     "eslint": "^3.19.0",
     "eslint-config-airbnb-base": "^11.1.3",
     "eslint-plugin-import": "^2.2.0",
+    "node-sass": "^4.5.2",
+    "sass-lint": "^1.10.2",
     "style-loader": "^0.16.1",
     "webpack": "^2.4.1",
     "webpack-dev-server": "^2.4.5"
@@ -26,6 +28,7 @@
   },
   "homepage": "https://github.com/jackaljack/threejs-es6-webpack-starter",
   "dependencies": {
+    "sass-loader": "^6.0.3",
     "three": "^0.85.2"
   }
 }

@@ -15,3 +15,4 @@ dist/bundle.js.map
 
 # linters
 .eslintrc.json
+.sass-lint.yml

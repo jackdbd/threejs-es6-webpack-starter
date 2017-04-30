@@ -39,6 +39,21 @@ module.exports = {
           },
         ],
       },
+      // rule for .sass/.scss files
+      {
+        test: /\.(sass|scss)$/,
+        use: [
+          {
+            loader: 'style-loader',  // create style nodes from JS strings
+          },
+          {
+            loader: 'css-loader',  // translate CSS into CommonJS
+          },
+          {
+            loader: 'sass-loader',  // compile Sass to CSS
+          },
+        ],
+      },
     ],
   },
 

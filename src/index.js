@@ -1,8 +1,7 @@
 import * as THREE from 'three';
 import * as Detector from '../js/Detector';
 
-require('../css/style.css');  // or in alternative
-// import css from '../css/style.css';
+require('../sass/style.sass');
 
 
 class Application {
