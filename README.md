@@ -40,3 +40,14 @@ yarn run start
 Open your browser at `localhost:8080` to see your project live!
 
 You can change the port of `webpack-dev-server` in `webpack.config.js`.
+
+
+### Credits
+
+The setup of this starter project was inspired by two snippets I found on Codepen: [this one](http://codepen.io/mo4_9/pen/VjqRQX) and [this one](https://codepen.io/iamphill/pen/jPYorE).
+
+The code for `vertexShader.glsl` and `fragmentShader.glsl` is taken from
+[this blog post](http://blog.cjgammon.com/threejs-custom-shader-material).
+
+The star used in the particle system is the PNG preview of [this image](https://commons.wikimedia.org/wiki/File:Star_icon-72a7cf.svg) by Offnfopt
+(Public domain or CC0, via Wikimedia Commons).

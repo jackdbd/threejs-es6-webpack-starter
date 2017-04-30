@@ -53,6 +53,7 @@ class Application {
     }
 
     this.setupCustomObject();
+    this.addParticleSystem();
   }
 
   render() {
@@ -199,6 +200,33 @@ class Application {
     // attribute buffers are not refreshed automatically. To update custom
     // attributes we need to set the needsUpdate flag to true
     this.customMesh.geometry.attributes.vertexDisplacement.needsUpdate = true;
+  }
+
+  addParticleSystem() {
+    const geometry = new THREE.Geometry();
+
+    const count = 500;
+    for (let i = 0; i < count; i += 1) {
+      const particle = new THREE.Vector3();
+      particle.x = THREE.Math.randFloatSpread(50);
+      particle.y = THREE.Math.randFloatSpread(50);
+      particle.z = THREE.Math.randFloatSpread(50);
+      geometry.vertices.push(particle);
+    }
+
+    const texture = new THREE.TextureLoader().load('/textures/star.png');
+    const material = new THREE.PointsMaterial({
+      size: 5,
+      map: texture,
+      transparent: true,
+      // alphaTest's default is 0 and the particles overlap. Any value > 0
+      // prevents the particles from overlapping.
+      alphaTest: 0.5,
+    });
+
+    const particleSystem = new THREE.Points(geometry, material);
+    particleSystem.position.set(-50, 50, -50);
+    this.scene.add(particleSystem);
   }
 
 }
