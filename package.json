@@ -1,13 +1,15 @@
 {
   "name": "threejs-es6-webpack-starter",
   "version": "1.0.0",
+  "description": "A starter project for Three.js with support for ES6 and Webpack 2",
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server",
-    "build": "webpack --progress && webpack-dev-server"
+    "build": "webpack --progress && webpack-dev-server",
+    "lint": "eslint src"
   },
   "repository": "git@github.com:jackaljack/threejs-es6-webpack-starter.git",
-  "author": "jackaljack <jackdebidda@gmail.com>",
+  "author": "jackaljack <jackdebidda@gmail.com> (http://www.giacomodebidda.com/)",
   "license": "MIT",
   "devDependencies": {
     "babel-core": "^6.24.1",
@@ -25,6 +27,16 @@
     "webpack-dev-server": "^2.4.5",
     "webpack-glsl-loader": "^1.0.1"
   },
+  "keywords": [
+    "threejs",
+    "three.js",
+    "boilerplate",
+    "webpack",
+    "webpack2",
+    "es6",
+    "babel",
+    "sass"
+    ],
   "bugs": {
     "url": "https://github.com/jackaljack/threejs-es6-webpack-starter/issues"
   },
