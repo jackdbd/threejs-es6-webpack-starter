@@ -1,0 +1,17 @@
+# OSX
+.DS_Store
+
+# editor
+.vscode/
+
+node_modules/
+
+# webpack bundle
+dist/bundle.js
+dist/bundle.js.map
+
+# logs
+*.log
+
+# linters
+.eslintrc.json
