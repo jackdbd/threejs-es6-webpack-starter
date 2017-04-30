@@ -19,6 +19,7 @@
     "eslint-plugin-import": "^2.2.0",
     "node-sass": "^4.5.2",
     "sass-lint": "^1.10.2",
+    "sass-loader": "^6.0.3",
     "style-loader": "^0.16.1",
     "webpack": "^2.4.1",
     "webpack-dev-server": "^2.4.5",
@@ -30,7 +31,6 @@
   "homepage": "https://github.com/jackaljack/threejs-es6-webpack-starter",
   "dependencies": {
     "orbit-controls-es6": "^1.0.8",
-    "sass-loader": "^6.0.3",
     "three": "^0.85.2"
   }
 }
