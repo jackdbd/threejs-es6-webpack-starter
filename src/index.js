@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import OrbitControls from 'orbit-controls-es6';
 import * as Detector from '../js/Detector';
 
 require('../sass/style.sass');
@@ -35,6 +36,7 @@ class Application {
     this.setupLights();
     this.setupHelpers();
     this.setupFloor();
+    this.setupControls();
 
     {
       const side = 20;
@@ -47,6 +49,7 @@ class Application {
   }
 
   render() {
+    this.controls.update();
     this.renderer.render(this.scene, this.camera);
     // when render is invoked via requestAnimationFrame(this.render) there is
     // no 'this', so either we bind it explicitly or use an es6 arrow function.
@@ -134,6 +137,14 @@ class Application {
     floor.position.y = -0.5;
     floor.rotation.x = Math.PI / 2;
     this.scene.add(floor);
+  }
+
+  setupControls() {
+    this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+    this.controls.enabled = true;
+    this.controls.maxDistance = 1500;
+    this.controls.minDistance = 0;
+    this.controls.autoRotate = true;
   }
 
 }
