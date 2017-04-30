@@ -1,6 +1,8 @@
 # three.js-es6-webpack-starter
 A minimal three.js ES6 starter project that uses webpack 2.
 
+![A GIF file showing a preview of the starter project](https://github.com/jackaljack/threejs-es6-webpack-starter/blob/master/preview.gif "A scene with a spotlight, a directional light, a particle system, a custom material and several helpers.")
+
 ### Features:
 
 * ES6 support via [babel-loader](https://github.com/babel/babel-loader)
