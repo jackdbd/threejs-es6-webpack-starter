@@ -44,7 +44,10 @@ You can change the port of `webpack-dev-server` in `webpack.config.js`.
 
 ### Credits
 
-The setup of this starter project was inspired by two snippets I found on Codepen: [this one](http://codepen.io/mo4_9/pen/VjqRQX) and [this one](https://codepen.io/iamphill/pen/jPYorE).
+The setup of this starter project was inspired by two snippets on Codepen: [this one](http://codepen.io/mo4_9/pen/VjqRQX) and [this one](https://codepen.io/iamphill/pen/jPYorE).
+
+I understood how to work with lights and camera helpers thanks to
+[this snippet](http://jsfiddle.net/f17Lz5ux/5131/) on JSFiddle.
 
 The code for `vertexShader.glsl` and `fragmentShader.glsl` is taken from
 [this blog post](http://blog.cjgammon.com/threejs-custom-shader-material).
