@@ -54,6 +54,7 @@ class Application {
 
     this.setupCustomObject();
     this.addParticleSystem();
+    this.addGroupObject();
   }
 
   render() {
@@ -227,6 +228,28 @@ class Application {
     const particleSystem = new THREE.Points(geometry, material);
     particleSystem.position.set(-50, 50, -50);
     this.scene.add(particleSystem);
+  }
+
+  addGroupObject() {
+    const group = new THREE.Group();
+    const side = 5;
+    const geometry = new THREE.BoxGeometry(side, side, side);
+    const material = new THREE.MeshLambertMaterial({
+      color: 0x228b22, // forest green
+    });
+
+    for (let i = 0; i < 50; i += 1) {
+      const mesh = new THREE.Mesh(geometry, material);
+      mesh.position.x = THREE.Math.randFloatSpread(50);
+      mesh.position.y = THREE.Math.randFloatSpread(50);
+      mesh.position.z = THREE.Math.randFloatSpread(50);
+      mesh.rotation.x = Math.random() * 360 * (Math.PI / 180);
+      mesh.rotation.y = Math.random() * 360 * (Math.PI / 180);
+      mesh.rotation.z = Math.random() * 360 * (Math.PI / 180);
+      group.add(mesh);
+    }
+    group.position.set(50, 20, 50);
+    this.scene.add(group);
   }
 
 }
