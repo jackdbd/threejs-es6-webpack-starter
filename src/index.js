@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import OrbitControls from 'orbit-controls-es6';
 import * as Detector from '../js/Detector';
+import * as DAT from '../js/dat.gui.min';
 
 require('../sass/style.sass');
 
@@ -37,6 +38,7 @@ class Application {
     this.setupHelpers();
     this.setupFloor();
     this.setupControls();
+    this.setupGUI();
 
     {
       const side = 20;
@@ -145,6 +147,13 @@ class Application {
     this.controls.maxDistance = 1500;
     this.controls.minDistance = 0;
     this.controls.autoRotate = true;
+  }
+
+  setupGUI() {
+    const gui = new DAT.GUI();
+    gui.add(this.camera.position, 'x').name('Camera X').min(0).max(100);
+    gui.add(this.camera.position, 'y').name('Camera Y').min(0).max(100);
+    gui.add(this.camera.position, 'z').name('Camera Z').min(0).max(100);
   }
 
 }
