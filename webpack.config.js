@@ -54,6 +54,15 @@ module.exports = {
           },
         ],
       },
+      // rule for .glsl files (shaders)
+      {
+        test: /\.glsl$/,
+        use: [
+          {
+            loader: 'webpack-glsl-loader',
+          },
+        ],
+      },
     ],
   },
 

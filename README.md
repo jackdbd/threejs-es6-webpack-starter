@@ -12,6 +12,7 @@ and [css-loader](https://github.com/webpack-contrib/css-loader)
 * SASS linting via [sass-lint](https://www.npmjs.com/package/sass-lint)
 * Controls via [orbit-controls-es6](https://www.npmjs.com/package/orbit-controls-es6)
 * GUI via [dat.GUI](https://github.com/dataarts/dat.gui)
+* GLSL shaders support via [webpack-glsl-loader](https://www.npmjs.com/package/webpack-glsl-loader)
 
 ### Installation
 

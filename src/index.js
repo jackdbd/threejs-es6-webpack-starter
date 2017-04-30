@@ -5,6 +5,9 @@ import * as DAT from '../js/dat.gui.min';
 
 require('../sass/style.sass');
 
+const vertexShader = require('../glsl/vertexShader.glsl');
+const fragmentShader = require('../glsl/fragmentShader.glsl');
+
 
 class Application {
   constructor(opts = {}) {
@@ -48,10 +51,13 @@ class Application {
       cube.position.set(0, side / 2, 0);
       this.scene.add(cube);
     }
+
+    this.setupCustomObject();
   }
 
   render() {
     this.controls.update();
+    this.updateCustomObject();
     this.renderer.render(this.scene, this.camera);
     // when render is invoked via requestAnimationFrame(this.render) there is
     // no 'this', so either we bind it explicitly or use an es6 arrow function.
@@ -154,6 +160,45 @@ class Application {
     gui.add(this.camera.position, 'x').name('Camera X').min(0).max(100);
     gui.add(this.camera.position, 'y').name('Camera Y').min(0).max(100);
     gui.add(this.camera.position, 'z').name('Camera Z').min(0).max(100);
+  }
+
+  setupCustomObject() {
+    // create an object that uses custom shaders
+    this.delta = 0;
+    const customUniforms = {
+      delta: { value: 0 },
+    };
+
+    const material = new THREE.ShaderMaterial({
+      vertexShader,
+      fragmentShader,
+      uniforms: customUniforms,
+    });
+
+    const geometry = new THREE.SphereBufferGeometry(5, 32, 32);
+
+    this.vertexDisplacement = new Float32Array(geometry.attributes.position.count);
+    for (let i = 0; i < this.vertexDisplacement.length; i += 1) {
+      this.vertexDisplacement[i] = Math.sin(i);
+    }
+
+    geometry.addAttribute('vertexDisplacement', new THREE.BufferAttribute(this.vertexDisplacement, 1));
+
+    this.customMesh = new THREE.Mesh(geometry, material);
+    this.customMesh.position.set(5, 5, 5);
+    this.scene.add(this.customMesh);
+  }
+
+  updateCustomObject() {
+    // update an object that uses custom shaders
+    this.delta += 0.1;
+    this.customMesh.material.uniforms.delta.value = 0.5 + (Math.sin(this.delta) * 0.5);
+    for (let i = 0; i < this.vertexDisplacement.length; i += 1) {
+      this.vertexDisplacement[i] = 0.5 + (Math.sin(i + this.delta) * 0.25);
+    }
+    // attribute buffers are not refreshed automatically. To update custom
+    // attributes we need to set the needsUpdate flag to true
+    this.customMesh.geometry.attributes.vertexDisplacement.needsUpdate = true;
   }
 
 }
