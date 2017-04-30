@@ -3,7 +3,9 @@ A minimal three.js ES6 starter project that uses webpack 2.
 
 ### Features:
 
-* ES6 Support via [babel-loader](https://github.com/babel/babel-loader)
+* ES6 support via [babel-loader](https://github.com/babel/babel-loader)
+* CSS support via [style-loader](https://github.com/webpack-contrib/style-loader)
+and [css-loader](https://github.com/webpack-contrib/css-loader)
 
 ### Installation
 

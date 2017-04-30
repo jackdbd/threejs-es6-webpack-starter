@@ -27,6 +27,18 @@ module.exports = {
           },
         },
       },
+      // rule for .css files
+      {
+        test: /\.css$/,
+        use: [
+          {
+            loader: 'style-loader',
+          },
+          {
+            loader: 'css-loader',
+          },
+        ],
+      },
     ],
   },
 
