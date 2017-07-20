@@ -1,12 +1,15 @@
 import * as THREE from 'three';
+// TODO: OrbitControls import three.js on its own, so the webpack bundle includes three.js twice!
 import OrbitControls from 'orbit-controls-es6';
-import * as Detector from '../js/Detector';
-import * as DAT from '../js/dat.gui.min';
+import * as Detector from '../js/vendor/Detector';
+import * as DAT from '../js/vendor/dat.gui.min';
 
-require('../sass/style.sass');
-
+const checkerboard = require('../textures/checkerboard.jpg');
+const star = require('../textures/star.png');
 const vertexShader = require('../glsl/vertexShader.glsl');
 const fragmentShader = require('../glsl/fragmentShader.glsl');
+
+require('../sass/home.sass');
 
 
 class Application {
@@ -135,7 +138,7 @@ class Application {
 
   setupFloor() {
     const geometry = new THREE.PlaneGeometry(100, 100, 1, 1);
-    const texture = new THREE.TextureLoader().load('/textures/checkerboard.jpg');
+    const texture = new THREE.TextureLoader().load(checkerboard);
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
     texture.repeat.set(4, 4);
@@ -215,7 +218,7 @@ class Application {
       geometry.vertices.push(particle);
     }
 
-    const texture = new THREE.TextureLoader().load('/textures/star.png');
+    const texture = new THREE.TextureLoader().load(star);
     const material = new THREE.PointsMaterial({
       size: 5,
       map: texture,

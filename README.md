@@ -1,5 +1,5 @@
 # three.js-es6-webpack-starter
-A minimal three.js ES6 starter project that uses webpack 2.
+A minimal three.js ES6 starter project that uses webpack.
 
 ![A GIF file showing a preview of the starter project](https://github.com/jackaljack/threejs-es6-webpack-starter/blob/master/preview.gif "A scene with a spotlight, a directional light, a particle system, a custom material and several helpers.")
 
@@ -15,6 +15,14 @@ and [css-loader](https://github.com/webpack-contrib/css-loader)
 * Controls via [orbit-controls-es6](https://www.npmjs.com/package/orbit-controls-es6)
 * GUI via [dat.GUI](https://github.com/dataarts/dat.gui)
 * GLSL shaders support via [webpack-glsl-loader](https://www.npmjs.com/package/webpack-glsl-loader)
+* Webpack configuration with:
+  - [ExtractTextPlugin](https://github.com/webpack-contrib/extract-text-webpack-plugin)
+  - [HtmlWebpackPlugin](https://github.com/jantimon/html-webpack-plugin)
+  - [BundleAnalyzerPlugin](https://github.com/th0r/webpack-bundle-analyzer)
+  - [CompressionPlugin](https://github.com/webpack-contrib/compression-webpack-plugin)
+  - [CleanWebpackPlugin](https://github.com/johnagan/clean-webpack-plugin)
+
+Tested on Node.js `v8.1.4`.
 
 ### Installation
 
@@ -27,21 +35,27 @@ yarn install
 
 ### Usage
 
-If you want to generate `bundle.js`, run:
+Generate all js/css bundles
 
 ```
 yarn run build
 ```
 
-Otherwise, if you want to run `webpack-dev-server` in memory, run:
+Run `webpack-dev-server` (all bundles will be served from memory)
 
 ```
 yarn run start
 ```
 
-Open your browser at `localhost:8080` to see your project live!
+If you have issues with old dependencies you can try to fix them by running:
 
-You can change the port of `webpack-dev-server` in `webpack.config.js`.
+```
+yarn update:dependencies
+```
+
+Go to `localhost:8080` to see your project live!
+
+Go to `localhost:8888` to analyze your webpack bundles with `BundleAnalyzerPlugin`
 
 
 ### Credits
@@ -50,6 +64,8 @@ The setup of this starter project was inspired by two snippets on Codepen: [this
 
 I understood how to work with lights and camera helpers thanks to
 [this snippet](http://jsfiddle.net/f17Lz5ux/5131/) on JSFiddle.
+
+The script which wipes all project's npm dependencies and reinstall them from scratch was found [here](https://medium.com/@_jh3y/how-to-update-all-npm-packages-in-your-project-at-once-17a8981860ea).
 
 The code for `vertexShader.glsl` and `fragmentShader.glsl` is taken from
 [this blog post](http://blog.cjgammon.com/threejs-custom-shader-material).
