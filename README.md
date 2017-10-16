@@ -1,4 +1,6 @@
 # three.js-es6-webpack-starter
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/jackdbd/threejs-es6-webpack-starter.svg)](https://greenkeeper.io/)
 A minimal three.js ES6 starter project that uses webpack.
 
 ![A GIF file showing a preview of the starter project](https://github.com/jackaljack/threejs-es6-webpack-starter/blob/master/preview.gif "A scene with a spotlight, a directional light, a particle system, a custom material and several helpers.")
