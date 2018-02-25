@@ -30,7 +30,7 @@
     "sass-lint": "^1.10.2",
     "sass-loader": "^6.0.6",
     "style-loader": "^0.18.2",
-    "webpack": "^3.3.0",
+    "webpack": "^4.0.0",
     "webpack-bundle-analyzer": "^2.8.3",
     "webpack-dev-server": "^2.5.1",
     "webpack-glsl-loader": "^1.0.1"
