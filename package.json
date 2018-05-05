@@ -51,6 +51,6 @@
   "homepage": "https://github.com/jackaljack/threejs-es6-webpack-starter",
   "dependencies": {
     "orbit-controls-es6": "^1.0.9",
-    "three": "^0.87.1"
+    "three": "^0.88.0"
   }
 }
