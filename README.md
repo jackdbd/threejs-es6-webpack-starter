@@ -52,7 +52,7 @@ yarn run dev
 If you have issues with old dependencies you can try to fix them by running:
 
 ```
-yarn update:dependencies
+yarn update:packages
 ```
 
 Go to `localhost:8080` to see your project live!
