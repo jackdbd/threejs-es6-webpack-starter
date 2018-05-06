@@ -3,7 +3,7 @@
 [![Greenkeeper badge](https://badges.greenkeeper.io/jackdbd/threejs-es6-webpack-starter.svg)](https://greenkeeper.io/)
 A minimal three.js ES6 starter project that uses webpack.
 
-![A GIF file showing a preview of the starter project](https://github.com/jackaljack/threejs-es6-webpack-starter/blob/master/preview.gif "A scene with a spotlight, a directional light, a particle system, a custom material and several helpers.")
+![A GIF file showing a preview of the starter project](https://github.com/jackdbd/threejs-es6-webpack-starter/blob/master/preview.gif "A scene with a spotlight, a directional light, a particle system, a custom material and several helpers.")
 
 ### Features:
 
@@ -29,7 +29,7 @@ Tested on Node.js `v8.1.4`.
 ### Installation
 
 ```
-git clone git@github.com:jackaljack/threejs-es6-webpack-starter.git
+git clone git@github.com:jackdbd/threejs-es6-webpack-starter.git
 cd threejs-es6-webpack-starter
 
 yarn install
@@ -46,7 +46,7 @@ yarn run build
 Run `webpack-dev-server` (all bundles will be served from memory)
 
 ```
-yarn run start
+yarn run dev
 ```
 
 If you have issues with old dependencies you can try to fix them by running:

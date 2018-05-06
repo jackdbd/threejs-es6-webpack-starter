@@ -1,3 +1,3 @@
-require('../css/about.css');
+require("../css/about.css");
 
-console.log('About page');
+console.log("About page");

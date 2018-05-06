@@ -6,9 +6,10 @@
 
 node_modules/
 
-# webpack bundle
-dist/bundle.js
-dist/bundle.js.map
+# webpack bundles
+/dist/*
+# unignore the favicon
+!/dist/favicon.ico
 
 # logs
 *.log

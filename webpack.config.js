@@ -1,136 +1,160 @@
-const path = require('path');
-const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const CompressionPlugin = require('compression-webpack-plugin');
+const path = require("path");
+const webpack = require("webpack");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CleanWebpackPlugin = require("clean-webpack-plugin");
+// const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
+//   .BundleAnalyzerPlugin;
+// const CompressionPlugin = require("compression-webpack-plugin");
 
 module.exports = {
+  target: "web",
 
   entry: {
-    home: path.join(__dirname, 'src', 'js', 'index.js'),
-    about: path.join(__dirname, 'src', 'js', 'about.js'),
+    home: ["./src/js/index.js", "./src/sass/home.sass"],
+    about: ["./src/js/about.js", "./src/css/about.css"]
   },
 
   output: {
-    path: path.join(__dirname, 'dist'),
-    filename: '[name].[chunkhash].bundle.js',
-    sourceMapFilename: '[file].map',
+    path: path.join(__dirname, "dist"),
+    filename: "[chunkhash].js",
+    chunkFilename: "[id].bundle.js"
   },
 
-  target: 'web',
+  devtool: "cheap-source-map",
 
   module: {
     rules: [
       // rule for .js/.jsx files
       {
         test: /\.(js|jsx)$/,
-        include: [
-          path.join(__dirname, 'js', 'src'),
-        ],
-        exclude: [
-          path.join(__dirname, 'node_modules'),
-        ],
+        include: [path.join(__dirname, "js", "src")],
+        exclude: [path.join(__dirname, "node_modules")],
         use: {
-          loader: 'babel-loader',
-        },
+          loader: "babel-loader"
+        }
       },
-      // rule for .css files
+      // rule for .css/.sass/.scss files
       {
-        test: /\.css$/,
-        include: path.join(__dirname, 'src', 'css'),
-        use: ExtractTextPlugin.extract({ fallback: 'style-loader', use: 'css-loader' }),
-      },
-      // rule for .sass files
-      {
-        test: /\.(sass|scss)$/,
-        include: [
-          path.join(__dirname, 'src', 'sass'),
-        ],
-        use: ExtractTextPlugin.extract({ fallback: 'style-loader', use: ['css-loader', 'sass-loader'] }),
+        test: /\.(css|sass|scss)$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          {
+            loader: "css-loader",
+            options: {
+              modules: true,
+              // importLoaders allows to configure how many loaders before css-loader should be applied to @imported resources.
+              // 0 => no loaders (default); 1 => postcss-loader; 2 => postcss-loader, sass-loader
+              importLoaders: 2,
+              sourceMap: true,
+              minimize: { safe: true }
+            }
+          },
+          {
+            loader: "sass-loader",
+            options: {
+              sourceMap: true
+            }
+          }
+        ]
       },
       // rule for .glsl files (shaders)
       {
         test: /\.glsl$/,
         use: [
           {
-            loader: 'webpack-glsl-loader',
-          },
-        ],
+            loader: "webpack-glsl-loader"
+          }
+        ]
       },
       // rule for textures (images)
       {
         test: /\.(jpe?g|png)$/i,
-        include: path.join(__dirname, 'src', 'textures'),
+        include: path.join(__dirname, "src", "textures"),
         loaders: [
-          'file-loader',
+          "file-loader",
           {
-            loader: 'image-webpack-loader',
+            loader: "image-webpack-loader",
             query: {
               progressive: true,
               optimizationLevel: 7,
               interlaced: false,
               pngquant: {
-                quality: '65-90',
-                speed: 4,
-              },
-            },
-          },
-        ],
-      },
-    ],
+                quality: "65-90",
+                speed: 4
+              }
+            }
+          }
+        ]
+      }
+    ]
   },
 
-  devtool: 'cheap-source-map',
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        js: {
+          test: /\.js$/,
+          name: "commons",
+          chunks: "all",
+          minChunks: 7
+        },
+        css: {
+          test: /\.(css|sass|scss)$/,
+          name: "commons",
+          chunks: "all",
+          minChunks: 2
+        }
+      }
+    }
+  },
 
   plugins: [
-    new BundleAnalyzerPlugin(),
-    new CleanWebpackPlugin(
-      ['dist'],
-      { root: __dirname, exclude: ['favicon.ico'], verbose: true }),
-    new ExtractTextPlugin('[name].[chunkhash].bundle.css'),
-    new HtmlWebpackPlugin({
-      template: path.join(__dirname, 'src', 'templates', 'index.html'),
-      hash: true,
-      filename: 'index.html',
-      chunks: ['commons', 'home'],
+    // new BundleAnalyzerPlugin(),
+    new CleanWebpackPlugin(["dist"], {
+      root: __dirname,
+      exclude: ["favicon.ico"],
+      verbose: true
+    }),
+    new MiniCssExtractPlugin({
+      filename: "[chunkhash].css",
+      chunkFilename: "[id].bundle.css"
     }),
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, 'src', 'templates', 'about.html'),
+      template: path.join(__dirname, "src", "templates", "index.html"),
       hash: true,
-      filename: 'about.html',
-      chunks: ['commons', 'about'],
+      filename: "index.html",
+      chunks: ["commons", "home"]
     }),
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'commons',
-      filename: '[name].[chunkhash].bundle.js',
-      chunks: ['home'],
-    }),
-    new CompressionPlugin({
-      asset: '[path].gz[query]',
-      algorithm: 'gzip',
-      test: /\.(js|html)$/,
-      threshold: 10240,
-      minRatio: 0.8,
-    }),
+    new HtmlWebpackPlugin({
+      template: path.join(__dirname, "src", "templates", "about.html"),
+      hash: true,
+      filename: "about.html",
+      chunks: ["commons", "about"]
+    })
+    // new CompressionPlugin({
+    //   asset: '[path].gz[query]',
+    //   algorithm: 'gzip',
+    //   test: /\.(js|html)$/,
+    //   threshold: 10240,
+    //   minRatio: 0.8,
+    // }),
   ],
 
   devServer: {
-    host: 'localhost',
+    host: "localhost",
     port: 8080,
-    contentBase: path.join(__dirname, 'dist'),
+    contentBase: path.join(__dirname, "dist"),
     inline: true, // live reloading
     stats: {
       colors: true,
       reasons: true,
       chunks: false,
-      modules: false,
-    },
+      modules: false
+    }
   },
 
   performance: {
-    hints: 'warning',
-  },
-
+    hints: "warning"
+  }
 };

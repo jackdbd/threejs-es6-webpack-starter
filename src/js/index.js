@@ -1,16 +1,16 @@
-import * as THREE from 'three';
+import * as THREE from "three";
 // TODO: OrbitControls import three.js on its own, so the webpack bundle includes three.js twice!
-import OrbitControls from 'orbit-controls-es6';
-import * as Detector from '../js/vendor/Detector';
-import * as DAT from '../js/vendor/dat.gui.min';
+import OrbitControls from "orbit-controls-es6";
+import * as Detector from "../js/vendor/Detector";
+import * as DAT from "../js/vendor/dat.gui.min";
 
-const checkerboard = require('../textures/checkerboard.jpg');
-const star = require('../textures/star.png');
-const vertexShader = require('../glsl/vertexShader.glsl');
-const fragmentShader = require('../glsl/fragmentShader.glsl');
+import * as checkerboard from "../textures/checkerboard.jpg";
+// const checkerboard = require("../textures/checkerboard.jpg");
+const star = require("../textures/star.png");
+const vertexShader = require("../glsl/vertexShader.glsl");
+const fragmentShader = require("../glsl/fragmentShader.glsl");
 
-require('../sass/home.sass');
-
+require("../sass/home.sass");
 
 class Application {
   constructor(opts = {}) {
@@ -30,7 +30,7 @@ class Application {
       this.render();
     } else {
       // TODO: style warning message
-      console.log('WebGL NOT supported in your browser!');
+      console.log("WebGL NOT supported in your browser!");
       const warning = Detector.getWebGLErrorMessage();
       this.container.appendChild(warning);
     }
@@ -49,7 +49,7 @@ class Application {
     {
       const side = 20;
       const geometry = new THREE.CubeGeometry(side, side, side);
-      const material = new THREE.MeshLambertMaterial({ color: 0xFBBC05 });
+      const material = new THREE.MeshLambertMaterial({ color: 0xfbbc05 });
       const cube = new THREE.Mesh(geometry, material);
       cube.position.set(0, side / 2, 0);
       this.scene.add(cube);
@@ -71,9 +71,9 @@ class Application {
   }
 
   static createContainer() {
-    const div = document.createElement('div');
-    div.setAttribute('id', 'canvas-container');
-    div.setAttribute('class', 'container');
+    const div = document.createElement("div");
+    div.setAttribute("id", "canvas-container");
+    div.setAttribute("class", "container");
     // div.setAttribute('width', window.innerWidth);
     // div.setAttribute('height', window.innerHeight);
     return div;
@@ -82,7 +82,7 @@ class Application {
   setupRenderer() {
     this.renderer = new THREE.WebGLRenderer({ antialias: true });
     // this.renderer.setClearColor(0xd3d3d3);  // it's a light gray
-    this.renderer.setClearColor(0x222222);  // it's a dark gray
+    this.renderer.setClearColor(0x222222); // it's a dark gray
     this.renderer.setPixelRatio(window.devicePixelRatio || 1);
     this.renderer.setSize(this.width, this.height);
     this.renderer.shadowMap.enabled = true;
@@ -127,12 +127,16 @@ class Application {
     // directional light helper + shadow camera helper
     const dirLightHelper = new THREE.DirectionalLightHelper(this.dirLight, 10);
     this.scene.add(dirLightHelper);
-    const dirLightCameraHelper = new THREE.CameraHelper(this.dirLight.shadow.camera);
+    const dirLightCameraHelper = new THREE.CameraHelper(
+      this.dirLight.shadow.camera
+    );
     this.scene.add(dirLightCameraHelper);
     // spot light helper + shadow camera helper
     const spotLightHelper = new THREE.SpotLightHelper(this.spotLight);
     this.scene.add(spotLightHelper);
-    const spotLightCameraHelper = new THREE.CameraHelper(this.spotLight.shadow.camera);
+    const spotLightCameraHelper = new THREE.CameraHelper(
+      this.spotLight.shadow.camera
+    );
     this.scene.add(spotLightCameraHelper);
   }
 
@@ -144,7 +148,7 @@ class Application {
     texture.repeat.set(4, 4);
     const material = new THREE.MeshBasicMaterial({
       side: THREE.DoubleSide,
-      map: texture,
+      map: texture
     });
     const floor = new THREE.Mesh(geometry, material);
     floor.position.y = -0.5;
@@ -162,32 +166,49 @@ class Application {
 
   setupGUI() {
     const gui = new DAT.GUI();
-    gui.add(this.camera.position, 'x').name('Camera X').min(0).max(100);
-    gui.add(this.camera.position, 'y').name('Camera Y').min(0).max(100);
-    gui.add(this.camera.position, 'z').name('Camera Z').min(0).max(100);
+    gui
+      .add(this.camera.position, "x")
+      .name("Camera X")
+      .min(0)
+      .max(100);
+    gui
+      .add(this.camera.position, "y")
+      .name("Camera Y")
+      .min(0)
+      .max(100);
+    gui
+      .add(this.camera.position, "z")
+      .name("Camera Z")
+      .min(0)
+      .max(100);
   }
 
   setupCustomObject() {
     // create an object that uses custom shaders
     this.delta = 0;
     const customUniforms = {
-      delta: { value: 0 },
+      delta: { value: 0 }
     };
 
     const material = new THREE.ShaderMaterial({
       vertexShader,
       fragmentShader,
-      uniforms: customUniforms,
+      uniforms: customUniforms
     });
 
     const geometry = new THREE.SphereBufferGeometry(5, 32, 32);
 
-    this.vertexDisplacement = new Float32Array(geometry.attributes.position.count);
+    this.vertexDisplacement = new Float32Array(
+      geometry.attributes.position.count
+    );
     for (let i = 0; i < this.vertexDisplacement.length; i += 1) {
       this.vertexDisplacement[i] = Math.sin(i);
     }
 
-    geometry.addAttribute('vertexDisplacement', new THREE.BufferAttribute(this.vertexDisplacement, 1));
+    geometry.addAttribute(
+      "vertexDisplacement",
+      new THREE.BufferAttribute(this.vertexDisplacement, 1)
+    );
 
     this.customMesh = new THREE.Mesh(geometry, material);
     this.customMesh.position.set(5, 5, 5);
@@ -197,9 +218,10 @@ class Application {
   updateCustomObject() {
     // update an object that uses custom shaders
     this.delta += 0.1;
-    this.customMesh.material.uniforms.delta.value = 0.5 + (Math.sin(this.delta) * 0.5);
+    this.customMesh.material.uniforms.delta.value =
+      0.5 + Math.sin(this.delta) * 0.5;
     for (let i = 0; i < this.vertexDisplacement.length; i += 1) {
-      this.vertexDisplacement[i] = 0.5 + (Math.sin(i + this.delta) * 0.25);
+      this.vertexDisplacement[i] = 0.5 + Math.sin(i + this.delta) * 0.25;
     }
     // attribute buffers are not refreshed automatically. To update custom
     // attributes we need to set the needsUpdate flag to true
@@ -225,7 +247,7 @@ class Application {
       transparent: true,
       // alphaTest's default is 0 and the particles overlap. Any value > 0
       // prevents the particles from overlapping.
-      alphaTest: 0.5,
+      alphaTest: 0.5
     });
 
     const particleSystem = new THREE.Points(geometry, material);
@@ -238,7 +260,7 @@ class Application {
     const side = 5;
     const geometry = new THREE.BoxGeometry(side, side, side);
     const material = new THREE.MeshLambertMaterial({
-      color: 0x228b22, // forest green
+      color: 0x228b22 // forest green
     });
 
     for (let i = 0; i < 50; i += 1) {
@@ -254,13 +276,12 @@ class Application {
     group.position.set(50, 20, 50);
     this.scene.add(group);
   }
-
 }
 
 // wrap everything inside a function scope and invoke it (IIFE, a.k.a. SEAF)
 (() => {
   const app = new Application({
-    container: document.getElementById('canvas-container'),
+    container: document.getElementById("canvas-container")
   });
   console.log(app);
 })();
