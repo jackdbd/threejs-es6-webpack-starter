@@ -12,19 +12,17 @@ A minimal three.js ES6 starter project that uses webpack.
 and [css-loader](https://github.com/webpack-contrib/css-loader)
 * SASS support via [sass-loader](https://github.com/jtangelder/sass-loader)
 * ES6 linting via [eslint](https://www.npmjs.com/package/eslint) and
-[eslint-config-airbnb](https://www.npmjs.com/package/eslint-config-airbnb)
+[eslint-config-airbnb](https://www.npmjs.com/package/eslint-config-airbnb) or [prettier](https://github.com/prettier/prettier)
 * SASS linting via [sass-lint](https://www.npmjs.com/package/sass-lint)
 * Controls via [orbit-controls-es6](https://www.npmjs.com/package/orbit-controls-es6)
 * GUI via [dat.GUI](https://github.com/dataarts/dat.gui)
 * GLSL shaders support via [webpack-glsl-loader](https://www.npmjs.com/package/webpack-glsl-loader)
 * Webpack configuration with:
-  - [ExtractTextPlugin](https://github.com/webpack-contrib/extract-text-webpack-plugin)
+  - [mini-css-extract-plugin](https://github.com/webpack-contrib/mini-css-extract-plugin)
   - [HtmlWebpackPlugin](https://github.com/jantimon/html-webpack-plugin)
   - [BundleAnalyzerPlugin](https://github.com/th0r/webpack-bundle-analyzer)
   - [CompressionPlugin](https://github.com/webpack-contrib/compression-webpack-plugin)
   - [CleanWebpackPlugin](https://github.com/johnagan/clean-webpack-plugin)
-
-Tested on Node.js `v8.1.4`.
 
 ### Installation
 
