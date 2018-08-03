@@ -1,9 +1,11 @@
 # three.js-es6-webpack-starter
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/jackdbd/threejs-es6-webpack-starter.svg)](https://greenkeeper.io/)
+[![Renovate enabled](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://renovateapp.com/)
 A minimal three.js ES6 starter project that uses webpack.
 
 ![A GIF file showing a preview of the starter project](https://github.com/jackdbd/threejs-es6-webpack-starter/blob/master/preview.gif "A scene with a spotlight, a directional light, a particle system, a custom material and several helpers.")
+
+:warning: If you encounter a `validateschema` error when running `yarn dev`, try downgrading `webpack-cli` to `2.0.0`. It seems a bug that affects only [webpack-dev-server](https://stackoverflow.com/questions/50654952/webpack-dev-server-fails-to-run-with-error-of-validateschema). :warning:
 
 ### Features:
 

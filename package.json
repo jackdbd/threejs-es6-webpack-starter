@@ -1,8 +1,9 @@
 {
   "name": "threejs-es6-webpack-starter",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "A starter project for Three.js with support for ES6 and Webpack 4",
   "main": "./src/js/index.js",
+  "private": true,
   "scripts": {
     "dev": "webpack-dev-server --config webpack.config.js --mode development --open",
     "build": "webpack --config webpack.config.js --progress --mode production",
