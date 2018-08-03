@@ -21,7 +21,7 @@
     "babel-core": "6.26.3",
     "babel-loader": "7.1.4",
     "babel-plugin-transform-object-rest-spread": "6.26.0",
-    "babel-preset-env": "1.6.1",
+    "babel-preset-env": "1.7.0",
     "babel-preset-stage-2": "6.24.1",
     "clean-webpack-plugin": "0.1.19",
     "compression-webpack-plugin": "1.1.11",
