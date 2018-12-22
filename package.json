@@ -38,7 +38,7 @@
     "sass-lint": "1.12.1",
     "sass-loader": "7.0.1",
     "style-loader": "0.21.0",
-    "webpack": "4.7.0",
+    "webpack": "4.28.2",
     "webpack-bundle-analyzer": "2.11.1",
     "webpack-cli": "3.0.0",
     "webpack-dev-server": "3.1.4",
