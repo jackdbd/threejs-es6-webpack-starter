@@ -1,9 +1,6 @@
 # OSX
 .DS_Store
 
-# editor
-.vscode/
-
 node_modules/
 
 # webpack bundles

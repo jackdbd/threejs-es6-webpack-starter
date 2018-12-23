@@ -1,0 +1,14 @@
+{
+  "recommendations": [
+    "christian-kohler.npm-intellisense",
+    "davidanson.vscode-markdownlint",
+    "EditorConfig.EditorConfig",
+    "eg2.vscode-npm-script",
+    "esbenp.prettier-vscode",
+    "joelday.docthis",
+    "mgmcdermott.vscode-language-babel",
+    "robinbentley.sass-indented",
+    "slevesque.shader",
+    "shinnn.stylelint"
+  ]
+}
