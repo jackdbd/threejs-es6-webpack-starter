@@ -20,7 +20,7 @@
   "license": "MIT",
   "dependencies": {
     "orbit-controls-es6": "2.0.0",
-    "three": "0.99.0"
+    "three": "0.100.0"
   },
   "devDependencies": {
     "@babel/core": "7.2.2",
