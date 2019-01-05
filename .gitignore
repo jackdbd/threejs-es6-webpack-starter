@@ -1,16 +1,5 @@
-# OSX
-.DS_Store
-
 node_modules/
-
-# webpack bundles
-/dist/*
+/build/*
 # unignore the favicon
-!/dist/favicon.ico
-
-# logs
+!/build/favicon.ico
 *.log
-
-# linters
-.eslintrc.json
-.sass-lint.yml

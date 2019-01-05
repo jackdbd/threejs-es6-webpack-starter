@@ -9,7 +9,7 @@ const config = {
     "\\.(jpg|jpeg|png|gif|glsl)$": "<rootDir>/__mocks__/fileMock.js",
     "\\.(css|sass)$": "<rootDir>/__mocks__/styleMock.js",
   },
-  modulePathIgnorePatterns: ["/dist/", "/node_modules/"],
+  modulePathIgnorePatterns: ["/build/", "/node_modules/"],
   setupTestFrameworkScriptFile: "<rootDir>/setupJestDomTests.js",
   testRegex: "/__tests__/.*\\.js$",
   transform: {

@@ -99,7 +99,7 @@ const devServer = {
   host: "localhost",
   port: 8080,
   compress: true,
-  contentBase: path.join(__dirname, "dist"),
+  contentBase: path.join(__dirname, "build"),
   inline: true,
   stats: {
     colors: true,
@@ -113,7 +113,7 @@ module.exports = (env, argv) => {
   console.log(`Prepare ${argv.mode.toUpperCase()} build`);
   const isProduction = argv.mode === "production";
   const plugins = [
-    new CleanWebpackPlugin(["dist"], {
+    new CleanWebpackPlugin(["build"], {
       root: __dirname,
       exclude: ["favicon.ico"],
       verbose: true,
@@ -168,7 +168,7 @@ module.exports = (env, argv) => {
       about: ["./src/js/about.js", "./src/css/about.css"],
     },
     output: {
-      path: path.join(__dirname, "dist"),
+      path: path.join(__dirname, "build"),
       filename: "[chunkhash].js",
       chunkFilename: "[id].bundle.js",
     },
