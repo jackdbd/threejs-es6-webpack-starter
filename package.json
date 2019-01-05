@@ -19,7 +19,8 @@
     "ncuu": "ncu --upgrade",
     "nuke": "rimraf node_modules && rm yarn.lock",
     "predeploy": "yarn build",
-    "test": "jest --verbose"
+    "test": "jest --verbose",
+    "static": "chromium-browser build/index.html"
   },
   "dependencies": {
     "orbit-controls-es6": "2.0.0",
