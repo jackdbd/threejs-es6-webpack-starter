@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack:///./src/css/src/css/about.css"],"names":[],"mappings":"AAAA;EACE,eAAc;EACd,uBAAsB;EACtB,gBAAe,EAChB","file":"c63b4ee4b042fa63805d.css","sourcesContent":["h1 {\n  color: #ff0000;\n  font-family: 'Raleway';\n  font-size: 2rem;\n}\n"],"sourceRoot":""}
