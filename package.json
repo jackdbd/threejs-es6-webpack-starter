@@ -44,7 +44,7 @@
     "mini-css-extract-plugin": "0.5.0",
     "node-sass": "4.11.0",
     "npm-check-updates": "2.15.0",
-    "prettier": "1.15.3",
+    "prettier": "1.16.4",
     "rimraf": "2.6.3",
     "sass-lint": "1.12.1",
     "sass-loader": "7.1.0",
