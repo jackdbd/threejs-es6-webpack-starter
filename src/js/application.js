@@ -14,6 +14,9 @@ class Application {
     this.width = window.innerWidth;
     this.height = window.innerHeight;
 
+    // bind event handlers to the Application instance before calling init()
+    this.handleClick = this.handleClick.bind(this);
+
     if (opts.container) {
       this.container = opts.container;
     } else {
@@ -38,6 +41,7 @@ class Application {
     this.setupCamera();
     this.setupLights();
     this.setupHelpers();
+    this.setupRay();
     this.setupFloor();
     this.setupControls();
     this.setupGUI();
@@ -75,6 +79,28 @@ class Application {
     return div;
   }
 
+  handleClick(event) {
+    const x = (event.clientX / window.innerWidth) * 2 - 1;
+    const y = -(event.clientY / window.innerHeight) * 2 + 1;
+    this.raycaster.setFromCamera({ x, y }, this.camera);
+
+    const hexColor = Math.random() * 0xffffff;
+    const intersects = this.raycaster.intersectObjects(this.scene.children);
+    for (var i = 0; i < intersects.length; i++) {
+      const intersection = intersects[i];
+      console.warn("ray intersects with", intersection.object);
+      intersection.object.material.color.setHex(hexColor);
+    }
+    this.scene.add(
+      new THREE.ArrowHelper(
+        this.raycaster.ray.direction,
+        this.raycaster.ray.origin,
+        100,
+        hexColor
+      )
+    );
+  }
+
   setupRenderer() {
     this.renderer = new THREE.WebGLRenderer({ antialias: true });
     // this.renderer.setClearColor(0xd3d3d3);  // it's a light gray
@@ -83,6 +109,7 @@ class Application {
     this.renderer.setSize(this.width, this.height);
     this.renderer.shadowMap.enabled = true;
     this.container.appendChild(this.renderer.domElement);
+    this.renderer.domElement.addEventListener("click", this.handleClick);
   }
 
   setupCamera() {
@@ -136,6 +163,10 @@ class Application {
     this.scene.add(spotLightCameraHelper);
   }
 
+  setupRay() {
+    this.raycaster = new THREE.Raycaster();
+  }
+
   setupFloor() {
     const geometry = new THREE.PlaneGeometry(100, 100, 1, 1);
     const texture = new THREE.TextureLoader().load(checkerboard);
@@ -157,7 +188,7 @@ class Application {
     this.controls.enabled = true;
     this.controls.maxDistance = 1500;
     this.controls.minDistance = 0;
-    this.controls.autoRotate = true;
+    // this.controls.autoRotate = true;
   }
 
   setupGUI() {
