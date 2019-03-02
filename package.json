@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "orbit-controls-es6": "2.0.0",
-    "three": "0.100.0"
+    "three": "0.102.1"
   },
   "devDependencies": {
     "@babel/core": "7.2.2",
