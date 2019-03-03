@@ -16,26 +16,14 @@ const rules = [
     },
   },
   {
-    test: /\.(css|sass|scss)$/,
-    include: [
-      path.join(__dirname, "src", "css"),
-      path.join(__dirname, "src", "sass"),
-    ],
+    test: /\.(css)$/,
+    include: [path.join(__dirname, "src", "css")],
     use: [
       MiniCssExtractPlugin.loader,
       {
         loader: "css-loader",
         options: {
-          // importLoaders allows to configure how many loaders before css-loader should be applied to @imported resources.
-          // 0 => no loaders (default); 1 => postcss-loader; 2 => postcss-loader, sass-loader
-          importLoaders: 2,
-          modules: true,
-          sourceMap: true,
-        },
-      },
-      {
-        loader: "sass-loader",
-        options: {
+          modules: false, // avoid using CSS modules
           sourceMap: true,
         },
       },
@@ -49,6 +37,16 @@ const rules = [
         loader: "webpack-glsl-loader",
       },
     ],
+  },
+  // rule for .ttf font files
+  {
+    test: /\.(ttf)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+    use: {
+      loader: "file-loader",
+      options: {
+        name: "./fonts/[name].[ext]",
+      },
+    },
   },
   // rule for textures (images)
   {
@@ -86,7 +84,7 @@ const optimization = {
         minChunks: 7,
       },
       css: {
-        test: /\.(css|sass|scss)$/,
+        test: /\.(css)$/,
         name: "commons",
         chunks: "all",
         minChunks: 2,
@@ -164,8 +162,8 @@ module.exports = (env, argv) => {
     context: __dirname,
     target: "web",
     entry: {
-      home: ["./src/js/index.js", "./src/sass/home.sass"],
-      about: ["./src/js/about.js", "./src/css/about.css"],
+      home: ["./src/js/index.js"],
+      about: ["./src/js/about.js"],
     },
     output: {
       path: path.join(__dirname, "build"),

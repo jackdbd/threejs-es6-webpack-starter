@@ -1,0 +1,44 @@
+@import "variables.css";
+@import "font-face-rules.css";
+
+body {
+  font-family: var(--typography-font-family-primary);
+  height: 100vh;
+  margin: 0;
+  overflow: hidden;
+  width: 100vw;
+}
+
+li {
+  font-family: var(--typography-font-family-secondary);
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--typography-font-family-primary);
+  height: 100%;
+  width: 100%;
+}
+
+.header {
+  background-color: var(--colors-background-primary);
+  display: flex;
+}
+
+.table-of-contents {
+  background-color: var(--colors-background-secondary);
+  display: flex;
+}
+
+.canvas-container {
+  background-color: var(--colors-background-primary);
+  display: flex;
+  height: 100%;
+  width: 100%;
+}
+
+.canvas-container > canvas {
+  height: 100%;
+  width: 100%;
+}

@@ -1,0 +1,24 @@
+/* Define font-face rules
+ * If you have multiple font formats, put most modern formats first.
+ * A single font-family can have multiple fonts (e.g. for bold, italic).
+ */
+
+@font-face {
+  font-family: InknutAntiqua;
+  font-style: normal;
+  font-weight: normal;
+  /* stylelint-disable-next-line declaration-colon-newline-after */
+  src: url("../fonts/Inknut_Antiqua/InknutAntiqua-Regular.ttf")
+    format("truetype");
+}
+
+@font-face {
+  font-family: InknutAntiqua;
+  font-style: normal;
+  font-weight: bold;
+  /* stylelint-disable-next-line declaration-colon-newline-after */
+  src: url("../fonts/Inknut_Antiqua/InknutAntiqua-ExtraBold.ttf")
+    format("truetype");
+}
+
+/* other cool fonts Syncopate, Quicksand, Aclonica */

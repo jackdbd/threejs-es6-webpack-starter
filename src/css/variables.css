@@ -1,0 +1,10 @@
+:root {
+  /* COLORS */
+  --colors-background-primary: #374047;
+  --colors-background-secondary: #5f6e78;
+  --colors-header: #5f6e78;
+
+  /* TYPOGRAPHY */
+  --typography-font-family-primary: "InknutAntiqua", sans-serif;
+  --typography-font-family-secondary: "Raleway";
+}

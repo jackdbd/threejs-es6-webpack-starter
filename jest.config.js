@@ -7,7 +7,7 @@ const config = {
    */
   moduleNameMapper: {
     "\\.(jpg|jpeg|png|gif|glsl)$": "<rootDir>/__mocks__/fileMock.js",
-    "\\.(css|sass)$": "<rootDir>/__mocks__/styleMock.js",
+    "\\.(css)$": "<rootDir>/__mocks__/styleMock.js",
   },
   modulePathIgnorePatterns: ["/build/", "/node_modules/"],
   setupTestFrameworkScriptFile: "<rootDir>/setupJestDomTests.js",
