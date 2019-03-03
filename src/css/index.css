@@ -14,9 +14,9 @@ li {
 }
 
 .app {
-  display: flex;
-  flex-direction: column;
   font-family: var(--typography-font-family-primary);
+  flex-direction: column;
+  display: flex;
   height: 100%;
   width: 100%;
 }

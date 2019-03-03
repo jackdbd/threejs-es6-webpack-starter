@@ -11,9 +11,10 @@ A minimal three.js ES6 starter project that uses webpack.
 ## Features
 
 - ES6 support with [babel-loader](https://github.com/babel/babel-loader)
+- Code formatting with [prettier](https://github.com/prettier/prettier)
 - CSS support with [style-loader](https://github.com/webpack-contrib/style-loader)
   and [css-loader](https://github.com/webpack-contrib/css-loader)
-- Code formatting with [prettier](https://github.com/prettier/prettier)
+- CSS linting with [stylelint](https://stylelint.io/)
 - Controls with [orbit-controls-es6](https://www.npmjs.com/package/orbit-controls-es6)
 - GUI with [dat.GUI](https://github.com/dataarts/dat.gui)
 - GLSL shaders support via [webpack-glsl-loader](https://www.npmjs.com/package/webpack-glsl-loader)
