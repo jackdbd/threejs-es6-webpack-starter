@@ -1,6 +1,7 @@
 import * as THREE from "three";
 // TODO: OrbitControls import three.js on its own, so the webpack bundle includes three.js twice!
 import OrbitControls from "orbit-controls-es6";
+import { Interaction } from "three.interaction";
 
 import * as Detector from "../js/vendor/Detector";
 import * as DAT from "../js/vendor/dat.gui.min";
@@ -21,6 +22,7 @@ export class Application {
     } else {
       this.createContainer();
     }
+    this.createTooltip();
     this.showHelpers = opts.showHelpers ? true : false;
     this.textureLoader = new THREE.TextureLoader();
 
@@ -42,6 +44,8 @@ export class Application {
     this.handleClick = this.handleClick.bind(this);
     this.handleMouseMove = this.handleMouseMove.bind(this);
     this.handleResize = this.handleResize.bind(this);
+    this.showTooltip = this.showTooltip.bind(this);
+    this.hideTooltip = this.hideTooltip.bind(this);
   }
 
   init() {
@@ -49,6 +53,7 @@ export class Application {
     this.setupScene();
     this.setupRenderer();
     this.setupCamera();
+    const interaction = new Interaction(this.renderer, this.scene, this.camera);
     this.setupLights();
     if (this.showHelpers) {
       this.setupHelpers();
@@ -98,6 +103,18 @@ export class Application {
     this.container = div;
   }
 
+  createTooltip() {
+    const elements = document.getElementsByClassName("app");
+    if (elements.length !== 1) {
+      alert("You need to have exactly ONE <div class='app' /> in your HTML");
+    }
+    const app = elements[0];
+    const div = document.createElement("div");
+    div.setAttribute("class", "tooltip");
+    app.appendChild(div);
+    this.tooltip = div;
+  }
+
   handleClick(event) {
     const [x, y] = this.getNDCCoordinates(event, true);
     this.raycaster.setFromCamera({ x, y }, this.camera);
@@ -113,6 +130,7 @@ export class Application {
       this.scene.add(arrow);
     }
   }
+
   handleMouseMove(event) {
     const [x, y] = this.getNDCCoordinates(event);
   }
@@ -123,6 +141,19 @@ export class Application {
     this.camera.aspect = clientWidth / clientHeight;
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(clientWidth, clientHeight);
+  }
+
+  showTooltip(interactionEvent) {
+    const { name, uuid, type } = interactionEvent.target;
+    const { x, y } = interactionEvent.data.global;
+    const [xScreen, yScreen] = this.getScreenCoordinates(x, y);
+    this.tooltip.innerHTML = `<h4>${name} (${type})</h4><br><span>UUID: ${uuid}</span><br><span><em>Click to cast a ray</em></span>`;
+    const style = `left: ${xScreen}px; top: ${yScreen}px; visibility: visible; opacity: 0.8`;
+    this.tooltip.style = style;
+  }
+
+  hideTooltip(interactionEvent) {
+    this.tooltip.style = "visibility: hidden";
   }
 
   /**
@@ -253,6 +284,10 @@ export class Application {
       floor.position.y = -0.5;
       floor.rotation.x = Math.PI / 2;
       this.scene.add(floor);
+
+      floor.cursor = "pointer";
+      floor.on("mouseover", this.showTooltip);
+      floor.on("mouseout", this.hideTooltip);
     };
 
     const onProgress = undefined;
@@ -344,6 +379,10 @@ export class Application {
     cube.name = "Cube";
     cube.position.set(0, side / 2, 0);
     this.scene.add(cube);
+
+    cube.cursor = "pointer";
+    cube.on("mouseover", this.showTooltip);
+    cube.on("mouseout", this.hideTooltip);
   }
 
   /**
@@ -373,6 +412,10 @@ export class Application {
       particleSystem.name = "Stars";
       particleSystem.position.set(-50, 50, -50);
       this.scene.add(particleSystem);
+
+      particleSystem.cursor = "pointer";
+      particleSystem.on("mouseover", this.showTooltip);
+      particleSystem.on("mouseout", this.hideTooltip);
     };
 
     const onProgress = undefined;
@@ -401,6 +444,10 @@ export class Application {
     }
     group.position.set(50, 20, 50);
     this.scene.add(group);
+
+    group.cursor = "pointer";
+    group.on("mouseover", this.showTooltip);
+    group.on("mouseout", this.hideTooltip);
   }
 
   /**
@@ -430,6 +477,21 @@ export class Application {
       console.table(data, ["x", "y"]);
     }
     return [x, y];
+  }
+
+  getScreenCoordinates(xNDC, yNDC) {
+    const {
+      clientHeight,
+      clientWidth,
+      offsetLeft,
+      offsetTop,
+    } = this.renderer.domElement;
+
+    const xRelativePx = ((xNDC + 1) / 2) * clientWidth;
+    const yRelativePx = -0.5 * (yNDC - 1) * clientHeight;
+    const xScreen = xRelativePx + offsetLeft;
+    const yScreen = yRelativePx + offsetTop;
+    return [xScreen, yScreen];
   }
 }
 

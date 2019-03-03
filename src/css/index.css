@@ -42,3 +42,21 @@ li {
   height: 100%;
   width: 100%;
 }
+
+.tooltip {
+  background: var(--colors-background-secondary);
+  border: 0;
+  border-radius: 1em;
+  font-family: var(--typography-font-family-secondary);
+  font-size: 1rem;
+  font-weight: bold;
+  height: auto;
+  padding: 0.5rem;
+  position: absolute;
+  text-align: center;
+  width: auto;
+}
+
+.tooltip:hover {
+  opacity: 0.8;
+}
