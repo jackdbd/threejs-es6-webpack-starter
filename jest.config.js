@@ -10,7 +10,7 @@ const config = {
     "\\.(css)$": "<rootDir>/__mocks__/styleMock.js",
   },
   modulePathIgnorePatterns: ["/build/", "/node_modules/"],
-  setupTestFrameworkScriptFile: "<rootDir>/setupJestDomTests.js",
+  setupFilesAfterEnv: ["<rootDir>/setupJestDomTests.js"],
   testRegex: "/__tests__/.*\\.js$",
   transform: {
     ".+\\.js": "babel-jest",

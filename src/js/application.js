@@ -29,7 +29,7 @@ export class Application {
       this.init();
       this.render();
     } else {
-      console.warn("WebGL NOT supported in your browser!");
+      // console.warn("WebGL NOT supported in your browser!");
       const warning = Detector.getWebGLErrorMessage();
       this.container.appendChild(warning);
     }
