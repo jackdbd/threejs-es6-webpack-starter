@@ -40,6 +40,7 @@ export class Application {
    */
   bindEventHandlers() {
     this.handleClick = this.handleClick.bind(this);
+    this.handleMouseMove = this.handleMouseMove.bind(this);
     this.handleResize = this.handleResize.bind(this);
   }
 
@@ -98,7 +99,7 @@ export class Application {
   }
 
   handleClick(event) {
-    const [x, y] = getNDCCoordinates(event);
+    const [x, y] = this.getNDCCoordinates(event, true);
     this.raycaster.setFromCamera({ x, y }, this.camera);
     const intersects = this.raycaster.intersectObjects(this.scene.children);
 
@@ -111,6 +112,9 @@ export class Application {
       const arrow = new THREE.ArrowHelper(direction, origin, 100, hexColor);
       this.scene.add(arrow);
     }
+  }
+  handleMouseMove(event) {
+    const [x, y] = this.getNDCCoordinates(event);
   }
 
   handleResize(event) {
@@ -155,6 +159,10 @@ export class Application {
     this.renderer.shadowMap.enabled = true;
     this.container.appendChild(this.renderer.domElement);
     this.renderer.domElement.addEventListener("click", this.handleClick);
+    this.renderer.domElement.addEventListener(
+      "mousemove",
+      this.handleMouseMove
+    );
   }
 
   setupCamera() {
@@ -394,17 +402,35 @@ export class Application {
     group.position.set(50, 20, 50);
     this.scene.add(group);
   }
-}
 
-/**
- * Convert screen coordinates into Normalized Device Coordinates [-1, +1].
- *
- * @see https://learnopengl.com/Getting-started/Coordinate-Systems
- */
-function getNDCCoordinates(event) {
-  const x = (event.clientX / window.innerWidth) * 2 - 1;
-  const y = -(event.clientY / window.innerHeight) * 2 + 1;
-  return [x, y];
+  /**
+   * Convert screen coordinates into Normalized Device Coordinates [-1, +1].
+   * @see https://learnopengl.com/Getting-started/Coordinate-Systems
+   */
+  getNDCCoordinates(event, debug) {
+    const {
+      clientHeight,
+      clientWidth,
+      offsetLeft,
+      offsetTop,
+    } = this.renderer.domElement;
+
+    const xRelativePx = event.clientX - offsetLeft;
+    const x = (xRelativePx / clientWidth) * 2 - 1;
+
+    const yRelativePx = event.clientY - offsetTop;
+    const y = -(yRelativePx / clientHeight) * 2 + 1;
+
+    if (debug) {
+      const data = {
+        "Screen Coords (px)": { x: event.screenX, y: event.screenY },
+        "Canvas-Relative Coords (px)": { x: xRelativePx, y: yRelativePx },
+        "NDC (adimensional)": { x, y },
+      };
+      console.table(data, ["x", "y"]);
+    }
+    return [x, y];
+  }
 }
 
 function makeParticle(d, i) {
