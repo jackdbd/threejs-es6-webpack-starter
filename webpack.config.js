@@ -156,7 +156,7 @@ module.exports = (env, argv) => {
     const bundleAnalyzerDev = new BundleAnalyzerPlugin({
       analyzerMode: "server",
       analyzerPort: 8888,
-      openAnalyzer: true,
+      openAnalyzer: false,
     });
     plugins.splice(0, 0, bundleAnalyzerDev);
   }

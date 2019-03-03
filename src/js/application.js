@@ -11,11 +11,11 @@ import "../sass/home.sass";
 
 class Application {
   constructor(opts = {}) {
-    this.width = window.innerWidth;
-    this.height = window.innerHeight;
+    this.setSize(window.innerWidth, window.innerHeight);
 
     // bind event handlers to the Application instance before calling init()
     this.handleClick = this.handleClick.bind(this);
+    this.handleResize = this.handleResize.bind(this);
 
     if (opts.container) {
       this.container = opts.container;
@@ -33,6 +33,11 @@ class Application {
       const warning = Detector.getWebGLErrorMessage();
       this.container.appendChild(warning);
     }
+  }
+
+  setSize(width, height) {
+    this.width = width;
+    this.height = height;
   }
 
   init() {
@@ -80,25 +85,27 @@ class Application {
   }
 
   handleClick(event) {
-    const x = (event.clientX / window.innerWidth) * 2 - 1;
-    const y = -(event.clientY / window.innerHeight) * 2 + 1;
+    const [x, y] = getNDCCoordinates(event);
     this.raycaster.setFromCamera({ x, y }, this.camera);
-
-    const hexColor = Math.random() * 0xffffff;
     const intersects = this.raycaster.intersectObjects(this.scene.children);
-    for (var i = 0; i < intersects.length; i++) {
-      const intersection = intersects[i];
-      console.warn("ray intersects with", intersection.object);
+
+    if (intersects.length > 0) {
+      const hexColor = Math.random() * 0xffffff;
+      const intersection = intersects[0];
       intersection.object.material.color.setHex(hexColor);
+
+      const { direction, origin } = this.raycaster.ray;
+      const arrow = new THREE.ArrowHelper(direction, origin, 100, hexColor);
+      this.scene.add(arrow);
     }
-    this.scene.add(
-      new THREE.ArrowHelper(
-        this.raycaster.ray.direction,
-        this.raycaster.ray.origin,
-        100,
-        hexColor
-      )
-    );
+  }
+
+  handleResize(event) {
+    // console.warn(event);
+    this.setSize(window.innerWidth, window.innerHeight);
+    this.camera.aspect = this.width / this.height;
+    this.camera.updateProjectionMatrix();
+    this.renderer.setSize(this.width, this.height);
   }
 
   setupRenderer() {
@@ -110,6 +117,7 @@ class Application {
     this.renderer.shadowMap.enabled = true;
     this.container.appendChild(this.renderer.domElement);
     this.renderer.domElement.addEventListener("click", this.handleClick);
+    window.addEventListener("resize", this.handleResize);
   }
 
   setupCamera() {
@@ -306,3 +314,14 @@ class Application {
 }
 
 export default Application;
+
+/**
+ * Convert screen coordinates into Normalized Device Coordinates [-1, +1].
+ *
+ * @see https://learnopengl.com/Getting-started/Coordinate-Systems
+ */
+function getNDCCoordinates(event) {
+  const x = (event.clientX / window.innerWidth) * 2 - 1;
+  const y = -(event.clientY / window.innerHeight) * 2 + 1;
+  return [x, y];
+}
