@@ -268,7 +268,7 @@ export class Application {
     this.controls.enabled = true;
     this.controls.maxDistance = 1500;
     this.controls.minDistance = 0;
-    // this.controls.autoRotate = true;
+    this.controls.autoRotate = true;
   }
 
   setupGUI() {

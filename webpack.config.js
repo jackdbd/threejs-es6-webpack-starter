@@ -136,9 +136,8 @@ module.exports = (env, argv) => {
   if (isProduction) {
     // The BundleAnalyzerPlugin must be the FIRST plugin
     const bundleAnalyzerProd = new BundleAnalyzerPlugin({
-      analyzerMode: "static",
+      analyzerMode: "disabled",
       generateStatsFile: true,
-      reportFilename: "bundleAnalyzerReport.html",
     });
     plugins.splice(0, 0, bundleAnalyzerProd);
     plugins.push(

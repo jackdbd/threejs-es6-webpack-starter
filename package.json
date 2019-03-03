@@ -22,6 +22,7 @@
     "prebuild": "yarn lint:css && yarn test",
     "predeploy": "yarn build",
     "static": "chromium-browser build/index.html",
+    "stats": "webpack-bundle-analyzer build/stats.json --port 8888",
     "test": "jest --verbose"
   },
   "dependencies": {
