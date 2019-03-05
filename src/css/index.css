@@ -54,6 +54,7 @@ li {
   padding: 0.5rem;
   position: absolute;
   text-align: center;
+  visibility: hidden;
   width: auto;
 }
 

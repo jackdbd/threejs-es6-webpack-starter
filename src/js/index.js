@@ -18,3 +18,6 @@ import "../css/index.css";
   }
   console.log("Application instance", app);
 })();
+
+// Note: neither app nor containers are defined here because they were available
+// only in function scope, so we don't pollute the global namespace.

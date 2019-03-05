@@ -6,9 +6,12 @@ const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
 const CleanWebpackPlugin = require("clean-webpack-plugin");
 const CompressionPlugin = require("compression-webpack-plugin");
 const DuplicatePackageCheckerPlugin = require("duplicate-package-checker-webpack-plugin");
+const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const PacktrackerPlugin = require("@packtracker/webpack-plugin");
+
+const APP_NAME = "Three.js ES6 Webpack 4 Project Starter";
 
 const rules = [
   {
@@ -104,26 +107,31 @@ const devServer = {
   inline: true,
   port: 8080,
   stats: {
-    colors: true,
-    reasons: true,
     chunks: false,
+    colors: true,
     modules: false,
+    reasons: true,
   },
 };
 
 module.exports = (env, argv) => {
   console.log(`Prepare ${argv.mode.toUpperCase()} build`);
   const isProduction = argv.mode === "production";
+  const PUBLIC_URL = isProduction
+    ? "https://jackdbd.github.io/threejs-es6-webpack-starter"
+    : "";
 
   const plugins = [
     new BundleAnalyzerPlugin({
       analyzerMode: "disabled",
       generateStatsFile: true,
     }),
-    new CleanWebpackPlugin(["build"], {
-      root: __dirname,
-      exclude: ["favicon.ico"],
+    new CleanWebpackPlugin({
+      cleanStaleWebpackAssets: true,
       verbose: true,
+    }),
+    new webpack.DefinePlugin({
+      APP_NAME: JSON.stringify(APP_NAME),
     }),
     new DuplicatePackageCheckerPlugin({
       emitError: false,
@@ -131,17 +139,29 @@ module.exports = (env, argv) => {
       strict: false,
       verbose: true,
     }),
-    new HtmlWebpackPlugin({
-      template: path.join(__dirname, "src", "templates", "index.html"),
-      hash: true,
-      filename: "index.html",
-      chunks: ["commons", "home"],
+    new FaviconsWebpackPlugin({
+      inject: true,
+      logo: path.join(__dirname, "src", "textures", "star.png"),
+      title: APP_NAME,
     }),
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, "src", "templates", "about.html"),
+      chunks: ["homePage"],
+      filename: "index.html",
       hash: true,
+      template: path.join(__dirname, "src", "templates", "index.html"),
+      templateParameters: {
+        APP_NAME,
+        PUBLIC_URL,
+      },
+    }),
+    new HtmlWebpackPlugin({
+      chunks: ["aboutPage"],
       filename: "about.html",
-      chunks: ["commons", "about"],
+      hash: true,
+      template: path.join(__dirname, "src", "templates", "about.html"),
+      templateParameters: {
+        PUBLIC_URL,
+      },
     }),
     new MiniCssExtractPlugin({
       filename: "[hash].css",
@@ -170,26 +190,44 @@ module.exports = (env, argv) => {
 
   const config = {
     context: __dirname,
-    target: "web",
-    entry: {
-      about: ["./src/js/about.js"],
-      home: ["./src/js/index.js"],
-    },
-    output: {
-      path: path.join(__dirname, "build"),
-      filename: "[hash].js",
-      chunkFilename: "[id].bundle.js",
-    },
+    devServer,
     devtool: isProduction ? "source-map" : "cheap-source-map",
+    entry: {
+      aboutPage: "./src/js/about.js",
+      homePage: "./src/js/index.js",
+    },
     module: {
       rules,
     },
     optimization,
+    // output: {
+    //   chunkFilename: "[id].bundle.js",
+    //   filename: "[hash].js",
+    //   path: path.join(__dirname, "build"),
+    // },
+    output: {
+      filename: "[name].[hash].js",
+      path: path.join(__dirname, "build"),
+    },
     plugins,
-    devServer,
     performance: {
       hints: "warning",
     },
+    resolve: {
+      alias: {
+        // orbit-controls-es6 declares a version of three different from the one
+        // used by this application. This would cause three to be duplicated in
+        // the bundle. One way to avoid this issue is to use resolve.alias.
+        // With resolve.alias we are telling Webpack to route any package
+        // references to a single specified path.
+        // Note: Aliasing packages with different major versions may break your
+        // app. Use only if you're sure that all required versions are
+        // compatible, at least in the context of your app
+        // https://github.com/darrenscerri/duplicate-package-checker-webpack-plugin#resolving-duplicate-packages-in-your-bundle
+        three: path.resolve(__dirname, "node_modules/three"),
+      },
+    },
+    target: "web",
   };
   return config;
 };
