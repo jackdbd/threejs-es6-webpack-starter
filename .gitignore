@@ -4,5 +4,7 @@
 /coverage/
 /node_modules/
 /cypress/videos/
+/tmp_demo_images/
 
 *.log
+demo.mp4
