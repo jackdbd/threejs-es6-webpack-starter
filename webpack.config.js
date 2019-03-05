@@ -200,17 +200,18 @@ module.exports = (env, argv) => {
       rules,
     },
     optimization,
-    // output: {
-    //   chunkFilename: "[id].bundle.js",
-    //   filename: "[hash].js",
-    //   path: path.join(__dirname, "build"),
-    // },
     output: {
       filename: "[name].[hash].js",
       path: path.join(__dirname, "build"),
     },
     plugins,
     performance: {
+      assetFilter: assetFilename => {
+        // Silence warnings for big source maps (default) and font files.
+        // To reduce .ttf file size, check the link below.
+        // https://www.cnx-software.com/2010/02/19/reducing-truetype-font-file-size-for-embedded-systems/
+        return !/\.map$/.test(assetFilename) && !assetFilename.endsWith(".ttf");
+      },
       hints: "warning",
     },
     resolve: {
