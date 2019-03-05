@@ -12,7 +12,7 @@ const config = {
     "\\.(jpg|jpeg|png|gif|glsl)$": "<rootDir>/__mocks__/fileMock.js",
     "\\.(css)$": "<rootDir>/__mocks__/styleMock.js",
   },
-  modulePathIgnorePatterns: ["/build/", "/node_modules/"],
+  modulePathIgnorePatterns: ["<rootDir>/node_modules/"],
   setupFilesAfterEnv: ["<rootDir>/setupJestDomTests.js"],
   testEnvironment: "jsdom",
   testURL: "http://localhost",
