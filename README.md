@@ -4,9 +4,7 @@
 
 A minimal three.js ES6 starter project that uses webpack.
 
-![A GIF file showing a preview of the starter project](https://github.com/jackdbd/threejs-es6-webpack-starter/blob/master/preview.gif "A scene with a spotlight, a directional light, a particle system, a custom material and several helpers.")
-
-:warning: If you encounter a `validateschema` error when running `yarn dev`, try downgrading `webpack-cli` to `2.0.0`. It seems a bug that affects only [webpack-dev-server](https://stackoverflow.com/questions/50654952/webpack-dev-server-fails-to-run-with-error-of-validateschema). :warning:
+![A GIF file showing a demo of the starter project](https://github.com/jackdbd/threejs-es6-webpack-starter/blob/master/demo.gif "A scene with a spotlight, a directional light, an ambient light, a particle system, a custom material and several helpers.")
 
 ## Features
 
@@ -20,11 +18,15 @@ A minimal three.js ES6 starter project that uses webpack.
 - GLSL shaders support via [webpack-glsl-loader](https://www.npmjs.com/package/webpack-glsl-loader)
 - Tests with [jest](https://jestjs.io/en/), [jest-dom](https://github.com/gnapse/jest-dom)
 - Webpack configuration with:
+  - [@packtracker/webpack-plugin](https://github.com/packtracker/webpack-plugin) (bundle sizes [here](https://app.packtracker.io/organizations/129/projects/110))
+  - [clean-webpack-plugin](https://github.com/johnagan/clean-webpack-plugin)
+  - [compression-webpack-plugin](https://github.com/webpack-contrib/compression-webpack-plugin)
+  - [duplicate-package-checker-webpack-plugin](https://github.com/darrenscerri/duplicate-package-checker-webpack-plugin)
+  - [favicons-webpack-plugin](https://github.com/jantimon/favicons-webpack-plugin)
+  - [html-webpack-plugin](https://github.com/jantimon/html-webpack-plugin)
   - [mini-css-extract-plugin](https://github.com/webpack-contrib/mini-css-extract-plugin)
-  - [HtmlWebpackPlugin](https://github.com/jantimon/html-webpack-plugin)
-  - [BundleAnalyzerPlugin](https://github.com/th0r/webpack-bundle-analyzer)
-  - [CompressionPlugin](https://github.com/webpack-contrib/compression-webpack-plugin)
-  - [CleanWebpackPlugin](https://github.com/johnagan/clean-webpack-plugin)
+  - [webpack-bundle-analyzer](https://github.com/th0r/webpack-bundle-analyzer)
+  - [webpack-glsl-loader](https://github.com/grieve/webpack-glsl-loader)
 
 ## Installation
 
@@ -44,8 +46,6 @@ yarn dev
 
 Go to `localhost:8080` to see your project live!
 
-Go to `localhost:8888` to analyze your webpack bundles with `BundleAnalyzerPlugin`
-
 ## Usage (production)
 
 Generate all js/css bundles
@@ -56,10 +56,25 @@ yarn build
 
 ## Other
 
-Check outdated dependencies
+Analyze webpack bundles offline:
+
+```shell
+yarn build  # to generate build/stats.json
+yarn stats  # uses webpack-bundle-analyzer as CLI
+```
+
+or push to a CI (e.g. [Travis CI](https://travis-ci.com/)), let it build your project and analyze your bundles online at [packtracker.io](https://packtracker.io/).
+
+Check outdated dependencies:
 
 ```shell
 yarn ncu
+```
+
+Update all outdated dependencies at once:
+
+```shell
+yarn ncuu
 ```
 
 ## Credits
