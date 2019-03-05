@@ -1,10 +1,14 @@
 const path = require("path");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const CleanWebpackPlugin = require("clean-webpack-plugin");
+const webpack = require("webpack");
+
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
   .BundleAnalyzerPlugin;
+const CleanWebpackPlugin = require("clean-webpack-plugin");
 const CompressionPlugin = require("compression-webpack-plugin");
+const DuplicatePackageCheckerPlugin = require("duplicate-package-checker-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const PacktrackerPlugin = require("@packtracker/webpack-plugin");
 
 const rules = [
   {
@@ -94,11 +98,11 @@ const optimization = {
 };
 
 const devServer = {
-  host: "localhost",
-  port: 8080,
   compress: true,
   contentBase: path.join(__dirname, "build"),
+  host: "localhost",
   inline: true,
+  port: 8080,
   stats: {
     colors: true,
     reasons: true,
@@ -110,15 +114,22 @@ const devServer = {
 module.exports = (env, argv) => {
   console.log(`Prepare ${argv.mode.toUpperCase()} build`);
   const isProduction = argv.mode === "production";
+
   const plugins = [
+    new BundleAnalyzerPlugin({
+      analyzerMode: "disabled",
+      generateStatsFile: true,
+    }),
     new CleanWebpackPlugin(["build"], {
       root: __dirname,
       exclude: ["favicon.ico"],
       verbose: true,
     }),
-    new MiniCssExtractPlugin({
-      filename: "[chunkhash].css",
-      chunkFilename: "[id].bundle.css",
+    new DuplicatePackageCheckerPlugin({
+      emitError: false,
+      showHelp: true,
+      strict: false,
+      verbose: true,
     }),
     new HtmlWebpackPlugin({
       template: path.join(__dirname, "src", "templates", "index.html"),
@@ -132,14 +143,19 @@ module.exports = (env, argv) => {
       filename: "about.html",
       chunks: ["commons", "about"],
     }),
+    new MiniCssExtractPlugin({
+      filename: "[hash].css",
+      chunkFilename: "[id].bundle.css",
+    }),
+    new PacktrackerPlugin({
+      branch: process.env.TRAVIS_BRANCH, // https://docs.packtracker.io/faq#why-cant-the-plugin-determine-my-branch-name
+      fail_build: true,
+      project_token: "2464bed1-d810-4af6-a615-877420f902b2",
+      upload: process.env.CI === "true", // upload stats.json only in CI
+    }),
   ];
+
   if (isProduction) {
-    // The BundleAnalyzerPlugin must be the FIRST plugin
-    const bundleAnalyzerProd = new BundleAnalyzerPlugin({
-      analyzerMode: "disabled",
-      generateStatsFile: true,
-    });
-    plugins.splice(0, 0, bundleAnalyzerProd);
     plugins.push(
       new CompressionPlugin({
         algorithm: "gzip",
@@ -149,24 +165,19 @@ module.exports = (env, argv) => {
       })
     );
   } else {
-    // The BundleAnalyzerPlugin must be the FIRST plugin
-    const bundleAnalyzerDev = new BundleAnalyzerPlugin({
-      analyzerMode: "server",
-      analyzerPort: 8888,
-      openAnalyzer: false,
-    });
-    plugins.splice(0, 0, bundleAnalyzerDev);
+    plugins.push(new webpack.HotModuleReplacementPlugin());
   }
+
   const config = {
     context: __dirname,
     target: "web",
     entry: {
-      home: ["./src/js/index.js"],
       about: ["./src/js/about.js"],
+      home: ["./src/js/index.js"],
     },
     output: {
       path: path.join(__dirname, "build"),
-      filename: "[chunkhash].js",
+      filename: "[hash].js",
       chunkFilename: "[id].bundle.js",
     },
     devtool: isProduction ? "source-map" : "cheap-source-map",

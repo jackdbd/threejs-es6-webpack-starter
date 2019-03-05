@@ -1,4 +1,7 @@
 const config = {
+  collectCoverage: true,
+  collectCoverageFrom: ["src/js/*.{js,ts}"],
+  coverageDirectory: "./coverage/",
   /*
    * Configure Jest to gracefully handle asset files such as stylesheets and
    * images. Usually, these files aren't particularly useful in tests so we can
@@ -15,6 +18,7 @@ const config = {
   transform: {
     ".+\\.js": "babel-jest",
   },
+  transformIgnorePatterns: ["[/\\\\]node_modules[/\\\\].+\\.(js|ts)$"],
 };
 
 module.exports = config;

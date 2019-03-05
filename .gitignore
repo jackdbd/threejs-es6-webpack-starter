@@ -1,5 +1,9 @@
 node_modules/
+
 /build/*
 # unignore the favicon
 !/build/favicon.ico
+
+coverage/
+
 *.log
