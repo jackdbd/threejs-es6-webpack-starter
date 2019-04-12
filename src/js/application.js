@@ -29,7 +29,7 @@ export class Application {
 
     if (Detector.webgl) {
       this.bindEventHandlers();
-      this.init();
+      this.init(opts.canvas);
       this.render();
     } else {
       // console.warn("WebGL NOT supported in your browser!");
@@ -49,10 +49,10 @@ export class Application {
     this.hideTooltip = this.hideTooltip.bind(this);
   }
 
-  init() {
+  init(canvas) {
     window.addEventListener("resize", this.handleResize);
     this.setupScene();
-    this.setupRenderer();
+    this.setupRenderer(canvas);
     this.setupCamera();
     const interaction = new Interaction(this.renderer, this.scene, this.camera);
     this.setupLights();
@@ -183,8 +183,11 @@ export class Application {
    * we set the canvas size, we add the canvas to the DOM and we bind event
    * listeners to it.
    */
-  setupRenderer() {
-    this.renderer = new THREE.WebGLRenderer({ antialias: true });
+  setupRenderer(canvas) {
+    this.renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      canvas,
+    });
     // this.renderer.setClearColor(0xd3d3d3);  // it's a light gray
     this.renderer.setClearColor(0x222222); // it's a dark gray
     this.renderer.setPixelRatio(window.devicePixelRatio || 1);

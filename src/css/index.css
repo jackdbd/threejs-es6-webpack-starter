@@ -61,3 +61,17 @@ li {
 .tooltip:hover {
   opacity: 0.8;
 }
+
+.test-canvas-container {
+  position: absolute;
+  border: 0.1rem solid red;
+  left: 4rem;
+  top: 3rem;
+  width: 50vw;
+  height: 50vh;
+}
+
+#test-canvas {
+  width: 100%;
+  height: 100%;
+}
