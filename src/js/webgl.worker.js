@@ -78,17 +78,6 @@ const makeCamera = (canvas, scene) => {
   return camera;
 };
 
-// function render(renderer, scene, camera, canvas) {
-//   renderer.render(scene, camera);
-// }
-
-// requestAnimationFrame fires only once for OffscreenCanvas.
-// requestAnimationFrame(cb);
-
-// As an alternative, setInterval works and keeps firing.
-// const ms = 1000;
-// setInterval(cb, ms);
-
 const draw = canvas => {
   const ctx = canvas.getContext("2d");
 
@@ -117,6 +106,17 @@ const init = payload => {
   const { canvas, sceneName } = payload;
   console.log(action.INIT, "self", self);
 
+  const delay = 10000;
+  postMessage({
+    action: action.NOTIFY,
+    payload: { info: `This demo will end in ${delay}ms` },
+  });
+
+  // Use a second canvas and second renderer to clear #bitmap-canvas when we
+  // are rendering #onscreen-canvas
+  const canvasCleared = new OffscreenCanvas(canvas.width, canvas.height);
+  const rendererCleared = makeRenderer(canvasCleared);
+
   // draw(canvas);
 
   postMessage({
@@ -137,32 +137,48 @@ const init = payload => {
   });
   const camera = makeCamera(canvas, scene);
 
-  postMessage({
-    action: action.NOTIFY,
-    payload: { info: "render scene in offscreen canvas" },
-  });
-  renderer.render(scene, camera);
-
   // Either we do nothing and let the scene rendered in the offscreen canvas be
   // sent to #onscreen-canvas automatically and asynchronously, or we explicitly
   // call the transferToImageBitmap method on the offscreen canvas and send the
   // rendered scene to #bitmap-canvas synchronously.
   // https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas
-  const useBitmapCanvas = true;
+  // const useBitmapCanvas = true;
 
-  if (useBitmapCanvas) {
-    const bitmap = canvas.transferToImageBitmap();
-    postMessage({
-      action: action.BITMAP,
-      payload: { bitmap },
-    });
-  }
+  let useBitmapCanvas = false;
 
-  const delay = 10000;
-  postMessage({
-    action: action.NOTIFY,
-    payload: { info: `I will tell you to terminate me in ${delay}ms` },
-  });
+  const renderLoop = () => {
+    renderer.render(scene, camera);
+
+    if (useBitmapCanvas) {
+      postMessage({
+        action: action.NOTIFY,
+        payload: { info: "render scene in #bitmap-canvas" },
+      });
+      const bitmap = canvas.transferToImageBitmap();
+      postMessage({
+        action: action.BITMAP,
+        payload: { bitmap },
+      });
+    } else {
+      rendererCleared.clear();
+      postMessage({
+        action: action.BITMAP,
+        payload: { bitmap: canvasCleared.transferToImageBitmap() },
+      });
+      postMessage({
+        action: action.NOTIFY,
+        payload: { info: "render scene in #onscreen-canvas" },
+      });
+    }
+    useBitmapCanvas = !useBitmapCanvas;
+  };
+
+  // requestAnimationFrame fires only once for OffscreenCanvas.
+  // requestAnimationFrame(cb);
+
+  // As an alternative, setInterval works and keeps firing.
+  const ms = 1000;
+  setInterval(renderLoop, ms);
 
   const cb = () => {
     postMessage({ action: action.KILL_ME });
