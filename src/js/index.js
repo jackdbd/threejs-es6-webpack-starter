@@ -40,7 +40,7 @@ import "../css/index.css";
   const onMessage = event => {
     //   console.log("Main thread received", event.data);
 
-    console.log(event.data.action);
+    console.log(`%c${event.data.action}`, "color: green");
     switch (event.data.action) {
       case action.NOTIFY:
         console.log(event.data.payload.info);
@@ -73,4 +73,26 @@ import "../css/index.css";
   };
   const transfer = [offscreenCanvas];
   worker.postMessage(message, transfer);
+
+  let useBitmapCanvas = false;
+
+  // const renderLoop = tick => {
+  //   worker.postMessage({
+  //     action: action.REQUEST_FRAME,
+  //     payload: { useBitmapCanvas },
+  //   });
+  //   useBitmapCanvas = !useBitmapCanvas;
+  //   requestAnimationFrame(renderLoop);
+  // };
+
+  // renderLoop(performance.now());
+
+  const renderLoop = () => {
+    worker.postMessage({
+      action: action.REQUEST_FRAME,
+      payload: { useBitmapCanvas },
+    });
+    useBitmapCanvas = !useBitmapCanvas;
+  };
+  setInterval(renderLoop, 1000);
 })();
