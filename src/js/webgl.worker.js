@@ -41,12 +41,7 @@ const makeScene = name => {
 };
 
 const makeRenderer = canvas => {
-  // const canvas = new OffscreenCanvas(512, 256);
-  // canvas.aaa = "offscreen-canvas";
   const gl = canvas.getContext("webgl");
-  console.warn("GL", gl);
-  // gl.drawingBufferWidth
-  // gl.drawingBufferHeight
   const renderer = new THREE.WebGLRenderer({
     antialias: true,
     canvas,
@@ -63,15 +58,7 @@ const makeRenderer = canvas => {
   // style of the canvas.
   const updateStyle = false;
   renderer.setSize(gl.drawingBufferWidth, gl.drawingBufferHeight, updateStyle);
-
   renderer.shadowMap.enabled = true;
-
-  // console.warn("OFFSCREEN", canvas, gl, renderer);
-
-  // const message = { payload: renderer };
-  // postMessage(message);
-
-  // return { canvas, gl, renderer };
   return renderer;
 };
 
@@ -92,7 +79,6 @@ const makeCamera = (canvas, scene) => {
 };
 
 // function render(renderer, scene, camera, canvas) {
-//   console.warn("render", canvas.aaa);
 //   renderer.render(scene, camera);
 // }
 
@@ -129,8 +115,7 @@ const draw = canvas => {
 
 const init = payload => {
   const { canvas, sceneName } = payload;
-  console.log(action.INIT, "self", self, "payload", payload);
-  const delay = 5000;
+  console.log(action.INIT, "self", self);
 
   // draw(canvas);
 
@@ -158,15 +143,31 @@ const init = payload => {
   });
   renderer.render(scene, camera);
 
-  // postMessage({
-  //   action: action.NOTIFY,
-  //   payload: { info: `I will tell you to terminate me in ${delay}ms` },
-  // });
+  // Either we do nothing and let the scene rendered in the offscreen canvas be
+  // sent to #onscreen-canvas automatically and asynchronously, or we explicitly
+  // call the transferToImageBitmap method on the offscreen canvas and send the
+  // rendered scene to #bitmap-canvas synchronously.
+  // https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas
+  const useBitmapCanvas = true;
 
-  // const cb = () => {
-  //   postMessage({ action: action.KILL_ME });
-  // };
-  // setTimeout(cb, delay);
+  if (useBitmapCanvas) {
+    const bitmap = canvas.transferToImageBitmap();
+    postMessage({
+      action: action.BITMAP,
+      payload: { bitmap },
+    });
+  }
+
+  const delay = 10000;
+  postMessage({
+    action: action.NOTIFY,
+    payload: { info: `I will tell you to terminate me in ${delay}ms` },
+  });
+
+  const cb = () => {
+    postMessage({ action: action.KILL_ME });
+  };
+  setTimeout(cb, delay);
 };
 
 onmessage = event => {

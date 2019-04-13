@@ -33,6 +33,10 @@ import "../css/index.css";
   const canvasId = `#${canvasName}`;
   const onscreenCanvas = document.querySelector(canvasId);
 
+  const canvasBitmap = document
+    .getElementById("bitmap-canvas")
+    .getContext("bitmaprenderer");
+
   const onMessage = event => {
     //   console.log("Main thread received", event.data);
 
@@ -40,6 +44,9 @@ import "../css/index.css";
     switch (event.data.action) {
       case action.NOTIFY:
         console.log(event.data.payload.info);
+        break;
+      case action.BITMAP:
+        canvasBitmap.transferFromImageBitmap(event.data.payload.bitmap);
         break;
       case action.KILL_ME:
         worker.terminate();
