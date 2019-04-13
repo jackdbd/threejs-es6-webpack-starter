@@ -57,6 +57,8 @@ import "../css/index.css";
   worker.onmessage = onMessage;
   worker.onerror = onError;
 
+  onscreenCanvas.setAttribute("width", "600");
+  onscreenCanvas.setAttribute("height", "400");
   const offscreenCanvas = onscreenCanvas.transferControlToOffscreen();
   const message = {
     action: action.INIT,

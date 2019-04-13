@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import * as action from "./actions";
 
+// let offscreenScene;
 const makeScene = name => {
   const scene = new THREE.Scene();
   scene.autoUpdate = true;
@@ -10,14 +11,40 @@ const makeScene = name => {
   // Any Three.js object in the scene (and the scene itself) can have a name.
   scene.name = name;
 
-  const message = { payload: scene };
-  postMessage(message);
+  const side = 30;
+  const geometry = new THREE.CubeGeometry(side, side, side);
+  const material = new THREE.MeshLambertMaterial({ color: 0xfbbc05 });
+  const cube = new THREE.Mesh(geometry, material);
+  cube.name = "Cube";
+  cube.position.set(0, side / 2, 0);
+  scene.add(cube);
+
+  const gridHelper = new THREE.GridHelper(200, 16);
+  gridHelper.name = "Floor GridHelper";
+  scene.add(gridHelper);
+
+  // XYZ axes helper (XYZ axes are RGB colors, respectively)
+  const axesHelper = new THREE.AxesHelper(75);
+  axesHelper.name = "XYZ AzesHelper";
+  scene.add(axesHelper);
+
+  const dirLight = new THREE.DirectionalLight(0x4682b4, 1); // steelblue
+  dirLight.position.set(120, 30, -200);
+  dirLight.castShadow = true;
+  dirLight.shadow.camera.near = 10;
+  scene.add(dirLight);
+
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
+  scene.add(ambientLight);
+
+  return scene;
 };
 
 const makeRenderer = canvas => {
   // const canvas = new OffscreenCanvas(512, 256);
   // canvas.aaa = "offscreen-canvas";
   const gl = canvas.getContext("webgl");
+  console.warn("GL", gl);
   // gl.drawingBufferWidth
   // gl.drawingBufferHeight
   const renderer = new THREE.WebGLRenderer({
@@ -39,15 +66,16 @@ const makeRenderer = canvas => {
 
   renderer.shadowMap.enabled = true;
 
-  console.warn("OFFSCREEN", canvas, gl, renderer);
+  // console.warn("OFFSCREEN", canvas, gl, renderer);
 
-  const message = { payload: renderer };
-  postMessage(message);
+  // const message = { payload: renderer };
+  // postMessage(message);
 
   // return { canvas, gl, renderer };
+  return renderer;
 };
 
-const makeCamera = canvas => {
+const makeCamera = (canvas, scene) => {
   const fov = 75;
   // There are no clientWith and clientHeight in an OffscreenCanvas
   // const { clientWidth, clientHeight } = canvas;
@@ -58,11 +86,9 @@ const makeCamera = canvas => {
   const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
   camera.name = "my-camera";
   camera.position.set(100, 100, 100);
-  // camera.lookAt(scene.position);
+  camera.lookAt(scene.position);
 
-  const message = { payload: camera };
-  postMessage(message);
-  // return camera;
+  return camera;
 };
 
 // function render(renderer, scene, camera, canvas) {
@@ -77,40 +103,70 @@ const makeCamera = canvas => {
 // const ms = 1000;
 // setInterval(cb, ms);
 
+const draw = canvas => {
+  const ctx = canvas.getContext("2d");
+
+  const x0 = 0;
+  const y0 = 0;
+  const x1 = canvas.width;
+  const y1 = canvas.height / 2;
+  const gradient = ctx.createLinearGradient(x0, y0, x1, y1);
+  gradient.addColorStop(0, "red");
+  gradient.addColorStop(1, "blue");
+  ctx.fillStyle = gradient;
+
+  const x = 0;
+  const y = 0;
+  const width = ctx.canvas.width;
+  const height = ctx.canvas.height / 2;
+  ctx.fillRect(x, y, width, height);
+
+  postMessage({
+    action: action.NOTIFY,
+    payload: { info: "Finished drawing canvas in worker thread" },
+  });
+};
+
 const init = payload => {
   const { canvas, sceneName } = payload;
   console.log(action.INIT, "self", self, "payload", payload);
   const delay = 5000;
 
+  // draw(canvas);
+
   postMessage({
     action: action.NOTIFY,
     payload: { info: "building the scene" },
   });
-  // makeScene(sceneName);
+  const scene = makeScene(sceneName);
 
   postMessage({
     action: action.NOTIFY,
     payload: { info: "building the renderer" },
   });
-  // makeRenderer(canvas);
+  const renderer = makeRenderer(canvas);
 
   postMessage({
     action: action.NOTIFY,
     payload: { info: "building the camera" },
   });
-  // makeCamera(canvas);
+  const camera = makeCamera(canvas, scene);
 
-  const msg0 = {
+  postMessage({
     action: action.NOTIFY,
-    payload: { info: `I will tell you to terminate me in ${delay}ms` },
-  };
-  postMessage(msg0);
+    payload: { info: "render scene in offscreen canvas" },
+  });
+  renderer.render(scene, camera);
 
-  const cb = () => {
-    const msg1 = { action: action.KILL_ME };
-    postMessage(msg1);
-  };
-  setTimeout(cb, delay);
+  // postMessage({
+  //   action: action.NOTIFY,
+  //   payload: { info: `I will tell you to terminate me in ${delay}ms` },
+  // });
+
+  // const cb = () => {
+  //   postMessage({ action: action.KILL_ME });
+  // };
+  // setTimeout(cb, delay);
 };
 
 onmessage = event => {
