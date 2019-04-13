@@ -188,22 +188,30 @@ const render = (
 ) => {
   renderer.render(scene, camera);
 
+  let message;
+  let bitmap;
+  let transfer;
   if (useBitmapCanvas) {
     postMessage({
       action: action.NOTIFY,
       payload: { info: "render scene in #bitmap-canvas" },
     });
-    const bitmap = canvas.transferToImageBitmap();
-    postMessage({
+    bitmap = canvas.transferToImageBitmap();
+    message = {
       action: action.BITMAP,
       payload: { bitmap },
-    });
+    };
+    transfer = [bitmap];
+    postMessage(message, transfer);
   } else {
     rendererCleared.clear();
-    postMessage({
+    bitmap = canvasCleared.transferToImageBitmap();
+    message = {
       action: action.BITMAP,
-      payload: { bitmap: canvasCleared.transferToImageBitmap() },
-    });
+      payload: { bitmap },
+    };
+    transfer = [bitmap];
+    postMessage(message, transfer);
     postMessage({
       action: action.NOTIFY,
       payload: { info: "render scene in #onscreen-canvas" },
