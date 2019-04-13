@@ -8,8 +8,11 @@ Three.js ES6 starter project with a sane webpack configuration.
 
 ## Features
 
-- ES6 with [babel-loader](https://github.com/babel/babel-loader)
+- ES6 support with [babel-loader](https://github.com/babel/babel-loader)
 - JS linting + code formatting with [eslint](https://eslint.org/) and [prettier](https://github.com/prettier/prettier)
+- Offscreen canvas rendering in a web worker with [OffscreenCanvas](https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas)
+- CSS support with [style-loader](https://github.com/webpack-contrib/style-loader)
+  and [css-loader](https://github.com/webpack-contrib/css-loader)
 - CSS linting with [stylelint](https://stylelint.io/)
 - Controls with [orbit-controls-es6](https://www.npmjs.com/package/orbit-controls-es6)
 - GUI with [dat.GUI](https://github.com/dataarts/dat.gui)
@@ -27,6 +30,7 @@ Three.js ES6 starter project with a sane webpack configuration.
   - [terser-webpack-plugin](https://github.com/webpack-contrib/terser-webpack-plugin/)
   - [webpack-bundle-analyzer](https://github.com/th0r/webpack-bundle-analyzer)
   - [webpack-glsl-loader](https://github.com/grieve/webpack-glsl-loader)
+  - [worker-loader](https://github.com/webpack-contrib/worker-loader)
 
 ## Installation
 

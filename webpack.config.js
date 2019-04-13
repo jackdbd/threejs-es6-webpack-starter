@@ -27,7 +27,14 @@ const rules = [
   {
     test: /\.worker\.js$/,
     include: [path.join(__dirname, "src", "js")],
-    use: { loader: "worker-loader" },
+    use: [
+      {
+        loader: "worker-loader",
+        options: {
+          name: "[name].[hash].js",
+        },
+      },
+    ],
   },
   // rule for stylesheets
   {

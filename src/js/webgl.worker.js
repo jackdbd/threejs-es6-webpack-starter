@@ -176,6 +176,7 @@ const init = payload => {
  *
  * @see https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas
  * @see https://hacks.mozilla.org/2016/01/webgl-off-the-main-thread/
+ * @see https://wiki.whatwg.org/wiki/OffscreenCanvas.requestAnimationFrame
  */
 const render = (
   renderer,
