@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "orbit-controls-es6": "2.0.0",
-    "three": "0.102.1",
+    "three": "0.108.0",
     "three.interaction": "0.2.2"
   },
   "devDependencies": {
