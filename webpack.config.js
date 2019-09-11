@@ -3,7 +3,7 @@ const webpack = require("webpack");
 
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
   .BundleAnalyzerPlugin;
-const CleanWebpackPlugin = require("clean-webpack-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const CompressionPlugin = require("compression-webpack-plugin");
 const DuplicatePackageCheckerPlugin = require("duplicate-package-checker-webpack-plugin");
 const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
@@ -72,7 +72,7 @@ const rules = [
             quality: 65,
           },
           pngquant: {
-            quality: "65-90",
+            quality: [0.65, 0.90],
             speed: 4,
           },
         },
