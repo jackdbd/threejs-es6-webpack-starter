@@ -5,10 +5,11 @@ import { Interaction } from "three.interaction";
 
 import * as Detector from "../js/vendor/Detector";
 import * as DAT from "../js/vendor/dat.gui.min";
-import * as checkerboard from "../textures/checkerboard.jpg";
-import * as star from "../textures/star.png";
-import * as vertexShader from "../glsl/vertexShader.glsl";
-import * as fragmentShader from "../glsl/fragmentShader.glsl";
+
+const checkerboard = require("../textures/checkerboard.jpg");
+const star = require("../textures/star.png");
+const vertexShader = require("../glsl/vertexShader.glsl");
+const fragmentShader = require("../glsl/fragmentShader.glsl");
 
 const CAMERA_NAME = "Perspective Camera";
 const DIRECTIONAL_LIGHT_NAME = "Directional Light";
@@ -495,6 +496,9 @@ export class Application {
   }
 }
 
+/**
+ * Create a particle for the particle system.
+ */
 function makeParticle(d, i) {
   const particle = new THREE.Vector3();
   particle.x = THREE.Math.randFloatSpread(d.spread.x);

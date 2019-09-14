@@ -2,21 +2,18 @@
 
 [![Build Status](https://travis-ci.org/jackdbd/threejs-es6-webpack-starter.svg?branch=master)](https://travis-ci.org/jackdbd/threejs-es6-webpack-starter) [![Renovate enabled](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://renovateapp.com/) [![Code style prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 
-A minimal three.js ES6 starter project that uses webpack.
+Three.js ES6 starter project with a sane webpack configuration.
 
 ![A GIF file showing a demo of the starter project](https://github.com/jackdbd/threejs-es6-webpack-starter/blob/master/demo.gif "A scene with a spotlight, a directional light, an ambient light, a particle system, a custom material and several helpers.")
 
 ## Features
 
-- ES6 support with [babel-loader](https://github.com/babel/babel-loader)
-- Code formatting with [prettier](https://github.com/prettier/prettier)
-- CSS support with [style-loader](https://github.com/webpack-contrib/style-loader)
-  and [css-loader](https://github.com/webpack-contrib/css-loader)
+- ES6 with [babel-loader](https://github.com/babel/babel-loader)
+- JS linting + code formatting with [eslint](https://eslint.org/) and [prettier](https://github.com/prettier/prettier)
 - CSS linting with [stylelint](https://stylelint.io/)
 - Controls with [orbit-controls-es6](https://www.npmjs.com/package/orbit-controls-es6)
 - GUI with [dat.GUI](https://github.com/dataarts/dat.gui)
-- GLSL shaders support via [webpack-glsl-loader](https://www.npmjs.com/package/webpack-glsl-loader)
-- Tests with [jest](https://jestjs.io/en/), [jest-dom](https://github.com/gnapse/jest-dom)
+- Tests with [jest](https://jestjs.io/en/)
 - Webpack configuration with:
   - [@packtracker/webpack-plugin](https://github.com/packtracker/webpack-plugin) (bundle sizes [here](https://app.packtracker.io/organizations/129/projects/110))
   - [clean-webpack-plugin](https://github.com/johnagan/clean-webpack-plugin)
@@ -38,10 +35,10 @@ yarn
 
 ## Usage (development)
 
-Run `webpack-dev-server` (all bundles will be served from memory)
+Run `webpack-dev-server` (js/css bundles will be served from memory)
 
 ```shell
-yarn dev
+yarn start
 ```
 
 Go to `localhost:8080` to see your project live!
@@ -65,7 +62,7 @@ yarn stats  # uses webpack-bundle-analyzer as CLI
 
 or push to a CI (e.g. [Travis CI](https://travis-ci.com/)), let it build your project and analyze your bundles online at [packtracker.io](https://packtracker.io/).
 
-Check outdated dependencies:
+Check outdated dependencies with [npm-check-updates](https://github.com/tjunnone/npm-check-updates):
 
 ```shell
 yarn ncu
@@ -75,6 +72,12 @@ Update all outdated dependencies at once:
 
 ```shell
 yarn ncuu
+```
+
+Or let [updtr](https://github.com/peerigon/updtr) update all your dependencies for you:
+
+```shell
+yarn updtr
 ```
 
 ## Credits
