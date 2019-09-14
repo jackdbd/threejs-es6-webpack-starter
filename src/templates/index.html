@@ -17,10 +17,14 @@
       </div>
       <div class="table-of-contents">
         <ul>
-          <li><a href="<%= PUBLIC_URL %>/about.html">About</a></li>
+          <li>
+            <a data-cy="link-to-about-page" href="<%= PUBLIC_URL %>/about.html"
+              >About</a
+            >
+          </li>
         </ul>
       </div>
-      <div class="canvas-container"></div>
+      <div data-cy="canvas-container" class="canvas-container"></div>
     </div>
     <!-- bundle.js is injected here by html-webpack-plugin -->
   </body>

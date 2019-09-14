@@ -1,9 +1,8 @@
-node_modules/
-
 /build/*
 # unignore the favicon
 !/build/favicon.ico
-
-coverage/
+/coverage/
+/node_modules/
+/cypress/videos/
 
 *.log

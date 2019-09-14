@@ -100,6 +100,7 @@ export class Application {
     const app = elements[0];
     const div = document.createElement("div");
     div.setAttribute("class", "canvas-container");
+    div.setAttribute("data-cy", "canvas-container");
     app.appendChild(div);
     this.container = div;
   }
@@ -112,6 +113,7 @@ export class Application {
     const app = elements[0];
     const div = document.createElement("div");
     div.setAttribute("class", "tooltip");
+    div.setAttribute("data-cy", "tooltip");
     app.appendChild(div);
     this.tooltip = div;
   }

@@ -1,0 +1,7 @@
+{
+  "baseUrl": "http://localhost:8080",
+  "env": {
+    "test-environment-variable": "123"
+  },
+  "projectId": "7trrtp"
+}
