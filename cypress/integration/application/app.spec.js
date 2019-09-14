@@ -31,10 +31,9 @@ describe("Three.js application", () => {
   context("Tooltip", () => {
     const selector = "[data-cy=tooltip]";
     it("exists but it is invisible at the startup", () => {
-      const tooltip = cy.get(selector);
-      tooltip.should("exist");
-      tooltip.should("not.be.visible");
-      // tooltip.should("be.hidden"); // in alternative to "not.be.visible"
+      cy.get(selector)
+        .should("exist")
+        .and("be.hidden");
     });
   });
 
@@ -54,9 +53,27 @@ describe("Three.js application", () => {
     it("zooms in the cube in the center", () => {
       const x = viewportWidth / 2;
       const y = viewportHeight / 2;
-      zoomInAt(selector, [x, y], 40);
+
+      const mousemoveOptions = {
+        clientX: x,
+        clientY: y,
+      };
+
+      const wheelOptions = {
+        clientX: x,
+        clientY: y,
+        deltaX: 0,
+        deltaY: -53,
+        deltaZ: 0,
+        deltaMode: 0,
+      };
+
       // TODO: I tried to assert that when mousemove-ing on the cube, the
       // tooltip becomes visible
+      cy.get(selector)
+        .trigger("mousemove", mousemoveOptions)
+        .trigger("wheel", wheelOptions)
+        .trigger("mousemove", mousemoveOptions);
     });
   });
 });
