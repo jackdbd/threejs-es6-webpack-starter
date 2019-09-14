@@ -1,0 +1,99 @@
+:root {
+  /* COLORS */
+  --colors-background-primary: #374047;
+  --colors-background-secondary: #5f6e78;
+  --colors-header: #5f6e78;
+
+  /* TYPOGRAPHY */
+  --typography-font-family-primary: "InknutAntiqua", sans-serif;
+  --typography-font-family-secondary: "Raleway";
+}
+
+/* Define font-face rules
+ * If you have multiple font formats, put most modern formats first.
+ * A single font-family can have multiple fonts (e.g. for bold, italic).
+ */
+
+@font-face {
+  font-family: InknutAntiqua;
+  font-style: normal;
+  font-weight: normal;
+  /* stylelint-disable-next-line declaration-colon-newline-after */
+  src: url(./fonts/InknutAntiqua-Regular.ttf)
+    format("truetype");
+}
+
+@font-face {
+  font-family: InknutAntiqua;
+  font-style: normal;
+  font-weight: bold;
+  /* stylelint-disable-next-line declaration-colon-newline-after */
+  src: url(./fonts/InknutAntiqua-ExtraBold.ttf)
+    format("truetype");
+}
+
+/* other cool fonts Syncopate, Quicksand, Aclonica */
+
+body {
+  font-family: var(--typography-font-family-primary);
+  height: 100vh;
+  margin: 0;
+  overflow: hidden;
+  width: 100vw;
+}
+
+li {
+  font-family: var(--typography-font-family-secondary);
+}
+
+.app {
+  font-family: var(--typography-font-family-primary);
+  flex-direction: column;
+  display: flex;
+  height: 100%;
+  width: 100%;
+}
+
+.header {
+  background-color: var(--colors-background-primary);
+  display: flex;
+}
+
+.table-of-contents {
+  background-color: var(--colors-background-secondary);
+  display: flex;
+}
+
+.canvas-container {
+  background-color: var(--colors-background-primary);
+  display: flex;
+  height: 100%;
+  width: 100%;
+}
+
+.canvas-container > canvas {
+  height: 100%;
+  width: 100%;
+}
+
+.tooltip {
+  background: var(--colors-background-secondary);
+  border: 0;
+  border-radius: 1em;
+  font-family: var(--typography-font-family-secondary);
+  font-size: 1rem;
+  font-weight: bold;
+  height: auto;
+  padding: 0.5rem;
+  position: absolute;
+  text-align: center;
+  visibility: hidden;
+  width: auto;
+}
+
+.tooltip:hover {
+  opacity: 0.8;
+}
+
+
+/*# sourceMappingURL=b9aa928a493405cbe6a7.css.map*/

@@ -1,0 +1,14 @@
+{
+  "version": "5.0.0",
+  "name": "threejs-es6-webpack-starter",
+  "description": "A starter project for Three.js with support for ES6 and Webpack 4",
+  "icons": {
+    "60": "/assets/firefox_app_60x60.png",
+    "128": "/assets/firefox_app_128x128.png",
+    "512": "/assets/firefox_app_512x512.png"
+  },
+  "developer": {
+    "name": "jackdbd",
+    "url": "http://www.giacomodebidda.com/"
+  }
+}
