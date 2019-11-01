@@ -9223,12 +9223,10 @@ ora@^3.4.0:
     strip-ansi "^5.2.0"
     wcwidth "^1.0.1"
 
-orbit-controls-es6@2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/orbit-controls-es6/-/orbit-controls-es6-2.0.0.tgz#c11d52e918e1c9944e479da075099dff7efe721a"
-  integrity sha512-1daiSVU/GN2fIjIMtBjVCiCSZh8eOOPyOe5GjHioDMnDpQzDbGRfux5idM54Y3BdIn8QTv3KqHK1suVzEgRC0A==
-  dependencies:
-    three "0.97.0"
+orbit-controls-es6@2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/orbit-controls-es6/-/orbit-controls-es6-2.0.1.tgz#43ee3d470007364106aaae337edbe4a74eedc041"
+  integrity sha512-Np+XREwlIFl7tSpMSqHuJ20ySonCwCJO+vxyMGmijCJv5+I1SqGQMNfn2fwJC3TVvakXRIxa4ayxJdzeF5dPAA==
 
 original@^1.0.0:
   version "1.0.2"
@@ -12030,11 +12028,6 @@ three@0.108.0:
   version "0.108.0"
   resolved "https://registry.yarnpkg.com/three/-/three-0.108.0.tgz#53d26597c7932f214bb43f4655e566d2058143b5"
   integrity sha512-d1ysIXwi8qTlbmMwrTxi5pYiiYIflEr0e48krP0LAY8ndS8c6fkLHn6NvRT+o76/Fs9PBLxFViuI62iGVWwwlg==
-
-three@0.97.0:
-  version "0.97.0"
-  resolved "https://registry.yarnpkg.com/three/-/three-0.97.0.tgz#76141e1b0ace14246fe9198a458fefddc98a4e30"
-  integrity sha512-ctZF79O1R2aMIDnz9cV5GUIONyFnYvfQKg4+EAwEVaEr1mgy99rglstH6hhRdIThu3SOa4Ns5da/Ee5fTbWc9A==
 
 throat@^4.0.0:
   version "4.1.0"

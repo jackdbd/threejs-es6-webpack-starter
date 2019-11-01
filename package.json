@@ -34,7 +34,7 @@
     "webhint:report": "python -m webbrowser ~/repos/threejs-es6-webpack-starter/hint-report/https-jackdbd-github-io-threejs-es6-webpack-starter/index.html"
   },
   "dependencies": {
-    "orbit-controls-es6": "2.0.0",
+    "orbit-controls-es6": "2.0.1",
     "three": "0.108.0",
     "three.interaction": "0.2.2"
   },
