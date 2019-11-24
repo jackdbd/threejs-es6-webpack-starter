@@ -1,6 +1,7 @@
 # three.js-es6-webpack-starter
 
 [![Build Status](https://travis-ci.org/jackdbd/threejs-es6-webpack-starter.svg?branch=master)](https://travis-ci.org/jackdbd/threejs-es6-webpack-starter) [![Renovate enabled](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://renovateapp.com/) [![Code style prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fjackdbd%2Fthreejs-es6-webpack-starter.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fjackdbd%2Fthreejs-es6-webpack-starter?ref=badge_shield)
 
 Three.js ES6 starter project with a sane webpack configuration.
 
@@ -92,3 +93,7 @@ The code for `vertexShader.glsl` and `fragmentShader.glsl` is taken from
 
 The star used in the particle system is the PNG preview of [this image](https://commons.wikimedia.org/wiki/File:Star_icon-72a7cf.svg) by Offnfopt
 (Public domain or CC0, via Wikimedia Commons).
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fjackdbd%2Fthreejs-es6-webpack-starter.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fjackdbd%2Fthreejs-es6-webpack-starter?ref=badge_large)
