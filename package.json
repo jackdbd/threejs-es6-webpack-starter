@@ -65,7 +65,7 @@
     "jest": "24.9.0",
     "jest-cli": "^24.9.0",
     "mini-css-extract-plugin": "0.8.0",
-    "npm-check-updates": "3.1.23",
+    "npm-check-updates": "3.2.2",
     "prettier": "1.18.2",
     "rimraf": "3.0.0",
     "style-loader": "1.0.0",
