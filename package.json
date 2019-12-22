@@ -55,7 +55,7 @@
     "duplicate-package-checker-webpack-plugin": "3.0.0",
     "eslint": "6.4.0",
     "eslint-config-prettier": "6.3.0",
-    "eslint-plugin-prettier": "3.1.0",
+    "eslint-plugin-prettier": "3.1.2",
     "favicons-webpack-plugin": "1.0.2",
     "file-loader": "4.2.0",
     "gh-pages": "2.1.1",
