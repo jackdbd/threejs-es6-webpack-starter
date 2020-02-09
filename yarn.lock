@@ -12026,10 +12026,10 @@ three.interaction@0.2.2:
   resolved "https://registry.yarnpkg.com/three.interaction/-/three.interaction-0.2.2.tgz#01ce80ba7cacd24ada09dc57f1d64e9dd5d7a0b0"
   integrity sha512-yWQ5L0SUl+TzxVGFRNZAf4hpRF84zYZVpcyGstzhO0vbRdUDobPiPV6QmUh0JZVS5gEUguAd09ONyNJEczMOyA==
 
-three@0.108.0:
-  version "0.108.0"
-  resolved "https://registry.yarnpkg.com/three/-/three-0.108.0.tgz#53d26597c7932f214bb43f4655e566d2058143b5"
-  integrity sha512-d1ysIXwi8qTlbmMwrTxi5pYiiYIflEr0e48krP0LAY8ndS8c6fkLHn6NvRT+o76/Fs9PBLxFViuI62iGVWwwlg==
+three@0.113.2:
+  version "0.113.2"
+  resolved "https://registry.yarnpkg.com/three/-/three-0.113.2.tgz#04791d491fe4359330f9dbe7b767db18bfb35d67"
+  integrity sha512-x3vrKW41/UtbWbWduWKGlfIc043SvHWr3YltehYq+UGb9YglQ2oztNGvl2eut05JtNSmP11Mh3t6Xak5/0e+Fg==
 
 three@0.97.0:
   version "0.97.0"
