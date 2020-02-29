@@ -4,12 +4,30 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><%= APP_NAME %></title>
+    <!-- Favicons -->
+    <!-- FaviconsWebpackPlugin together with HtmlWebpackPlugin should be able to
+      inject the link tags for the favicons, but there must be something wrong
+      with my config -->
+    <!-- https://github.com/jantimon/favicons-webpack-plugin#html-injection -->
+    <link rel="shortcut icon" href="/assets/favicon.ico">
+    <link rel="icon" sizes="16x16 32x32 64x64" href="/assets/favicon.ico">
+    <link rel="icon" type="image/png" sizes="96x96" href="/assets/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="64x64" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+    <!-- Google fonts -->
     <link
       href="https://fonts.googleapis.com/css?family=Open+Sans|Raleway"
       rel="stylesheet"
     />
+    <!-- Preload web worker script. I would prefer to use one of the following
+      webpack plugins, but it seems that they rely on some old HtmlWebpackPlugin
+      hooks. -->
+    <!-- https://github.com/GoogleChromeLabs/preload-webpack-plugin -->
+    <!-- https://github.com/jantimon/resource-hints-webpack-plugin -->
+    <!-- https://github.com/numical/script-ext-html-webpack-plugin -->
     <link type="preload" as="script" href="<%= PUBLIC_URL %>/webgl-worker.js" />
-    <!-- bundle.css is injected here by html-webpack-plugin -->
+    <!-- CSS bundle injected here by html-webpack-plugin -->
   </head>
   <body>
     <div class="app">
@@ -35,6 +53,6 @@
         <canvas id="bitmap-canvas">
       </div>
     </div>
-    <!-- bundle.js is injected here by html-webpack-plugin -->
+    <!-- JS bundle injected here by html-webpack-plugin -->
   </body>
 </html>

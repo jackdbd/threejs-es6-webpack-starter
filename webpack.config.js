@@ -180,15 +180,10 @@ module.exports = (env, argv) => {
       strict: false,
       verbose: true,
     }),
-    new FaviconsWebpackPlugin({
-      inject: true,
-      logo: path.join(__dirname, "src", "textures", "star.png"),
-      title: APP_NAME,
-    }),
     new HtmlWebpackPlugin({
       chunks: ["home"],
       filename: "index.html",
-      hash: false,
+      hash: true,
       template: path.join(__dirname, "src", "templates", "index.html"),
       templateParameters: {
         APP_NAME,
@@ -204,8 +199,16 @@ module.exports = (env, argv) => {
         PUBLIC_URL,
       },
     }),
+    // html-webpack-plugin must come BEFORE favicons-webpack-plugin in the
+    // plugins array.
+    // https://github.com/jantimon/favicons-webpack-plugin#html-injection
+    new FaviconsWebpackPlugin({
+      inject: true,
+      logo: path.join(__dirname, "src", "textures", "star.png"),
+      title: APP_NAME,
+    }),
     new MiniCssExtractPlugin({
-      filename: "[hash].css",
+      filename: "[name].[hash].css",
       chunkFilename: "[id].bundle.css",
     }),
     new PacktrackerPlugin({
@@ -254,7 +257,7 @@ module.exports = (env, argv) => {
     },
     optimization,
     output: {
-      filename: "[name].js",
+      filename: "[name].[hash].js",
       path: path.join(__dirname, "build"),
       publicPath: "/",
       sourceMapFilename: "[file].[hash].map",
@@ -280,7 +283,7 @@ module.exports = (env, argv) => {
         // app. Use only if you're sure that all required versions are
         // compatible, at least in the context of your app
         // https://github.com/darrenscerri/duplicate-package-checker-webpack-plugin#resolving-duplicate-packages-in-your-bundle
-        three: path.resolve(__dirname, "node_modules/three"),
+        three: path.resolve(__dirname, "node_modules", "three"),
       },
       extensions: [".js"],
     },
