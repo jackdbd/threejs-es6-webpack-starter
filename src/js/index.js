@@ -1,5 +1,5 @@
 import { Application } from "./application";
-import WebGLWorker from "./webgl.worker.js";
+import WebGLWorker from "./webgl.worker";
 import * as action from "./actions";
 
 import "../css/index.css";

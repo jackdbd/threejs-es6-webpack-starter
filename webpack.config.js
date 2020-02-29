@@ -31,7 +31,7 @@ const rules = [
       {
         loader: "worker-loader",
         options: {
-          name: "[name].[hash].js",
+          name: path.join("workers", "[name].[hash].js"),
         },
       },
     ],

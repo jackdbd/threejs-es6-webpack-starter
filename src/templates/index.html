@@ -20,13 +20,15 @@
       href="https://fonts.googleapis.com/css?family=Open+Sans|Raleway"
       rel="stylesheet"
     />
-    <!-- Preload web worker script. I would prefer to use one of the following
-      webpack plugins, but it seems that they rely on some old HtmlWebpackPlugin
-      hooks. -->
+    <!-- TODO: preload web worker script with a HTTP resource hint -->
+    <!-- Next line seems NOT to trigger a preload request -->
+    <!-- <link type="preload" as="script" href="/workers/webgl-worker.js" /> -->
+    <!-- I trued to use one all the following webpack plugins, but they rely on
+      some old HtmlWebpackPlugin hook function that fails with the version I
+      have. -->
     <!-- https://github.com/GoogleChromeLabs/preload-webpack-plugin -->
     <!-- https://github.com/jantimon/resource-hints-webpack-plugin -->
     <!-- https://github.com/numical/script-ext-html-webpack-plugin -->
-    <link type="preload" as="script" href="<%= PUBLIC_URL %>/webgl-worker.js" />
     <!-- CSS bundle injected here by html-webpack-plugin -->
   </head>
   <body>
