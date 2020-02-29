@@ -1,15 +1,15 @@
 const path = require("path");
-const webpack = require("webpack");
-
-const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
-  .BundleAnalyzerPlugin;
+const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
+const CircularDependencyPlugin = require("circular-dependency-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const CompressionPlugin = require("compression-webpack-plugin");
+const { DefinePlugin, HotModuleReplacementPlugin } = require("webpack");
 const DuplicatePackageCheckerPlugin = require("duplicate-package-checker-webpack-plugin");
 const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const PacktrackerPlugin = require("@packtracker/webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
 
 const APP_NAME = "Three.js ES6 Webpack 4 Project Starter";
 
@@ -48,19 +48,25 @@ const rules = [
   // rule for .ttf font files
   {
     test: /\.(ttf)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+    include: [path.join(__dirname, "src", "fonts")],
     use: {
       loader: "file-loader",
       options: {
-        name: "./fonts/[name].[ext]",
+        name: path.join("fonts", "[name].[ext]"),
       },
     },
   },
   // rule for textures (images)
   {
-    test: /\.(jpe?g|png)$/i,
+    test: /.(jpe?g|png)$/i,
     include: path.join(__dirname, "src", "textures"),
     loaders: [
-      "file-loader",
+      {
+        loader: "file-loader",
+        options: {
+          name: path.join("textures", "[name].[hash].[ext]"),
+        },
+      },
       {
         loader: "image-webpack-loader",
         query: {
@@ -69,10 +75,10 @@ const rules = [
           },
           mozjpeg: {
             progressive: true,
-            quality: 65,
+            quality: 85,
           },
           pngquant: {
-            quality: [0.65, 0.90],
+            quality: [0.65, 0.9],
             speed: 4,
           },
         },
@@ -82,21 +88,36 @@ const rules = [
 ];
 
 const optimization = {
+  minimizer: [
+    new TerserPlugin({
+      // Enable file caching
+      cache: true,
+      // Use multi-process parallel running (speeds up the build)
+      parallel: true,
+      // Use source maps to map error message locations to modules (slows down the build)
+      sourceMap: true,
+    }),
+  ],
   splitChunks: {
+    automaticNameDelimiter: "~",
     cacheGroups: {
-      js: {
-        test: /\.js$/,
-        name: "commons",
-        chunks: "all",
-        minChunks: 7,
-      },
-      css: {
-        test: /\.(css)$/,
-        name: "commons",
-        chunks: "all",
+      default: {
         minChunks: 2,
+        priority: -20,
+        reuseExistingChunk: true,
+      },
+      vendors: {
+        priority: -10,
+        test: /[\\/]node_modules[\\/]/,
       },
     },
+    chunks: "async",
+    maxAsyncRequests: 5,
+    maxInitialRequests: 3,
+    maxSize: 0,
+    minChunks: 1,
+    minSize: 30000,
+    name: true,
   },
 };
 
@@ -125,12 +146,14 @@ module.exports = (env, argv) => {
     new BundleAnalyzerPlugin({
       analyzerMode: "disabled",
       generateStatsFile: true,
+      statsFilename: "stats.json",
     }),
+    new CircularDependencyPlugin(),
     new CleanWebpackPlugin({
       cleanStaleWebpackAssets: true,
       verbose: true,
     }),
-    new webpack.DefinePlugin({
+    new DefinePlugin({
       APP_NAME: JSON.stringify(APP_NAME),
     }),
     new DuplicatePackageCheckerPlugin({
@@ -179,13 +202,24 @@ module.exports = (env, argv) => {
     plugins.push(
       new CompressionPlugin({
         algorithm: "gzip",
-        test: /\.(js|html)$/,
+        filename: "[path].gz[query]",
+        test: /\.(css|html|js|svg|ttf)$/,
+        threshold: 10240,
+        minRatio: 0.8,
+      })
+    );
+    plugins.push(
+      new CompressionPlugin({
+        algorithm: "brotliCompress",
+        compressionOptions: { level: 11 },
+        filename: "[path].br[query]",
+        test: /\.(css|html|js|svg|ttf)$/,
         threshold: 10240,
         minRatio: 0.8,
       })
     );
   } else {
-    plugins.push(new webpack.HotModuleReplacementPlugin());
+    plugins.push(new HotModuleReplacementPlugin());
   }
 
   const config = {
@@ -193,9 +227,10 @@ module.exports = (env, argv) => {
     devServer,
     devtool: isProduction ? "source-map" : "cheap-source-map",
     entry: {
-      aboutPage: "./src/js/about.js",
+      aboutPage: path.resolve(__dirname, "src", "js", "about.js"),
       homePage: "./src/js/index.js",
     },
+    mode: argv.mode,
     module: {
       rules,
     },
@@ -203,6 +238,8 @@ module.exports = (env, argv) => {
     output: {
       filename: "[name].[hash].js",
       path: path.join(__dirname, "build"),
+      publicPath: "/",
+      sourceMapFilename: "[file].[hash].map",
     },
     plugins,
     performance: {
@@ -227,8 +264,10 @@ module.exports = (env, argv) => {
         // https://github.com/darrenscerri/duplicate-package-checker-webpack-plugin#resolving-duplicate-packages-in-your-bundle
         three: path.resolve(__dirname, "node_modules/three"),
       },
+      extensions: [".js"],
     },
     target: "web",
   };
+  // console.log("=== Webpack config ===", config);
   return config;
 };

@@ -352,7 +352,7 @@ export class Application {
       this.vertexDisplacement[i] = Math.sin(i);
     }
 
-    geometry.addAttribute(
+    geometry.setAttribute(
       "vertexDisplacement",
       new THREE.BufferAttribute(this.vertexDisplacement, 1)
     );
@@ -509,6 +509,9 @@ function makeParticle(d, i) {
   return particle;
 }
 
+/**
+ * Make a mesh for each Box in the GroupObject.
+ */
 function makeMesh(d, i) {
   const material = new THREE.MeshLambertMaterial({
     color: Math.random() * 0xffffff,
