@@ -23,6 +23,7 @@ Three.js ES6 starter project with a sane webpack configuration.
   - [favicons-webpack-plugin](https://github.com/jantimon/favicons-webpack-plugin)
   - [html-webpack-plugin](https://github.com/jantimon/html-webpack-plugin)
   - [mini-css-extract-plugin](https://github.com/webpack-contrib/mini-css-extract-plugin)
+  - [speed-measure-webpack-plugin](https://github.com/stephencookdev/speed-measure-webpack-plugin)
   - [terser-webpack-plugin](https://github.com/webpack-contrib/terser-webpack-plugin/)
   - [webpack-bundle-analyzer](https://github.com/th0r/webpack-bundle-analyzer)
   - [webpack-glsl-loader](https://github.com/grieve/webpack-glsl-loader)

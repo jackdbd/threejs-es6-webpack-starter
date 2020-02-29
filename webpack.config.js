@@ -9,6 +9,7 @@ const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const PacktrackerPlugin = require("@packtracker/webpack-plugin");
+const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 
 const APP_NAME = "Three.js ES6 Webpack 4 Project Starter";
@@ -273,5 +274,9 @@ module.exports = (env, argv) => {
   };
 
   // console.log("=== Webpack config ===", config);
-  return config;
+  const smp = new SpeedMeasurePlugin({
+    // granularLoaderData: true,
+  });
+
+  return smp.wrap(config);
 };
