@@ -16,12 +16,14 @@ Three.js ES6 starter project with a sane webpack configuration.
 - Tests with [jest](https://jestjs.io/en/)
 - Webpack configuration with:
   - [@packtracker/webpack-plugin](https://github.com/packtracker/webpack-plugin) (bundle sizes [here](https://app.packtracker.io/organizations/129/projects/110))
+  - [circular-dependency-plugin](https://github.com/aackerman/circular-dependency-plugin)
   - [clean-webpack-plugin](https://github.com/johnagan/clean-webpack-plugin)
   - [compression-webpack-plugin](https://github.com/webpack-contrib/compression-webpack-plugin)
   - [duplicate-package-checker-webpack-plugin](https://github.com/darrenscerri/duplicate-package-checker-webpack-plugin)
   - [favicons-webpack-plugin](https://github.com/jantimon/favicons-webpack-plugin)
   - [html-webpack-plugin](https://github.com/jantimon/html-webpack-plugin)
   - [mini-css-extract-plugin](https://github.com/webpack-contrib/mini-css-extract-plugin)
+  - [terser-webpack-plugin](https://github.com/webpack-contrib/terser-webpack-plugin/)
   - [webpack-bundle-analyzer](https://github.com/th0r/webpack-bundle-analyzer)
   - [webpack-glsl-loader](https://github.com/grieve/webpack-glsl-loader)
 

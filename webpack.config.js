@@ -148,7 +148,10 @@ module.exports = (env, argv) => {
       generateStatsFile: true,
       statsFilename: "stats.json",
     }),
-    new CircularDependencyPlugin(),
+    new CircularDependencyPlugin({
+      exclude: /node_modules/,
+      failOnError: true,
+    }),
     new CleanWebpackPlugin({
       cleanStaleWebpackAssets: true,
       verbose: true,
@@ -268,6 +271,7 @@ module.exports = (env, argv) => {
     },
     target: "web",
   };
+
   // console.log("=== Webpack config ===", config);
   return config;
 };
