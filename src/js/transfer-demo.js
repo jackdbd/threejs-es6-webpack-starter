@@ -1,4 +1,3 @@
-// import { Application } from "./application";
 import TransferWorker from "./workers/transfer-worker";
 import * as action from "./actions";
 

@@ -1,16 +1,24 @@
 import {
   AmbientLight,
   AxesHelper,
+  CanvasTexture,
   Color,
   CubeGeometry,
   DirectionalLight,
   GridHelper,
+  ImageBitmapLoader,
+  LoadingManager,
   Mesh,
+  MeshBasicMaterial,
   MeshLambertMaterial,
+  ObjectLoader,
   PerspectiveCamera,
   Scene,
   WebGLRenderer,
 } from "three";
+
+// import { OBJLoader } from "../vendor/OBJLoader";
+
 import * as action from "../actions";
 
 const NAME = "transfer-worker";
@@ -24,7 +32,7 @@ const makeScene = name => {
   // Any Three.js object in the scene (and the scene itself) can have a name.
   scene.name = name;
 
-  const side = 30;
+  const side = 10;
   const geometry = new CubeGeometry(side, side, side);
   const material = new MeshLambertMaterial({ color: 0xfbbc05 });
   const cube = new Mesh(geometry, material);
@@ -113,6 +121,122 @@ const init = payload => {
     payload: { info: `[${NAME}] - camera inizialized` },
   });
   const camera = makeCamera(canvas, scene);
+
+  const onManagerLoad = () => {
+    postMessage({
+      action: action.NOTIFY,
+      payload: {
+        info: `[${NAME}] - Loaded all items`,
+      },
+    });
+  };
+
+  const onManagerProgress = (item, loaded, total) => {
+    // console.log("LoadingManager progress:", item, loaded, total);
+    postMessage({
+      action: action.NOTIFY,
+      payload: {
+        info: `[${NAME}] - Loaded ${loaded} of ${total} items`,
+      },
+    });
+  };
+
+  const onManagerStart = (url, itemsLoaded, itemsTotal) => {
+    postMessage({
+      action: action.NOTIFY,
+      payload: {
+        info: `[${NAME}] - started loading file ${url} (Loaded ${itemsLoaded} of ${itemsTotal} items)`,
+      },
+    });
+  };
+
+  const onManagerError = error => {
+    console.error("ERROR IN LOADING MANAGER", error);
+  };
+
+  const manager = new LoadingManager(
+    onManagerLoad,
+    onManagerProgress,
+    onManagerError
+  );
+  manager.onStart = onManagerStart;
+
+  const objectLoader = new ObjectLoader(manager);
+  const bitmapLoader = new ImageBitmapLoader(manager);
+  bitmapLoader.setOptions({ imageOrientation: "flipY" });
+
+  const onObjectLoad = object3D => {
+    // console.log("=== object3D ===", object3D);
+    const name = object3D.name || "unnamed-object";
+    const info = `[${NAME}] - Loaded ${name} (geometry: ${object3D.geometry.type}, material: ${object3D.material.type})`;
+    postMessage({
+      action: action.NOTIFY,
+      payload: {
+        info,
+      },
+    });
+    // object3D.traverse(function(child) {
+    //   console.log("child", child);
+    //   if (child.isMesh) {
+    //     child.material.map = texture;
+    //   }
+    // });
+    object3D.position.set(50, 0, 50);
+    object3D.scale.set(15, 15, 15);
+    state.scene.add(object3D);
+  };
+
+  const onProgress = xhr => {
+    if (xhr.lengthComputable) {
+      const percentComplete = Math.round((xhr.loaded / xhr.total) * 100);
+      postMessage({
+        action: action.NOTIFY,
+        payload: {
+          info: `[${NAME}] - downloading model (${percentComplete}%)`,
+        },
+      });
+    }
+  };
+
+  const onError = error => {
+    console.error("ERROR IN LOADER", error);
+  };
+
+  const url =
+    "https://raw.githubusercontent.com/mrdoob/three.js/master/examples/models/json/teapot-claraio.json";
+  objectLoader.load(url, onObjectLoad, onProgress, onError);
+
+  // This one fails because it tries to access `window`, which of course is not
+  // available in a web worker.
+  // const url2 =
+  //   "https://raw.githubusercontent.com/mrdoob/three.js/master/examples/models/json/multimaterial.json";
+  // objectLoader.load(url2, onLoad, onProgress, onError);
+
+  const onBitmapLoad = bitmap => {
+    const info = `[${NAME}] - Loaded bitmap (${bitmap.width}x${bitmap.height})`;
+    postMessage({
+      action: action.NOTIFY,
+      payload: {
+        info,
+      },
+    });
+    const texture = new CanvasTexture(bitmap);
+    const materialWithTexture = new MeshBasicMaterial({ map: texture });
+
+    const geom = new CubeGeometry(30, 30, 30);
+    const cube = new Mesh(geom, materialWithTexture);
+    cube.name = "Cube with textured material";
+    cube.position.set(-50, 50, 50);
+    scene.add(cube);
+  };
+
+  bitmapLoader.load(
+    "https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/planets/earth_atmos_2048.jpg",
+    onBitmapLoad,
+    // onProgress callback currently not supported
+    undefined,
+    onError
+  );
 
   state.camera = camera;
   state.canvas = canvas;
@@ -203,7 +327,7 @@ const onMessage = event => {
 onmessage = onMessage;
 
 const renderLoop = tick => {
-  state.camera.rotateZ(0.05);
+  // state.camera.rotateZ(0.05);
   render(tick);
   if (state.error) {
     postMessage({
