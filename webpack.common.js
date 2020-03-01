@@ -1,32 +1,20 @@
 const path = require("path");
-const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 const CircularDependencyPlugin = require("circular-dependency-plugin");
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-const CompressionPlugin = require("compression-webpack-plugin");
-const { DefinePlugin, HotModuleReplacementPlugin } = require("webpack");
+const { DefinePlugin } = require("webpack");
 const DuplicatePackageCheckerPlugin = require("duplicate-package-checker-webpack-plugin");
 const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const PacktrackerPlugin = require("@packtracker/webpack-plugin");
 const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
-const TerserPlugin = require("terser-webpack-plugin");
 
 const APP_NAME = "Three.js ES6 Webpack 4 Project Starter";
 
 const rules = [
+  // Rule for web workers
   {
-    test: /\.(js|jsx)$/,
-    include: [path.join(__dirname, "src", "js")],
+    test: /\.js$/,
+    include: [path.join(__dirname, "src", "js", "workers")],
     exclude: [path.join(__dirname, "node_modules")],
-    use: {
-      loader: "babel-loader",
-    },
-  },
-  // rule for web workers
-  {
-    test: /\.worker\.js$/,
-    include: [path.join(__dirname, "src", "js")],
     use: [
       {
         loader: "worker-loader",
@@ -36,7 +24,19 @@ const rules = [
       },
     ],
   },
-  // rule for stylesheets
+  // Rule for JS files (not web workers)
+  {
+    test: /\.(js|jsx)$/,
+    include: [path.join(__dirname, "src", "js")],
+    exclude: [
+      path.join(__dirname, "node_modules"),
+      path.join(__dirname, "src", "js", "workers"),
+    ],
+    use: {
+      loader: "babel-loader",
+    },
+  },
+  // Rule for stylesheets
   {
     test: /\.(css)$/,
     include: [path.join(__dirname, "src", "css")],
@@ -45,13 +45,14 @@ const rules = [
       {
         loader: "css-loader",
         options: {
-          modules: false, // avoid using CSS modules
+          // avoid using CSS modules
+          modules: false,
           sourceMap: true,
         },
       },
     ],
   },
-  // rule for shaders
+  // Rule for shaders
   {
     test: /\.glsl$/,
     use: [
@@ -60,7 +61,7 @@ const rules = [
       },
     ],
   },
-  // rule for .ttf font files
+  // Rule for .ttf font files
   {
     test: /\.(ttf)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
     include: [path.join(__dirname, "src", "fonts")],
@@ -71,7 +72,7 @@ const rules = [
       },
     },
   },
-  // rule for textures (images)
+  // Rule for textures (images)
   {
     test: /.(jpe?g|png)$/i,
     include: path.join(__dirname, "src", "textures"),
@@ -102,74 +103,24 @@ const rules = [
   },
 ];
 
-const optimization = {
-  minimizer: [
-    new TerserPlugin({
-      // Enable file caching
-      cache: true,
-      // Use multi-process parallel running (speeds up the build)
-      parallel: true,
-      // Use source maps to map error message locations to modules (slows down the build)
-      sourceMap: true,
-    }),
-  ],
-  splitChunks: {
-    automaticNameDelimiter: "~",
-    cacheGroups: {
-      default: {
-        minChunks: 2,
-        priority: -20,
-        reuseExistingChunk: true,
-      },
-      vendors: {
-        priority: -10,
-        test: /[\\/]node_modules[\\/]/,
-      },
-    },
-    chunks: "async",
-    maxAsyncRequests: 5,
-    maxInitialRequests: 3,
-    maxSize: 0,
-    minChunks: 1,
-    minSize: 30000,
-    name: true,
-  },
-};
-
-const devServer = {
-  compress: true,
-  contentBase: path.join(__dirname, "build"),
-  host: "localhost",
-  inline: true,
-  port: 8080,
-  stats: {
-    chunks: false,
-    colors: true,
-    modules: false,
-    reasons: true,
-  },
-};
-
-module.exports = (env, argv) => {
+/**
+ * Webpack config shared between development and production environments.
+ */
+const commonConfigFn = (env = {}, argv = {}) => {
+  if (!env.hasOwnProperty("publicUrl")) {
+    throw new Error("env must have the `publicUrl` property");
+  }
+  if (!argv.hasOwnProperty("mode")) {
+    throw new Error(
+      "argv must have the `mode` property ('development' or 'production')"
+    );
+  }
   console.log(`Prepare ${argv.mode.toUpperCase()} build`);
-  const isProduction = argv.mode === "production";
-  const PUBLIC_URL = isProduction
-    ? "https://jackdbd.github.io/threejs-es6-webpack-starter"
-    : "";
 
   const plugins = [
-    new BundleAnalyzerPlugin({
-      analyzerMode: "disabled",
-      generateStatsFile: true,
-      statsFilename: "stats.json",
-    }),
     new CircularDependencyPlugin({
       exclude: /node_modules/,
       failOnError: true,
-    }),
-    new CleanWebpackPlugin({
-      cleanStaleWebpackAssets: true,
-      verbose: true,
     }),
     new DefinePlugin({
       APP_NAME: JSON.stringify(APP_NAME),
@@ -187,7 +138,7 @@ module.exports = (env, argv) => {
       template: path.join(__dirname, "src", "templates", "index.html"),
       templateParameters: {
         APP_NAME,
-        PUBLIC_URL,
+        PUBLIC_URL: env.publicUrl,
       },
     }),
     new HtmlWebpackPlugin({
@@ -196,7 +147,7 @@ module.exports = (env, argv) => {
       hash: true,
       template: path.join(__dirname, "src", "templates", "about.html"),
       templateParameters: {
-        PUBLIC_URL,
+        PUBLIC_URL: env.publicUrl,
       },
     }),
     // html-webpack-plugin must come BEFORE favicons-webpack-plugin in the
@@ -211,42 +162,10 @@ module.exports = (env, argv) => {
       filename: "[name].[hash].css",
       chunkFilename: "[id].bundle.css",
     }),
-    new PacktrackerPlugin({
-      branch: process.env.TRAVIS_BRANCH, // https://docs.packtracker.io/faq#why-cant-the-plugin-determine-my-branch-name
-      fail_build: true,
-      project_token: "2464bed1-d810-4af6-a615-877420f902b2",
-      upload: process.env.CI === "true", // upload stats.json only in CI
-    }),
   ];
-
-  if (isProduction) {
-    plugins.push(
-      new CompressionPlugin({
-        algorithm: "gzip",
-        filename: "[path].gz[query]",
-        test: /\.(css|html|js|svg|ttf)$/,
-        threshold: 10240,
-        minRatio: 0.8,
-      })
-    );
-    plugins.push(
-      new CompressionPlugin({
-        algorithm: "brotliCompress",
-        compressionOptions: { level: 11 },
-        filename: "[path].br[query]",
-        test: /\.(css|html|js|svg|ttf)$/,
-        threshold: 10240,
-        minRatio: 0.8,
-      })
-    );
-  } else {
-    plugins.push(new HotModuleReplacementPlugin());
-  }
 
   const config = {
     context: __dirname,
-    devServer,
-    devtool: isProduction ? "source-map" : "cheap-source-map",
     entry: {
       about: path.resolve(__dirname, "src", "js", "about.js"),
       home: path.resolve(__dirname, "src", "js", "index.js"),
@@ -255,7 +174,6 @@ module.exports = (env, argv) => {
     module: {
       rules,
     },
-    optimization,
     output: {
       filename: "[name].[hash].js",
       path: path.join(__dirname, "build"),
@@ -296,4 +214,8 @@ module.exports = (env, argv) => {
   });
 
   return smp.wrap(config);
+};
+
+module.exports = {
+  commonConfigFn,
 };

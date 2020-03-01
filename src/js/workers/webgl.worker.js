@@ -11,7 +11,7 @@ import {
   Scene,
   WebGLRenderer,
 } from "three";
-import * as action from "./actions";
+import * as action from "../actions";
 
 const makeScene = name => {
   const scene = new Scene();

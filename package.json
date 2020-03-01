@@ -12,19 +12,19 @@
     "node": ">=11.10.1"
   },
   "scripts": {
-    "build": "yarn prebuild && webpack --config webpack.config.js --progress --mode production",
+    "build": "yarn prebuild && webpack --config webpack.prod.js",
     "ci": "yarn test && yarn coverage && yarn build",
     "coverage": "codecov",
     "deploy": "gh-pages -d build",
     "lint": "yarn lint:css && yarn lint:js",
     "lint:css": "stylelint --config .stylelintrc.json --formatter verbose './src/**/*.css'",
-    "lint:js": "eslint 'src/**/*.{js,ts}' --fix",
+    "lint:js": "eslint 'src/**/*.{js,ts}' --fix --debug",
     "ncu": "ncu",
     "ncuu": "ncu --upgrade",
     "nuke": "rimraf node_modules && rm yarn.lock",
     "prebuild": "yarn lint",
     "predeploy": "yarn test && yarn build",
-    "start": "webpack-dev-server --config webpack.config.js --mode development --open",
+    "start": "webpack-dev-server --config webpack.dev.js",
     "static": "chromium-browser build/index.html",
     "stats": "webpack-bundle-analyzer build/stats.json --port 8888",
     "test": "yarn test:unit",
@@ -84,6 +84,7 @@
     "webpack-cli": "3.3.11",
     "webpack-dev-server": "3.10.3",
     "webpack-glsl-loader": "1.0.1",
+    "webpack-merge": "4.2.2",
     "worker-loader": "2.0.0"
   },
   "keywords": [
