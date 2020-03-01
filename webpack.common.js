@@ -142,6 +142,20 @@ const commonConfigFn = (env = {}, argv = {}) => {
       },
     }),
     new HtmlWebpackPlugin({
+      chunks: ["bitmap-demo"],
+      filename: "bitmap-canvas-demo.html",
+      hash: true,
+      template: path.join(
+        __dirname,
+        "src",
+        "templates",
+        "bitmap-canvas-demo.html"
+      ),
+      templateParameters: {
+        PUBLIC_URL: env.publicUrl,
+      },
+    }),
+    new HtmlWebpackPlugin({
       chunks: ["about"],
       filename: "about.html",
       hash: true,
@@ -168,6 +182,7 @@ const commonConfigFn = (env = {}, argv = {}) => {
     context: __dirname,
     entry: {
       about: path.resolve(__dirname, "src", "js", "about.js"),
+      "bitmap-demo": path.resolve(__dirname, "src", "js", "bitmap-demo.js"),
       home: path.resolve(__dirname, "src", "js", "index.js"),
     },
     mode: argv.mode,

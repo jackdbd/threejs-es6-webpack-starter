@@ -1,5 +1,6 @@
 import { Application } from "./application";
-import WebGLWorker from "./webgl.worker";
+import BitmapWorker from "./workers/bitmap-worker";
+// import WebGLWorker from "./workers/webgl.worker";
 import * as action from "./actions";
 
 import "../css/index.css";
@@ -27,7 +28,8 @@ import "../css/index.css";
   }
   console.log("Application instance", app);
 
-  const worker = new WebGLWorker();
+  // const worker = new WebGLWorker();
+  const bitmapWorker = new BitmapWorker();
 
   const canvasName = "test-canvas";
   const canvasId = `#${canvasName}`;
@@ -49,7 +51,7 @@ import "../css/index.css";
         canvasBitmap.transferFromImageBitmap(event.data.payload.bitmap);
         break;
       case action.KILL_ME:
-        worker.terminate();
+        // worker.terminate();
         console.warn("Main thread terminated the worker");
         break;
       default:
@@ -61,8 +63,11 @@ import "../css/index.css";
     console.warn("FUCK! It didn't work!", event);
   };
 
-  worker.onmessage = onMessage;
-  worker.onerror = onError;
+  // worker.onmessage = onMessage;
+  // worker.onerror = onError;
+
+  bitmapWorker.onmessage = onMessage;
+  bitmapWorker.onerror = onError;
 
   onscreenCanvas.setAttribute("width", "600");
   onscreenCanvas.setAttribute("height", "400");
@@ -72,9 +77,10 @@ import "../css/index.css";
     payload: { canvas: offscreenCanvas, sceneName: "my-scene" },
   };
   const transfer = [offscreenCanvas];
-  worker.postMessage(message, transfer);
+  // worker.postMessage(message, transfer);
+  bitmapWorker.postMessage(message, transfer);
 
-  let useBitmapCanvas = false;
+  // let useBitmapCanvas = false;
 
   // const renderLoop = tick => {
   //   worker.postMessage({
@@ -87,12 +93,28 @@ import "../css/index.css";
 
   // renderLoop(performance.now());
 
-  const renderLoop = () => {
-    worker.postMessage({
-      action: action.REQUEST_FRAME,
-      payload: { useBitmapCanvas },
+  // const renderLoop = () => {
+  //   worker.postMessage({
+  //     action: action.REQUEST_FRAME,
+  //     payload: { useBitmapCanvas },
+  //   });
+  //   useBitmapCanvas = !useBitmapCanvas;
+  // };
+
+  // const renderLoop = () => {
+  //   bitmapWorker.postMessage({
+  //     action: action.REQUEST_BITMAP,
+  //   });
+  // };
+
+  const renderLoop = tick => {
+    bitmapWorker.postMessage({
+      action: action.REQUEST_BITMAP,
     });
-    useBitmapCanvas = !useBitmapCanvas;
+    requestAnimationFrame(renderLoop);
   };
-  setInterval(renderLoop, 1000);
+
+  renderLoop();
+
+  // setInterval(renderLoop, 1000);
 })();

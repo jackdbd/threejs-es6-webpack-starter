@@ -77,15 +77,11 @@ li {
 }
 
 .bitmap-canvas-container {
-  position: absolute;
   border: 0.1rem solid steelblue;
-  left: 50vw;
-  top: 50vh;
-  width: 40vw;
   height: 30vh;
 }
 
-#bitmap-canvas {
-  width: 100%;
+.bitmap-canvas-container > canvas {
   height: 100%;
+  width: 100%;
 }

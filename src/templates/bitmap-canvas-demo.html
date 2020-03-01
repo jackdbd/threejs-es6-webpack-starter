@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><%= APP_NAME %></title>
+    <title>Bitmap Canvas Demo</title>
     <!-- Favicons -->
     <!-- FaviconsWebpackPlugin together with HtmlWebpackPlugin should be able to
       inject the link tags for the favicons, but there must be something wrong
@@ -20,27 +20,19 @@
       href="https://fonts.googleapis.com/css?family=Open+Sans|Raleway"
       rel="stylesheet"
     />
-    <!-- TODO: preload web worker script with a HTTP resource hint -->
-    <!-- Next line seems NOT to trigger a preload request -->
-    <!-- <link type="preload" as="script" href="/workers/webgl-worker.js" /> -->
-    <!-- I trued to use one all the following webpack plugins, but they rely on
-      some old HtmlWebpackPlugin hook function that fails with the version I
-      have. -->
-    <!-- https://github.com/GoogleChromeLabs/preload-webpack-plugin -->
-    <!-- https://github.com/jantimon/resource-hints-webpack-plugin -->
-    <!-- https://github.com/numical/script-ext-html-webpack-plugin -->
     <!-- CSS bundle injected here by html-webpack-plugin -->
   </head>
   <body>
     <div class="app">
       <div class="header">
-        <h1><%= APP_NAME %></h1>
+        <h1>Bitmap Canvas Demo</h1>
       </div>
       <div class="table-of-contents">
         <ul>
+          <li><a href="<%= PUBLIC_URL %>/index.html">Home</a></li>
           <li>
-            <a data-cy="link-to-bitmap-canvas-demo-page" href="<%= PUBLIC_URL %>/bitmap-canvas-demo.html"
-              >Bitmap canvas demo</a
+            <a data-cy="link-to-transfer-canvas-demo-page" href="<%= PUBLIC_URL %>/transfer-canvas-demo.html"
+              >Transfer canvas demo</a
             >
           </li>
           <li>
@@ -50,14 +42,22 @@
           </li>
         </ul>
       </div>
-      <div class="canvas-container" data-cy="canvas-container">
-        <canvas id="onscreen-canvas">
-      </div>
-      <div class="test-canvas-container" data-cy="test-canvas-container">
-        <canvas id="test-canvas">
-      </div>
+      <p>The main thread creates a
+        <a href="https://developer.mozilla.org/en-US/docs/Web/API/ImageBitmapRenderingContext" target="_blank">ImageBitmapRenderingContext</a>
+         with <code>const ctx = canvasBitmap.getContext("bitmaprenderer");</code>,
+         the web worker creates a
+         <a href="https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas" target="_blank">OffscreenCanvas</a>,
+         render something into it, converts the canvas into a bitmap with
+         <code>const bitmap = canvas.transferToImageBitmap();</code>
+         and sends the bitmap to the main thread as a
+         <a href="https://developer.mozilla.org/en-US/docs/Web/API/Transferable"target="_blank"></a>Transferable.
+         The main thread updates its canvas with <code>ctx.transferFromImageBitmap(event.data.payload.bitmap);</code>
+      </p>
       <div class="bitmap-canvas-container" data-cy="bitmap-canvas-container">
         <canvas id="bitmap-canvas">
+      </div>
+      <div class="bitmap-canvas-container" data-cy="bitmap-canvas-container">
+        <canvas id="another-bitmap-canvas">
       </div>
     </div>
     <!-- JS bundle injected here by html-webpack-plugin -->
