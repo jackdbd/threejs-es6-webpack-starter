@@ -44,6 +44,11 @@
             >
           </li>
           <li>
+            <a data-cy="link-to-transfer-canvas-demo-page" href="<%= PUBLIC_URL %>/transfer-canvas-demo.html"
+              >Transfer canvas demo</a
+            >
+          </li>
+          <li>
             <a data-cy="link-to-about-page" href="<%= PUBLIC_URL %>/about.html"
               >About</a
             >
@@ -51,13 +56,7 @@
         </ul>
       </div>
       <div class="canvas-container" data-cy="canvas-container">
-        <canvas id="onscreen-canvas">
-      </div>
-      <div class="test-canvas-container" data-cy="test-canvas-container">
-        <canvas id="test-canvas">
-      </div>
-      <div class="bitmap-canvas-container" data-cy="bitmap-canvas-container">
-        <canvas id="bitmap-canvas">
+        <canvas id="application-canvas">
       </div>
     </div>
     <!-- JS bundle injected here by html-webpack-plugin -->

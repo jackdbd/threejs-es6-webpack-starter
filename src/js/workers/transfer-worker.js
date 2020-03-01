@@ -11,12 +11,9 @@ import {
   Scene,
   WebGLRenderer,
 } from "three";
-
 import * as action from "../actions";
 
-const NAME = "bitmap-worker";
-// stop the demo after x renderers
-const NUM_RENDER_FOR_DEMO = 300;
+const NAME = "transfer-worker";
 
 const makeScene = name => {
   const scene = new Scene();
@@ -88,111 +85,99 @@ const makeCamera = (canvas, scene) => {
   const far = 10000;
   const camera = new PerspectiveCamera(fov, aspect, near, far);
   camera.name = "my-camera";
-  camera.position.set(100, 100, 100);
+  // camera.position.set(100, 100, 100);
+  // Axes Helpers: RED (X), GREEN (Y), BLUE (Z)
+  camera.position.set(100, 50, 200);
   camera.lookAt(scene.position);
 
   return camera;
 };
 
 const init = payload => {
-  const { height, sceneName, width } = payload;
-
-  const canvas = new OffscreenCanvas(width, height);
+  const { canvas, sceneName } = payload;
 
   postMessage({
     action: action.NOTIFY,
-    payload: { info: `[${NAME}] - building the scene` },
+    payload: { info: `[${NAME}] - scene initialized` },
   });
   const scene = makeScene(sceneName);
 
   postMessage({
     action: action.NOTIFY,
-    payload: { info: `[${NAME}] - building the renderer` },
+    payload: { info: `[${NAME}] - renderer inizialized` },
   });
   const renderer = makeRenderer(canvas);
 
   postMessage({
     action: action.NOTIFY,
-    payload: { info: `[${NAME}] - building the camera` },
+    payload: { info: `[${NAME}] - camera inizialized` },
   });
   const camera = makeCamera(canvas, scene);
 
-  return {
-    camera,
-    canvas,
-    counter: 0,
-    renderer,
-    scene,
-  };
+  state.camera = camera;
+  state.canvas = canvas;
+  state.error = undefined;
+  state.renderer = renderer;
+  state.reqId = performance.now();
+  state.scene = scene;
 };
 
 /**
- * Render the scene to the offscreen canvas, then create a bitmap and send it to
- * the main thread with a zero-copy operation.
+ * Render the scene to the offscreen canvas.
  *
- * We call the transferToImageBitmap method on the offscreen canvas and send the
- * bitmap to the main thread synchronously.
- *
- * Note: requestAnimationFrame and cancelAnimationFrame are available for web
- * workers. But we can also use requestAnimationFrame in the main thread and
- * send a message to the web worker requesting a new bitmap when the main thread
- * needs it.
+ * The scene rendered in the offscreen canvas appears automatically on the
+ * onscreen canvas because the main thread transferred the ownership of the
+ * rendering context to the offscreen canvas managed by this web worker.
+ * The onscreen canvas is updated automatically and asynchronously.
  */
-const render = () => {
-  // This web worker has some internal state. If these conditions are not
-  // satisfied we crash and burn, so the main thread knows there is a problem.
+const render = tick => {
+  // We could use the tick to control the animation.
   if (!state.renderer) {
-    throw new Error(
+    state.error = new Error(
       `Cannot call "render" without a renderer in ${NAME}'s state`
     );
+    return;
   }
   if (!state.canvas) {
-    throw new Error(`Cannot call "render" without a canvas in ${NAME}'s state`);
+    state.error = new Error(
+      `Cannot call "render" without a canvas in ${NAME}'s state`
+    );
+    return;
   }
   if (!state.camera) {
-    throw new Error(`Cannot call "render" without a camera in ${NAME}'s state`);
+    state.error = new Error(
+      `Cannot call "render" without a camera in ${NAME}'s state`
+    );
+    return;
   }
   if (!state.scene) {
-    throw new Error(`Cannot call "render" without a scene in ${NAME}'s state`);
+    state.error = new Error(
+      `Cannot call "render" without a scene in ${NAME}'s state`
+    );
+    return;
   }
 
-  // Signal to the main thread that this web worker is done, this web worker's
-  // heap can be freed. You can see that this web worker's heap disappears in
-  // the Chrome Dev Tools Memory tab.
-  if (state.counter > NUM_RENDER_FOR_DEMO) {
-    postMessage({ action: action.KILL_ME });
-  }
-
-  // The web worker renders the scene in its OffscreenCanvas
+  // If we made it here, the web worker can safely render the scene.
   state.renderer.render(state.scene, state.camera);
 
-  // The main thread has a `ImageBitmapRenderingContext`, so the web worker
-  // needs to send back a `ImageBitmap`
-  // https://developer.mozilla.org/en-US/docs/Web/API/ImageBitmap
-  const bitmap = state.canvas.transferToImageBitmap();
-
-  // In other use-cases the web-worker could send back a `Blob` with
-  // `canvas.convertToBlob().then(blob => postMessage({ blob }, [blob]))`
-
-  const message = {
-    action: action.BITMAP,
-    payload: { bitmap },
-  };
-
-  // ImageBitmap implements the Transerable interface, so we can send it to the
-  // main WITHOUT using the structured clone algorithm. In other words, this
-  // `postMessage` is a ZERO-COPY operation: we are passing the bitmap BY
-  // REFERENCE and NOT BY VALUE.
-  // https://developer.mozilla.org/en-US/docs/Web/API/Transferable
-  // https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm
-  postMessage(message, [bitmap]);
+  // Maybe the main thread is interested in knowing what this web worker is
+  // doing, so we notify it about what has been done. Please note that the main
+  // thread doesn't have to do anything, and CANNOT do anything on the canvas on
+  // the screen, because it transferred the ownership of that canvas to the web
+  // worker. So basically the visible, onscreen canvas is just a proxy for the
+  // offscreen canvas.
+  postMessage({
+    action: action.NOTIFY,
+    payload: { info: `[${NAME}] - render loop` },
+  });
 };
 
 let state = {
   camera: undefined,
   canvas: undefined,
-  counter: undefined,
+  error: undefined,
   renderer: undefined,
+  reqId: undefined,
   scene: undefined,
 };
 
@@ -200,12 +185,14 @@ const onMessage = event => {
   console.log(`%c${event.data.action}`, "color: red");
   switch (event.data.action) {
     case action.INIT:
-      state = init(event.data.payload);
+      init(event.data.payload);
       break;
-    case action.REQUEST_BITMAP: {
-      state.counter++;
-      state.camera.rotateZ(0.2);
-      render();
+    case action.START_RENDER_LOOP: {
+      renderLoop();
+      break;
+    }
+    case action.STOP_RENDER_LOOP: {
+      cancelAnimationFrame(state.reqId);
       break;
     }
     default: {
@@ -214,3 +201,20 @@ const onMessage = event => {
   }
 };
 onmessage = onMessage;
+
+const renderLoop = tick => {
+  state.camera.rotateZ(0.05);
+  render(tick);
+  if (state.error) {
+    postMessage({
+      action: action.NOTIFY,
+      payload: {
+        info: `[${NAME}] - error: ${state.error.message}. Please terminate me.`,
+      },
+    });
+    cancelAnimationFrame(state.reqId);
+    postMessage({ action: action.KILL_ME });
+  } else {
+    state.reqId = requestAnimationFrame(renderLoop);
+  }
+};

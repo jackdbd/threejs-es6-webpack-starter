@@ -156,6 +156,20 @@ const commonConfigFn = (env = {}, argv = {}) => {
       },
     }),
     new HtmlWebpackPlugin({
+      chunks: ["transfer-demo"],
+      filename: "transfer-canvas-demo.html",
+      hash: true,
+      template: path.join(
+        __dirname,
+        "src",
+        "templates",
+        "transfer-canvas-demo.html"
+      ),
+      templateParameters: {
+        PUBLIC_URL: env.publicUrl,
+      },
+    }),
+    new HtmlWebpackPlugin({
       chunks: ["about"],
       filename: "about.html",
       hash: true,
@@ -183,6 +197,7 @@ const commonConfigFn = (env = {}, argv = {}) => {
     entry: {
       about: path.resolve(__dirname, "src", "js", "about.js"),
       "bitmap-demo": path.resolve(__dirname, "src", "js", "bitmap-demo.js"),
+      "transfer-demo": path.resolve(__dirname, "src", "js", "transfer-demo.js"),
       home: path.resolve(__dirname, "src", "js", "index.js"),
     },
     mode: argv.mode,

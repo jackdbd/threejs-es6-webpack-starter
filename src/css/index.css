@@ -62,18 +62,9 @@ li {
   opacity: 0.8;
 }
 
-.test-canvas-container {
-  position: absolute;
+.transfer-canvas-container {
   border: 0.1rem solid red;
-  left: 4rem;
-  top: 3rem;
-  width: 50vw;
   height: 50vh;
-}
-
-#test-canvas {
-  width: 100%;
-  height: 100%;
 }
 
 .bitmap-canvas-container {
@@ -81,7 +72,8 @@ li {
   height: 30vh;
 }
 
-.bitmap-canvas-container > canvas {
+.bitmap-canvas-container > canvas,
+.transfer-canvas-container > canvas {
   height: 100%;
   width: 100%;
 }
