@@ -1,73 +1,115 @@
-// import { Application } from "./application";
 import BitmapWorker from "./workers/bitmap-worker";
-import * as action from "./actions";
+import { BitmapWorkerAction, MainThreadAction } from "./worker-actions";
 
 import "../css/index.css";
 
 // TODO: preload the web worker script with resource hints. Or is it done automatically by webpack's worker-loader?
 // const workerUrl = document.querySelector("[rel=preload][as=script]").href;
-
 (function iife() {
+  const NAME = "Main thread";
+
   const bitmapWorker = new BitmapWorker();
 
-  const canvasBitmap = document.getElementById("bitmap-canvas");
+  // https://developer.mozilla.org/en-US/docs/Web/API/ImageBitmapRenderingContext
+  const bitmapsConfig = [
+    {
+      ctx: document
+        .getElementById("bitmap-canvas-low-res")
+        .getContext("bitmaprenderer"),
+      resolution: { width: 160, height: 90 },
+    },
+    {
+      ctx: document
+        .getElementById("bitmap-canvas-medium-res")
+        .getContext("bitmaprenderer"),
+      resolution: { width: 640, height: 480 },
+    },
+    {
+      ctx: document
+        .getElementById("bitmap-canvas-high-res")
+        .getContext("bitmaprenderer"),
+      resolution: { width: 1024, height: 768 },
+    },
+  ];
 
-  // canvasBitmap.setAttribute("width", `${width}`);
-  // canvasBitmap.setAttribute("height", `${height}`);
-  const ctx = canvasBitmap.getContext("bitmaprenderer");
+  const resolutions = bitmapsConfig.reduce((accumul, curVal) => {
+    return [...accumul, curVal.resolution];
+  }, []);
 
-  // const anotherCanvas = document.getElementById("another-bitmap-canvas");
-  // const anotherCtx = anotherCanvas.getContext("bitmaprenderer");
+  const style = "color: green; font-weight: normal";
+
+  let reqId;
 
   const onMessage = event => {
-    console.log(`%c${event.data.action}`, "color: green");
+    const label = `[${NAME} <-- ${event.data.source}] - ${event.data.action}`;
+    console.log(`%c${label}`, style);
+
     switch (event.data.action) {
-      case action.BITMAP:
-        ctx.transferFromImageBitmap(event.data.payload.bitmap);
-        // anotherCtx.transferFromImageBitmap(event.data.payload.bitmap);
+      case BitmapWorkerAction.BITMAPS: {
+        const { bitmaps } = event.data.payload;
+        bitmapsConfig.forEach((cfg, i) => {
+          cfg.ctx.transferFromImageBitmap(bitmaps[i]);
+        });
         break;
-      case action.KILL_ME:
+      }
+      case BitmapWorkerAction.TERMINATE_ME: {
         bitmapWorker.terminate();
-        console.warn("Main thread terminated the worker");
+        console.warn(`${NAME} terminated ${event.data.source}`);
+        // If the web worker is no longer listening, it makes no sense to keep
+        // sending him messages in requestLoop;
+        cancelAnimationFrame(reqId);
         break;
-      case action.NOTIFY:
-        console.log(`%c${event.data.payload.info}`, "color: green");
+      }
+      case BitmapWorkerAction.NOTIFY: {
+        // we have already printed the message, so we simply break.
         break;
-      default:
-        console.warn(
-          "Main thread received a message that does not handle",
-          event
-        );
+      }
+      default: {
+        console.warn(`${NAME} received a message that does not handle`, event);
+      }
     }
   };
 
+  // When a runtime error occurs in the worker, its onerror event handler is
+  // called. It receives an event named error which implements the ErrorEvent
+  // interface.
+  // https://developer.mozilla.org/en-US/docs/Web/API/ErrorEvent
   let errorInWorker = undefined;
-  const onError = error => {
-    errorInWorker = error;
+  const onError = event => {
+    errorInWorker = event;
   };
 
   bitmapWorker.onmessage = onMessage;
   bitmapWorker.onerror = onError;
 
   const message = {
-    action: action.INIT,
+    action: MainThreadAction.INIT_WORKER_STATE,
     // width and height are for the OffscreenCanvas created by the web worker.
     // They will also be the width and height of the generated ImageBitmap
     // returned by the web-worker and rendered into the canvas that has a
     // `bitmaprenderer` context.
-    payload: { width: 1024, height: 768 },
+    payload: { width: 1024, height: 768, sceneName: "My Test Scene" },
+    source: NAME,
   };
   bitmapWorker.postMessage(message);
 
-  const renderLoop = tick => {
+  // Up until recently, requestAnimationFrame was not available in web workers,
+  // so using requestAnimationFrame in the main thread was one of the possible
+  // workarounds. Now I think it would be better to move requestAnimationFrame
+  // to the web worker, so the main thread has less work to do.
+  const requestLoop = tick => {
     bitmapWorker.postMessage({
-      action: action.REQUEST_BITMAP,
+      action: MainThreadAction.REQUEST_BITMAPS,
+      payload: {
+        resolutions,
+      },
+      source: NAME,
     });
-    const reqId = requestAnimationFrame(renderLoop);
+    reqId = requestAnimationFrame(requestLoop);
     if (errorInWorker) {
       cancelAnimationFrame(reqId);
     }
   };
 
-  renderLoop();
+  requestLoop();
 })();

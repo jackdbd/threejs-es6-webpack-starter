@@ -69,7 +69,9 @@ li {
 
 .bitmap-canvas-container {
   border: 0.1rem solid steelblue;
-  height: 30vh;
+  display: inline-block;
+  height: 50vh;
+  width: 32vw;
 }
 
 .bitmap-canvas-container > canvas,

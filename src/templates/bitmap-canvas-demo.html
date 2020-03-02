@@ -23,7 +23,7 @@
     <!-- CSS bundle injected here by html-webpack-plugin -->
   </head>
   <body>
-    <div class="app">
+    <div>
       <div class="header">
         <h1>Bitmap Canvas Demo</h1>
       </div>
@@ -53,11 +53,14 @@
          <a href="https://developer.mozilla.org/en-US/docs/Web/API/Transferable"target="_blank"></a>Transferable.
          The main thread updates its canvas with <code>ctx.transferFromImageBitmap(event.data.payload.bitmap);</code>
       </p>
-      <div class="bitmap-canvas-container" data-cy="bitmap-canvas-container">
-        <canvas id="bitmap-canvas">
+      <div class="bitmap-canvas-container" data-cy="bitmap-canvas-container-low-res">
+        <canvas id="bitmap-canvas-low-res">
       </div>
-      <div class="bitmap-canvas-container" data-cy="bitmap-canvas-container">
-        <canvas id="another-bitmap-canvas">
+      <div class="bitmap-canvas-container" data-cy="bitmap-canvas-container-medium-res">
+        <canvas id="bitmap-canvas-medium-res">
+      </div>
+      <div class="bitmap-canvas-container" data-cy="bitmap-canvas-container-high-res">
+        <canvas id="bitmap-canvas-high-res">
       </div>
     </div>
     <!-- JS bundle injected here by html-webpack-plugin -->
