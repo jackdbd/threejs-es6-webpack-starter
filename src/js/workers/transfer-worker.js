@@ -17,10 +17,9 @@ import {
   WebGLRenderer,
 } from "three";
 
-// import { OBJLoader } from "../vendor/OBJLoader";
-
 import * as action from "../actions";
 
+import { OBJLoader2 } from "../vendor/OBJLoader2";
 const NAME = "transfer-worker";
 
 const makeScene = name => {
@@ -165,6 +164,16 @@ const init = payload => {
   const bitmapLoader = new ImageBitmapLoader(manager);
   bitmapLoader.setOptions({ imageOrientation: "flipY" });
 
+  const objLoader = new OBJLoader2(manager);
+
+  const objURL =
+    "https://raw.githubusercontent.com/mrdoob/three.js/master/examples/models/obj/male02/male02.obj";
+  objLoader.load(objURL, object3D => {
+    // console.log("=== object3D ===", object3D);
+    object3D.name = "male02";
+    scene.add(object3D);
+  });
+
   const onObjectLoad = object3D => {
     // console.log("=== object3D ===", object3D);
     const name = object3D.name || "unnamed-object";
@@ -282,6 +291,10 @@ const render = tick => {
   }
 
   // If we made it here, the web worker can safely render the scene.
+  const male02 = state.scene.getObjectByName("male02");
+  // console.log("Math.sin(tick)", Math.sin(tick));
+  male02.rotateY(0.03);
+  // male02.rotateZ(0.05);
   state.renderer.render(state.scene, state.camera);
 
   // Maybe the main thread is interested in knowing what this web worker is
