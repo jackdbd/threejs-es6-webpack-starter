@@ -6511,6 +6511,11 @@ globjoin@^0.1.4:
   resolved "https://registry.yarnpkg.com/globjoin/-/globjoin-0.1.4.tgz#2f4494ac8919e3767c5cbb691e9f463324285d43"
   integrity sha1-L0SUrIkZ43Z8XLtpHp9GMyQoXUM=
 
+gltf-loader-ts@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/gltf-loader-ts/-/gltf-loader-ts-0.3.1.tgz#917395bfc77dc98df148c57a2585170241be6318"
+  integrity sha512-GypLFqIDAEtl211fPyGA596Wz75R9eHEAMl+RQfQ8XQZb6Wks/1Aas6YuF/e/Xw57rULkefcBW/hsqLISkBBww==
+
 gonzales-pe@^4.2.4:
   version "4.2.4"
   resolved "https://registry.yarnpkg.com/gonzales-pe/-/gonzales-pe-4.2.4.tgz#356ae36a312c46fe0f1026dd6cb539039f8500d2"

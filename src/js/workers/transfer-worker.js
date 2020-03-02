@@ -20,7 +20,15 @@ import {
 import * as action from "../actions";
 
 import { OBJLoader2 } from "../vendor/OBJLoader2";
+
+// https://bwasty.github.io/gltf-loader-ts/index.html
+// https://github.com/KhronosGroup/glTF-Sample-Models/tree/master/2.0/
+// https://github.com/mrdoob/three.js/blob/master/examples/webgl_loader_gltf.html
+import { GltfLoader } from "gltf-loader-ts";
+
 const NAME = "transfer-worker";
+
+const gltfLoader = new GltfLoader();
 
 const makeScene = name => {
   const scene = new Scene();
@@ -99,6 +107,31 @@ const makeCamera = (canvas, scene) => {
 
   return camera;
 };
+
+const tryGltf = uri => {
+  return new Promise((resolve, reject) => {
+    return gltfLoader
+      .load(uri)
+      .then(asset => {
+        // console.log("tryGltf -> asset", asset);
+        const gltf = asset.gltf;
+        // console.log("GLTF", gltf);
+        resolve(gltf);
+      })
+      .catch(err => {
+        reject(err);
+      });
+  });
+};
+
+// async function tryGltf(uri) {
+//   const asset = await gltfLoader.load(uri);
+//   console.log("tryGltf -> asset", asset);
+//   let gltf = asset.gltf;
+//   console.log("GLTF", gltf);
+//   // let data = await asset.accessorData(0); // fetches BoxTextured0.bin
+//   // let image: Image = await asset.imageData.get(0); // fetches CesiumLogoFlat.png
+// }
 
 const init = payload => {
   const { canvas, sceneName } = payload;
@@ -246,6 +279,23 @@ const init = payload => {
     undefined,
     onError
   );
+
+  tryGltf(
+    "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/BoxTextured/glTF/BoxTextured.gltf"
+  )
+    .then(glft => {
+      console.log("glft", glft);
+      //   scene.add( gltf.scene );
+
+      // gltf.animations; // Array<THREE.AnimationClip>
+      // gltf.scene; // THREE.Group
+      // gltf.scenes; // Array<THREE.Group>
+      // gltf.cameras; // Array<THREE.Camera>
+      // gltf.asset; // Object
+    })
+    .catch(err => {
+      console.log("err with gltf", err);
+    });
 
   state.camera = camera;
   state.canvas = canvas;
