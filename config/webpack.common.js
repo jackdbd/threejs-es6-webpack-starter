@@ -1,5 +1,6 @@
 const path = require("path");
 const CircularDependencyPlugin = require("circular-dependency-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
 const { DefinePlugin } = require("webpack");
 const DuplicatePackageCheckerPlugin = require("duplicate-package-checker-webpack-plugin");
 const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
@@ -11,6 +12,8 @@ const WorkerPlugin = require("worker-plugin");
 // The path used in each rule is resolved starting from `context`.
 // GOTCHA: use path.resolve for the path to the source files, and path.join for
 // the output files.
+const WEB_WORKERS_PUBLIC_PATH = "shared-web-workers/";
+
 const rules = [
   // Rule for html documents and document fragments
   {
@@ -26,7 +29,8 @@ const rules = [
       },
     },
   },
-  // Rule for JS files. Web workers are bundled by worker-plugin.
+  // Rule for JS files. Dedicated web workers are bundled by worker-plugin.
+  // Shared web workers are copied by CopyPlugin.
   {
     test: /\.(js|jsx)$/,
     include: [path.resolve("src", "js")],
@@ -160,6 +164,7 @@ const commonConfigFn = (env = {}, argv = {}) => {
       APP_NAME: JSON.stringify(APP_NAME),
       AUTHOR: JSON.stringify("Giacomo Debidda"),
       PUBLIC_URL: JSON.stringify(PUBLIC_URL),
+      WEB_WORKERS_PUBLIC_PATH: JSON.stringify(WEB_WORKERS_PUBLIC_PATH),
     }),
     new DuplicatePackageCheckerPlugin({
       emitError: false,
@@ -212,6 +217,13 @@ const commonConfigFn = (env = {}, argv = {}) => {
       minify,
       template: path.resolve("src", "html", "documents", "404.html"),
     }),
+    new HtmlWebpackPlugin({
+      chunks: ["commons", "runtime", "shared-worker-demo", "styles"],
+      filename: "shared-worker.html",
+      hash: false,
+      minify,
+      template: path.resolve("src", "html", "documents", "shared-worker.html"),
+    }),
     // html-webpack-plugin must come BEFORE favicons-webpack-plugin in the
     // plugins array.
     // https://github.com/jantimon/favicons-webpack-plugin#html-injection
@@ -237,6 +249,14 @@ const commonConfigFn = (env = {}, argv = {}) => {
     // https://github.com/GoogleChromeLabs/worker-plugin/issues/19
     // https://web.dev/module-workers/#preload-workers-with-modulepreload
     new WorkerPlugin(),
+    // Workaround for shared web workers (at the moment worker-plugin does not
+    // support them).
+    new CopyPlugin([
+      {
+        from: path.resolve("src", "js", "workers", "shared-worker.js"),
+        to: WEB_WORKERS_PUBLIC_PATH,
+      },
+    ]),
   ];
 
   const config = {
@@ -248,6 +268,7 @@ const commonConfigFn = (env = {}, argv = {}) => {
       about: path.resolve("src", "js", "about.js"),
       "bitmap-demo": path.resolve("src", "js", "bitmap-demo.js"),
       home: path.resolve("src", "js", "index.js"),
+      "shared-worker-demo": path.resolve("src", "js", "shared-worker-demo.js"),
       "transfer-demo": path.resolve("src", "js", "transfer-demo.js"),
     },
     mode: argv.mode,
