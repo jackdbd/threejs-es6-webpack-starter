@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+  ${require('../fragments/head.html')}
+  <body class="site">
+    ${require('../fragments/navbar.html')}
+    <main class="box single-responsive-element">
+      <figure class="no-margins">
+        <div class="canvas-container-outer preserve-aspect-ratio">
+          <div class="canvas-container-inner">
+            <canvas id="application-canvas"></canvas>
+          </div>
+        </div>
+      </figure>
+      <figcaption>
+        A scene with a spotlight, a directional light, an ambient light, a
+        particle system, a custom material and several helpers.
+      </figcaption>
+    </main>
+    ${require('../fragments/footer.html')}
+  </body>
+</html>

@@ -17,19 +17,17 @@ const SPOT_LIGHT_NAME = "Spotlight";
 const CUSTOM_MESH_NAME = "Custom Mesh";
 
 export class Application {
-  constructor(opts = {}) {
-    if (opts.container) {
-      this.container = opts.container;
-    } else {
-      this.createContainer();
-    }
+  constructor(opts) {
+    this.showHelpers =
+      opts && opts.showHelpers !== undefined ? opts.showHelpers : true;
+    this.canvas = document.getElementById("application-canvas");
+    this.container = document.querySelector("main .canvas-container-inner");
     this.createTooltip();
-    this.showHelpers = opts.showHelpers ? true : false;
     this.textureLoader = new THREE.TextureLoader();
 
     if (Detector.webgl) {
       this.bindEventHandlers();
-      this.init(opts.canvas);
+      this.init(this.canvas);
       this.render();
     } else {
       // console.warn("WebGL NOT supported in your browser!");
@@ -50,6 +48,7 @@ export class Application {
   }
 
   init(canvas) {
+    const showGUI = false;
     window.addEventListener("resize", this.handleResize);
     this.setupScene();
     this.setupRenderer(canvas);
@@ -61,7 +60,10 @@ export class Application {
     }
     this.setupRay();
     this.setupControls();
-    this.setupGUI();
+
+    if (showGUI) {
+      this.setupGUI();
+    }
 
     this.addFloor(100, 100);
     this.addCube(20);
@@ -89,32 +91,15 @@ export class Application {
     requestAnimationFrame(() => this.render());
   }
 
-  /**
-   * Create a div element which will contain the Three.js canvas.
-   */
-  createContainer() {
-    const elements = document.getElementsByClassName("app");
-    if (elements.length !== 1) {
-      alert("You need to have exactly ONE <div class='app' /> in your HTML");
-    }
-    const app = elements[0];
-    const div = document.createElement("div");
-    div.setAttribute("class", "canvas-container");
-    div.setAttribute("data-cy", "canvas-container");
-    app.appendChild(div);
-    this.container = div;
-  }
-
   createTooltip() {
-    const elements = document.getElementsByClassName("app");
-    if (elements.length !== 1) {
-      alert("You need to have exactly ONE <div class='app' /> in your HTML");
+    const main = document.querySelector("main");
+    if (!main) {
+      alert(`You have no '<main>' tag on ythe HTML page. You need exactly ONE`);
     }
-    const app = elements[0];
     const div = document.createElement("div");
     div.setAttribute("class", "tooltip");
     div.setAttribute("data-cy", "tooltip");
-    app.appendChild(div);
+    main.appendChild(div);
     this.tooltip = div;
   }
 
@@ -150,7 +135,7 @@ export class Application {
     const { name, uuid, type } = interactionEvent.target;
     const { x, y } = interactionEvent.data.global;
     const [xScreen, yScreen] = this.getScreenCoordinates(x, y);
-    this.tooltip.innerHTML = `<h4>${name} (${type})</h4><br><span>UUID: ${uuid}</span><br><span><em>Click to cast a ray</em></span>`;
+    this.tooltip.innerHTML = `<h4>${name} (${type})</h4><span><em>Click to cast a ray</em></span>`;
     const style = `left: ${xScreen}px; top: ${yScreen}px; visibility: visible; opacity: 0.8`;
     this.tooltip.style = style;
   }
@@ -486,17 +471,31 @@ export class Application {
   }
 
   getScreenCoordinates(xNDC, yNDC) {
-    const {
-      clientHeight,
-      clientWidth,
-      offsetLeft,
-      offsetTop,
-    } = this.renderer.domElement;
+    // const {
+    //   clientHeight,
+    //   clientWidth,
+    //   offsetLeft,
+    //   offsetTop,
+    // } = this.renderer.domElement;
 
-    const xRelativePx = ((xNDC + 1) / 2) * clientWidth;
-    const yRelativePx = -0.5 * (yNDC - 1) * clientHeight;
-    const xScreen = xRelativePx + offsetLeft;
-    const yScreen = yRelativePx + offsetTop;
+    // TODO: save this.main at instantiation
+    const main = document.querySelector(".single-responsive-element");
+
+    const canvasDomRect = this.canvas.getBoundingClientRect();
+    const mainDomRect = main.getBoundingClientRect();
+    // console.log("canvasDomRect", canvasDomRect, "mainDomRect", mainDomRect);
+    const x = canvasDomRect.x - mainDomRect.x;
+    const y = canvasDomRect.y - mainDomRect.y;
+
+    // const xRelativePx = ((xNDC + 1) / 2) * clientWidth;
+    // const yRelativePx = -0.5 * (yNDC - 1) * clientHeight;
+    // const xScreen = xRelativePx + offsetLeft;
+    // const yScreen = yRelativePx + offsetTop;
+    // TODO: this is not exactly right, so the ray will not be correct
+    const xRelativePx = ((xNDC + 1) / 2) * canvasDomRect.width;
+    const yRelativePx = -0.5 * (yNDC - 1) * canvasDomRect.height;
+    const xScreen = xRelativePx + x;
+    const yScreen = yRelativePx + y;
     return [xScreen, yScreen];
   }
 }

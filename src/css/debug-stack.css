@@ -1,0 +1,11 @@
+.stack {
+  background: hsla(210, 100%, 50%, 0.5) !important;
+  box-shadow: none !important;
+  color: hsla(210, 100%, 100%, 0.9) !important;
+  outline: 0.1rem solid hsla(30, 100%, 50%, 0.5) !important;
+}
+
+.stack > * {
+  background: hsla(220, 100%, 50%, 0.5) !important;
+  outline: 0.25rem solid hsla(40, 100%, 50%, 0.5) !important;
+}

@@ -1,0 +1,40 @@
+/**
+ * Cluster layout
+ *
+ * A cluster element is a container that lets its grandchildren wrap on the next
+ * row when they would otherwise overflow. Set the --space CSS custom property
+ * to control the space between its grandchildren.
+ *
+ * @example
+ * <nav class="cluster">
+ *   <div> <!-- intermediary wrapper -->
+ *     <div>Logo (grandchild 0)</div>
+ *     <ul>List of links (grandchild 1)</ul>
+ *   </div>
+ * </nav>
+ *
+ * nav.cluster {
+ *   --space: 3rem;
+ * }
+ *
+ * @see
+ * https://absolutely.every-layout.dev/layouts/cluster/
+ */
+
+.cluster {
+  --space: 1rem;
+
+  overflow: hidden;
+}
+
+.cluster > * {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  margin: calc(var(--space) / 2 * -1);
+}
+
+.cluster > * > * {
+  margin: calc(var(--space) / 2);
+}

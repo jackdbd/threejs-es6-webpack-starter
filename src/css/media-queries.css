@@ -1,0 +1,59 @@
+/* stylelint-disable unit-whitelist */
+@media only screen and (min-width: 321px) {
+  .single-responsive-element {
+    left: 5%;
+    width: 90%;
+  }
+}
+
+@media only screen and (min-width: 1300px) {
+  .single-responsive-element {
+    left: 10%;
+    width: 80%;
+  }
+}
+
+@media only screen and (min-width: 1500px) {
+  .single-responsive-element {
+    left: 12.5%;
+    width: 75%;
+  }
+}
+
+@media only screen and (min-width: 1700px) {
+  .single-responsive-element {
+    left: 15%;
+    width: 70%;
+  }
+}
+
+@media only screen and (min-width: 1900px) {
+  .single-responsive-element {
+    left: 17.5%;
+    width: 65%;
+  }
+}
+
+@media only screen and (min-width: 2200px) {
+  .single-responsive-element {
+    left: 22.5%;
+    width: 55%;
+  }
+}
+
+@media only screen and (min-width: 600px) {
+  .nav-grid {
+    grid-template-areas: "home pages";
+  }
+
+  .nav-grid-hamburger {
+    display: none;
+  }
+
+  .nav-grid-pages {
+    display: flex;
+    justify-self: flex-end;
+  }
+}
+
+/* stylelint-enable unit-whitelist */

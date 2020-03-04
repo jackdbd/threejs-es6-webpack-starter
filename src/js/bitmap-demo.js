@@ -1,7 +1,11 @@
 import BitmapWorker from "./workers/bitmap-worker";
 import { BitmapWorkerAction, MainThreadAction } from "./worker-actions";
+import { toggleMobileNav } from "./components/navbar";
+import { makeLi } from "./helpers";
 
 import "../css/index.css";
+
+window.toggleMobileNav = toggleMobileNav;
 
 // TODO: preload the web worker script with resource hints. Or is it done automatically by webpack's worker-loader?
 // const workerUrl = document.querySelector("[rel=preload][as=script]").href;
@@ -14,19 +18,19 @@ import "../css/index.css";
   const bitmapsConfig = [
     {
       ctx: document
-        .getElementById("bitmap-canvas-low-res")
+        .getElementById("low-res-bitmap-canvas")
         .getContext("bitmaprenderer"),
       resolution: { width: 160, height: 90 },
     },
     {
       ctx: document
-        .getElementById("bitmap-canvas-medium-res")
+        .getElementById("medium-res-bitmap-canvas")
         .getContext("bitmaprenderer"),
       resolution: { width: 640, height: 480 },
     },
     {
       ctx: document
-        .getElementById("bitmap-canvas-high-res")
+        .getElementById("high-res-bitmap-canvas")
         .getContext("bitmaprenderer"),
       resolution: { width: 1024, height: 768 },
     },
@@ -40,9 +44,15 @@ import "../css/index.css";
 
   let reqId;
 
+  const messages = document.querySelector(".messages");
+
   const onMessage = event => {
-    const label = `[${NAME} <-- ${event.data.source}] - ${event.data.action}`;
-    console.log(`%c${label}`, style);
+    const text = `[${NAME} <-- ${event.data.source}] - ${event.data.action}`;
+    console.log(`%c${text}`, style);
+
+    const li = makeLi({ text, style });
+    messages.appendChild(li);
+    messages.lastChild.scrollIntoView();
 
     switch (event.data.action) {
       case BitmapWorkerAction.BITMAPS: {
@@ -93,6 +103,13 @@ import "../css/index.css";
   };
   bitmapWorker.postMessage(message);
 
+  const li = makeLi({
+    text: `[${NAME} --> worker] ${message.action}`,
+    style: "color: red; font-weight: normal",
+  });
+  messages.appendChild(li);
+  messages.lastChild.scrollIntoView();
+
   // Up until recently, requestAnimationFrame was not available in web workers,
   // so using requestAnimationFrame in the main thread was one of the possible
   // workarounds. Now I think it would be better to move requestAnimationFrame
@@ -105,6 +122,13 @@ import "../css/index.css";
       },
       source: NAME,
     });
+    messages.appendChild(
+      makeLi({
+        text: `[${NAME} --> worker] ${MainThreadAction.REQUEST_BITMAPS}`,
+        style: "color: red; font-weight: normal",
+      })
+    );
+    messages.lastChild.scrollIntoView();
     reqId = requestAnimationFrame(requestLoop);
     if (errorInWorker) {
       cancelAnimationFrame(reqId);

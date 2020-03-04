@@ -1,0 +1,37 @@
+/**
+ * Stack layout
+ *
+ * A stack element is a container that controls the vertical margins of its
+ * children. Set the --space CSS custom property to control the vertical space
+ * between its children.
+ *
+ * @example
+ * <div class="stack">
+ *   <div>Child 0</div>
+ *   <div>Child 1</div>
+ *   <div>Child 2</div>
+ * </div>
+ *
+ * div.stack {
+ *   --space: 3rem;
+ * }
+ *
+ * @see
+ * https://absolutely.every-layout.dev/layouts/stack/
+ */
+.stack {
+  --space: 1rem;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.stack > * {
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+.stack > * + * {
+  margin-top: var(--space);
+}

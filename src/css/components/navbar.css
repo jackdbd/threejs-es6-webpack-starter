@@ -1,0 +1,52 @@
+.nav-grid {
+  display: grid;
+  grid-template-areas: "home hamburger";
+}
+
+.nav-grid-pages {
+  display: none;
+  grid-area: pages;
+}
+
+.nav-grid--expanded {
+  grid-template-areas:
+    "home hamburger"
+    "pages pages";
+}
+
+.nav-grid-home {
+  align-items: center;
+  display: flex;
+  grid-area: home;
+  margin-right: auto;
+}
+
+.nav-grid-home a,
+.nav-grid-pages li {
+  line-height: normal;
+}
+
+.nav-grid-hamburger {
+  grid-area: hamburger;
+  margin-left: auto;
+}
+
+.nav-grid-hamburger button {
+  background: none;
+  border: none;
+  color: var(--color-font-primary);
+  outline: 0.1rem solid var(--color-highlighted);
+}
+
+.nav-grid--expanded .nav-grid-pages {
+  display: flex;
+  flex-direction: column;
+}
+
+.nav-grid--expanded .nav-grid-pages a {
+  display: block;
+}
+
+.nav-grid--expanded .nav-grid-pages > li + li {
+  margin-top: var(--geometry-space-small);
+}

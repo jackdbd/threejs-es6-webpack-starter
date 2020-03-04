@@ -1,10 +1,21 @@
 :root {
   /* COLORS */
-  --colors-background-primary: #374047;
-  --colors-background-secondary: #5f6e78;
-  --colors-header: #5f6e78;
+  --color-background-primary: #374047;
+  --color-background-secondary: #5f6e78;
+  --color-font-primary: white;
+  --color-highlighted: orange;
+
+  /* GEOMETRY */
+  --geometry-space-small: 1rem;
+  --geometry-space-medium: 2rem;
+  --geometry-space-big: 3rem;
 
   /* TYPOGRAPHY */
-  --typography-font-family-primary: "InknutAntiqua", sans-serif;
+
+  /* --typography-font-family-primary: "InknutAntiqua", sans-serif; */
+  --typography-font-family-primary: "Raleway";
   --typography-font-family-secondary: "Raleway";
+  --typography-font-family-tertiary: "Raleway";
+
+  /* --typography-font-family-tertiary: "InknutAntiqua-ExtraBold"; */
 }

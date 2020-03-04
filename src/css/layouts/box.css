@@ -1,0 +1,24 @@
+/**
+ * Box layout
+ *
+ * A box element applies a padding on all sides. Set the --space CSS custom
+ * property to set the amount of this padding.
+ *
+ * @example
+ * <div class="box">
+ *   <div>Child (there is padding around me)</div>
+ * </div>
+ *
+ * div.box {
+ *   --space: 3rem;
+ * }
+ *
+ * @see
+ * https://absolutely.every-layout.dev/layouts/box/
+ */
+
+.box {
+  --space: var(--geometry-space-small);
+
+  padding: var(--space);
+}

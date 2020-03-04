@@ -7,9 +7,21 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
 
-const APP_NAME = "Three.js ES6 Webpack 4 Project Starter";
-
 const rules = [
+  // Rule for html documents and document fragments
+  {
+    test: /\.html$/,
+    include: [path.join(__dirname, "src", "html")],
+    loader: "html-loader",
+    options: {
+      // Required to use expressions in HTML documents and fragments.
+      // https://webpack.js.org/loaders/html-loader/#interpolate
+      interpolate: true,
+      minimize: {
+        removeComments: true,
+      },
+    },
+  },
   // Rule for web workers
   {
     test: /\.js$/,
@@ -36,20 +48,21 @@ const rules = [
       loader: "babel-loader",
     },
   },
-  // Rule for stylesheets
+  // Rule for stylesheets (.sass, .scss, .css)
   {
-    test: /\.(css)$/,
+    test: /\.(sa|sc|c)ss$/,
     include: [path.join(__dirname, "src", "css")],
     use: [
-      MiniCssExtractPlugin.loader,
       {
-        loader: "css-loader",
+        loader: MiniCssExtractPlugin.loader,
         options: {
           // avoid using CSS modules
           modules: false,
           sourceMap: true,
         },
       },
+      "css-loader",
+      "sass-loader",
     ],
   },
   // Rule for shaders
@@ -71,6 +84,12 @@ const rules = [
         name: path.join("fonts", "[name].[ext]"),
       },
     },
+  },
+  // rule for .woff2 font files
+  {
+    test: /\.woff2?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+    include: [path.join(__dirname, "src", "fonts")],
+    use: "url-loader",
   },
   // Rule for textures (images)
   {
@@ -117,6 +136,43 @@ const commonConfigFn = (env = {}, argv = {}) => {
   }
   console.log(`Prepare ${argv.mode.toUpperCase()} build`);
 
+  const APP_NAME = `Three.js ES6 Webpack 4 Project Starter (${argv.mode})`;
+  const author = "Giacomo Debidda";
+  const PUBLIC_URL = env.publicUrl;
+  console.log("=== commonConfigFn -> PUBLIC_URL ===", PUBLIC_URL);
+  const pages = [
+    { name: "Home", href: `${PUBLIC_URL}/index.html` },
+    {
+      name: "OffscreenCanvas + bitmaprenderer",
+      href: `${PUBLIC_URL}/offscreen-bitmaprenderer.html`,
+    },
+    {
+      name: "OffscreenCanvas + webgl",
+      href: `${PUBLIC_URL}/offscreen-webgl.html`,
+    },
+    {
+      name: "About",
+      href: `${PUBLIC_URL}/about.html`,
+    },
+  ];
+
+  // In production html-webpack-plugin should automatically minify HTML
+  // documents with html-minifier-terser and these parameters, but it doesn't.
+  // Setting minify to true also does not work for me; only setting minify as an
+  // object does.
+  // https://github.com/jantimon/html-webpack-plugin#minification
+  const minify =
+    argv.mode === "production"
+      ? {
+          collapseWhitespace: true,
+          removeComments: true,
+          removeRedundantAttributes: true,
+          removeScriptTypeAttributes: true,
+          removeStyleLinkTypeAttributes: true,
+          useShortDoctype: true,
+        }
+      : false;
+
   const plugins = [
     new CircularDependencyPlugin({
       exclude: /node_modules/,
@@ -124,6 +180,7 @@ const commonConfigFn = (env = {}, argv = {}) => {
     }),
     new DefinePlugin({
       APP_NAME: JSON.stringify(APP_NAME),
+      PUBLIC_URL: JSON.stringify(PUBLIC_URL),
     }),
     new DuplicatePackageCheckerPlugin({
       emitError: false,
@@ -132,51 +189,50 @@ const commonConfigFn = (env = {}, argv = {}) => {
       verbose: true,
     }),
     new HtmlWebpackPlugin({
-      chunks: ["home"],
+      chunks: ["home", "styles"],
       filename: "index.html",
-      hash: true,
-      template: path.join(__dirname, "src", "templates", "index.html"),
-      templateParameters: {
-        APP_NAME,
-        PUBLIC_URL: env.publicUrl,
-      },
+      // hash: true,
+      // inject: false,
+      minify,
+      template: path.join(__dirname, "src", "html", "documents", "index.html"),
     }),
     new HtmlWebpackPlugin({
-      chunks: ["bitmap-demo"],
-      filename: "bitmap-canvas-demo.html",
-      hash: true,
+      chunks: ["bitmap-demo", "styles"],
+      filename: "offscreen-bitmaprenderer.html",
+      // hash: true,
+      minify,
       template: path.join(
         __dirname,
         "src",
-        "templates",
-        "bitmap-canvas-demo.html"
+        "html",
+        "documents",
+        "offscreen-bitmaprenderer.html"
       ),
-      templateParameters: {
-        PUBLIC_URL: env.publicUrl,
-      },
     }),
     new HtmlWebpackPlugin({
-      chunks: ["transfer-demo"],
-      filename: "transfer-canvas-demo.html",
-      hash: true,
+      chunks: ["transfer-demo", "styles"],
+      filename: "offscreen-webgl.html",
+      // hash: true,
+      minify,
       template: path.join(
         __dirname,
         "src",
-        "templates",
-        "transfer-canvas-demo.html"
+        "html",
+        "documents",
+        "offscreen-webgl.html"
       ),
-      templateParameters: {
-        PUBLIC_URL: env.publicUrl,
-      },
     }),
     new HtmlWebpackPlugin({
-      chunks: ["about"],
+      chunks: ["about", "styles"],
       filename: "about.html",
-      hash: true,
-      template: path.join(__dirname, "src", "templates", "about.html"),
-      templateParameters: {
-        PUBLIC_URL: env.publicUrl,
-      },
+      minify,
+      template: path.join(__dirname, "src", "html", "documents", "about.html"),
+    }),
+    new HtmlWebpackPlugin({
+      chunks: ["styles"],
+      filename: "404.html",
+      minify,
+      template: path.join(__dirname, "src", "html", "documents", "404.html"),
     }),
     // html-webpack-plugin must come BEFORE favicons-webpack-plugin in the
     // plugins array.
@@ -187,8 +243,8 @@ const commonConfigFn = (env = {}, argv = {}) => {
       title: APP_NAME,
     }),
     new MiniCssExtractPlugin({
-      filename: "[name].[hash].css",
-      chunkFilename: "[id].bundle.css",
+      chunkFilename: "[name].[contenthash].css",
+      filename: "[name].[contenthash].css",
     }),
   ];
 

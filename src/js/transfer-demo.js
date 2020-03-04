@@ -1,17 +1,50 @@
 import TransferWorker from "./workers/transfer-worker";
 import * as action from "./actions";
-
+import { toggleMobileNav } from "./components/navbar";
+import { makeLi } from "./helpers";
 import "../css/index.css";
+
+window.toggleMobileNav = toggleMobileNav;
 
 // TODO: preload the web worker script with resource hints. Or is it done automatically by webpack's worker-loader?
 // const workerUrl = document.querySelector("[rel=preload][as=script]").href;
 
 (function iife() {
+  const NAME = "Main thread";
   const worker = new TransferWorker();
   const canvas = document.getElementById("transfer-canvas");
 
+  // TODO: handle resize of the canvas
+
+  const handleResize = event => {
+    console.warn(event);
+    // const { clientWidth, clientHeight } = this.container;
+    console.log(
+      "handleResize",
+      // clientWidth,
+      // clientHeight,
+      this
+    );
+    // this.camera.aspect = clientWidth / clientHeight;
+    // this.camera.updateProjectionMatrix();
+    // this.renderer.setSize(clientWidth, clientHeight);
+  };
+
+  window.addEventListener("resize", handleResize);
+
+  // const messages = document.querySelector(".messages");
+
   const onMessage = event => {
-    console.log(`%c${event.data.action}`, "color: green");
+    const text = event.data.action;
+    const style = "color: green; font-weight: normal";
+    console.log(`%c${text}`, style);
+    const li = makeLi({
+      text,
+      style,
+    });
+    // messages.appendChild(li);
+    // messages.lastChild.scrollIntoView();
+
     switch (event.data.action) {
       case action.NOTIFY:
         console.log(event.data.payload.info);
@@ -52,13 +85,36 @@ import "../css/index.css";
   const transfer = [offscreenCanvas];
   worker.postMessage(message, transfer);
 
+  const styleFromWorker = "color: red; font-weight: normal";
+  // messages.appendChild(
+  //   makeLi({
+  //     text: `[${NAME} --> worker] ${message.action}`,
+  //     style: styleFromWorker,
+  //   })
+  // );
+  // messages.lastChild.scrollIntoView();
+
   const startButton = document.getElementById("start-render-loop");
   startButton.addEventListener("click", () => {
     worker.postMessage({ action: action.START_RENDER_LOOP });
+    messages.appendChild(
+      makeLi({
+        text: `[${NAME} --> worker] ${action.START_RENDER_LOOP}`,
+        style: styleFromWorker,
+      })
+    );
+    messages.lastChild.scrollIntoView();
   });
 
   const stopButton = document.getElementById("stop-render-loop");
   stopButton.addEventListener("click", () => {
     worker.postMessage({ action: action.STOP_RENDER_LOOP });
+    // messages.appendChild(
+    //   makeLi({
+    //     text: `[${NAME} --> worker] ${action.STOP_RENDER_LOOP}`,
+    //     style: styleFromWorker,
+    //   })
+    // );
+    // messages.lastChild.scrollIntoView();
   });
 })();

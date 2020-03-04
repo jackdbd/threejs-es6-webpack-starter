@@ -1,0 +1,118 @@
+/**
+ * Grid element that keep placing on the same row its children, then it places
+ * on subsequent rows the children that would otherwise overflow.
+ * Set the --child-min-width CSS custom property to control how wide each child
+ * should AT LEAST be.
+ *
+ * @example
+ * <div class="grid-template-columns:auto-fit">
+ *   <div>Child 0</div>
+ *   <div>Child 1</div>
+ *   <div>Child 2</div>
+ * </ul>
+ *
+ * .my-class .grid-template-columns\:auto-fit {
+ *   --child-min-width: 500px;
+ * }
+ *
+ * @see
+ * https://css-tricks.com/auto-sizing-columns-css-grid-auto-fill-vs-auto-fit/
+ */
+.grid-template-columns\:auto-fit {
+  /* stylelint-disable-next-line unit-whitelist */
+  --child-min-width: 321px;
+
+  display: grid;
+  grid-column-gap: 1rem;
+  grid-row-gap: 1rem;
+  /* stylelint-disable-next-line unit-whitelist */
+  grid-template-columns: repeat(auto-fit, minmax(var(--child-min-width), 1fr));
+}
+
+/**
+ * @see
+ * http://wellcaffeinated.net/articles/2012/12/10/very-simple-css-only-proportional-resizing-of-elements
+ */
+.preserve-aspect-ratio {
+  --aspect: calc(4 / 3);
+
+  padding-top: calc(100% / var(--aspect));
+  position: relative;
+  width: calc(100% - var(--grid-column-gap));
+}
+
+.preserve-aspect-ratio > * {
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.preserve-aspect-ratio > * > * {
+  height: 100%;
+  width: 100%;
+}
+
+/**
+ * Lobotomized owl to set margin-left for all children but the last one.
+ *
+ * This will probably no longer be necessary when browsers will implement `gap`
+ * for flex containers.
+ * https://caniuse.com/#search=gap
+ *
+ * @example
+ * <ul class="lobotomized-owl:margin-left">
+ *   <li>Child 0</li>
+ *   <li>Child 1</li>
+ *   <li>Child 2 (this one has no margin-left)</li>
+ * </ul>
+ *
+ * ul.lobotomized-owl\:margin-left {
+ *   --space: 1.5rem;
+ * }
+ *
+ * @see
+ * https://alistapart.com/article/axiomatic-css-and-lobotomized-owls/
+ */
+.lobotomized-owl\:margin-left > * + * {
+  margin-left: var(--space);
+}
+
+.site {
+  background-color: var(--color-background-primary);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.site > main {
+  background-color: var(--color-background-secondary);
+  flex: 1 0 auto;
+}
+
+.ghost-button {
+  color: var(--color-font-primary);
+  outline: 0.1rem solid var(--color-highlighted);
+  padding: 0 var(--geometry-space-small);
+  text-decoration: none;
+}
+
+.ghost-button:hover {
+  color: var(--color-highlighted);
+  text-decoration: underline;
+}
+
+.no-margins {
+  margin: 0;
+}
+
+.single-responsive-element {
+  left: 0;
+  position: relative;
+  width: 100%;
+}
+
+.display\:none {
+  display: none;
+}

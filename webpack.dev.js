@@ -11,7 +11,8 @@ const devServer = {
   inline: true,
   open: true,
   // openPage: ["bitmap-canvas-demo.html", "transfer-canvas-demo.html"],
-  openPage: "bitmap-canvas-demo.html",
+  // openPage: "bitmap-canvas-demo.html",
+  openPage: "about.html",
   port: 8080,
   stats: {
     chunks: false,

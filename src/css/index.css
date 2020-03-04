@@ -1,81 +1,19 @@
-@import "variables.css";
-@import "font-face-rules.css";
+/* @font-face rules should be defined first in your main CSS file */
 
-body {
-  font-family: var(--typography-font-family-primary);
-  height: 100vh;
-  margin: 0;
-  overflow: hidden;
-  width: 100vw;
-}
+/* https://alligator.io/css/font-face/ */
 
-li {
-  font-family: var(--typography-font-family-secondary);
-}
+@import "../css/font-face-rules.css";
+@import "../css/variables.css";
+@import "../css/typography.css";
+@import "../css/layouts/index.css";
+@import "../css/components/index.css";
+@import "../css/helpers.css";
+@import "../css/defaults.css";
+@import "../css/media-queries.css";
 
-.app {
-  font-family: var(--typography-font-family-primary);
-  flex-direction: column;
-  display: flex;
-  height: 100%;
-  width: 100%;
-}
-
-.header {
-  background-color: var(--colors-background-primary);
-  display: flex;
-}
-
-.table-of-contents {
-  background-color: var(--colors-background-secondary);
-  display: flex;
-}
-
-.canvas-container {
-  background-color: var(--colors-background-primary);
-  display: flex;
-  height: 100%;
-  width: 100%;
-}
-
-.canvas-container > canvas {
-  height: 100%;
-  width: 100%;
-}
-
-.tooltip {
-  background: var(--colors-background-secondary);
-  border: 0;
-  border-radius: 1em;
-  font-family: var(--typography-font-family-secondary);
-  font-size: 1rem;
-  font-weight: bold;
-  height: auto;
-  padding: 0.5rem;
-  position: absolute;
-  text-align: center;
-  visibility: hidden;
-  width: auto;
-}
-
-.tooltip:hover {
-  opacity: 0.8;
-}
-
-.transfer-canvas-container {
-  border: 0.1rem solid red;
-  height: 50vh;
-}
-
-.bitmap-canvas-container {
-  border: 0.1rem solid steelblue;
-  display: inline-block;
-  height: 50vh;
-  width: 32vw;
-}
-
-.bitmap-canvas-container > canvas,
-.transfer-canvas-container > canvas {
-  height: 100%;
-  width: 100%;
+.messages {
+  background-color: white;
+  /* stylelint-disable-next-line unit-whitelist */
+  height: 400px;
+  overflow: auto;
 }

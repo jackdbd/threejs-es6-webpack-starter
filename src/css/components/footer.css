@@ -1,0 +1,11 @@
+/* footer.box {
+  --space: var(--geometry-space-small);
+
+  outline: 1px solid red;
+} */
+
+footer {
+  /* outline: 1px solid blue; */
+  display: flex;
+  justify-content: center;
+}

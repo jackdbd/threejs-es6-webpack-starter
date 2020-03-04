@@ -1,0 +1,27 @@
+/**
+ * Import this file to see the structure of a page.
+ *
+ * https://www.freecodecamp.org/news/heres-my-favorite-weird-trick-to-debug-css-88529aa5a6a3/
+ */
+*:not(path):not(g) {
+  background: hsla(210, 100%, 50%, 0.5) !important;
+  box-shadow: none !important;
+  color: hsla(210, 100%, 100%, 0.9) !important;
+  outline: 0.25rem solid hsla(210, 100%, 100%, 0.5) !important;
+}
+
+/* div {
+  outline: 0.1rem solid red !important;
+} */
+
+/* footer {
+  outline: 0.1rem solid fuchsia !important;
+} */
+
+/* p {
+  outline: 0.1rem solid purple !important;
+} */
+
+/* ul {
+  outline: 0.1rem solid lawngreen !important;
+} */
