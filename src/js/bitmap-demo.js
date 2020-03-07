@@ -1,4 +1,3 @@
-import BitmapWorker from "./workers/bitmap-worker";
 import { BitmapWorkerAction, MainThreadAction } from "./worker-actions";
 import { toggleMobileNav } from "./components/navbar";
 import { makeLi } from "./helpers";
@@ -11,7 +10,9 @@ window.toggleMobileNav = toggleMobileNav;
 (function iife() {
   const NAME = "Main thread";
 
-  const bitmapWorker = new BitmapWorker();
+  const bitmapWorker = new Worker("./workers/bitmap-worker.js", {
+    type: "module",
+  });
 
   // https://developer.mozilla.org/en-US/docs/Web/API/ImageBitmapRenderingContext
   const bitmapsConfig = [

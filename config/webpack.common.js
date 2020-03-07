@@ -6,6 +6,7 @@ const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
+const WorkerPlugin = require("worker-plugin");
 
 // The path used in each rule is resolved starting from `context`.
 // GOTCHA: use path.resolve for the path to the source files, and path.join for
@@ -25,21 +26,7 @@ const rules = [
       },
     },
   },
-  // Rule for web workers
-  {
-    test: /\.js$/,
-    include: [path.resolve("src", "js", "workers")],
-    exclude: [path.resolve("node_modules")],
-    use: [
-      {
-        loader: "worker-loader",
-        options: {
-          name: path.join("workers", "[name].[hash].js"),
-        },
-      },
-    ],
-  },
-  // Rule for JS files (not web workers)
+  // Rule for JS files. Web workers are bundled by worker-plugin.
   {
     test: /\.(js|jsx)$/,
     include: [path.resolve("src", "js")],
@@ -228,6 +215,16 @@ const commonConfigFn = (env = {}, argv = {}) => {
       chunkFilename: "[name].[contenthash].css",
       filename: "[name].[contenthash].css",
     }),
+    // Create a bundle for each web worker. This is cool, but at the moment it
+    // seems not possible to use a fixed name for this bundle. It would be
+    // useful because with a fixed filename we could inject a resource hint like
+    // <link rel="modulepreload" href="my-worker.hash.js" />
+    // in the template <head>. Keep in mind that if the name has a hash (for
+    // cache busting) we need something like WebpackManifestPlugin to find the
+    // generated filename.
+    // https://github.com/GoogleChromeLabs/worker-plugin/issues/19
+    // https://web.dev/module-workers/#preload-workers-with-modulepreload
+    new WorkerPlugin(),
   ];
 
   const config = {

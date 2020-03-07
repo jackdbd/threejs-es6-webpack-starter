@@ -1,4 +1,3 @@
-import TransferWorker from "./workers/transfer-worker";
 import * as action from "./actions";
 import { toggleMobileNav } from "./components/navbar";
 import { makeLi } from "./helpers";
@@ -11,7 +10,11 @@ window.toggleMobileNav = toggleMobileNav;
 
 (function iife() {
   const NAME = "Main thread";
-  const worker = new TransferWorker();
+
+  const worker = new Worker("./workers/transfer-worker.js", {
+    type: "module",
+  });
+
   const canvas = document.getElementById("transfer-canvas");
 
   // TODO: handle resize of the canvas
