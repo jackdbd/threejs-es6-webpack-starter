@@ -1,4 +1,3 @@
-const path = require("path");
 const { HotModuleReplacementPlugin } = require("webpack");
 const merge = require("webpack-merge");
 
@@ -6,13 +5,11 @@ const { commonConfigFn } = require("./webpack.common");
 
 const devServer = {
   compress: true,
-  contentBase: path.join(__dirname, "build"),
   host: "localhost",
   inline: true,
   open: true,
   // openPage: ["bitmap-canvas-demo.html", "transfer-canvas-demo.html"],
-  // openPage: "bitmap-canvas-demo.html",
-  openPage: "about.html",
+  openPage: "index.html",
   port: 8080,
   stats: {
     chunks: false,

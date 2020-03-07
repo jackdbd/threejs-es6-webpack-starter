@@ -38,10 +38,10 @@ window.toggleMobileNav = toggleMobileNav;
     const text = event.data.action;
     const style = "color: green; font-weight: normal";
     console.log(`%c${text}`, style);
-    const li = makeLi({
-      text,
-      style,
-    });
+    // const li = makeLi({
+    //   text,
+    //   style,
+    // });
     // messages.appendChild(li);
     // messages.lastChild.scrollIntoView();
 
@@ -97,13 +97,13 @@ window.toggleMobileNav = toggleMobileNav;
   const startButton = document.getElementById("start-render-loop");
   startButton.addEventListener("click", () => {
     worker.postMessage({ action: action.START_RENDER_LOOP });
-    messages.appendChild(
-      makeLi({
-        text: `[${NAME} --> worker] ${action.START_RENDER_LOOP}`,
-        style: styleFromWorker,
-      })
-    );
-    messages.lastChild.scrollIntoView();
+    // messages.appendChild(
+    //   makeLi({
+    //     text: `[${NAME} --> worker] ${action.START_RENDER_LOOP}`,
+    //     style: styleFromWorker,
+    //   })
+    // );
+    // messages.lastChild.scrollIntoView();
   });
 
   const stopButton = document.getElementById("stop-render-loop");

@@ -2,7 +2,6 @@ import BitmapWorker from "./workers/bitmap-worker";
 import { BitmapWorkerAction, MainThreadAction } from "./worker-actions";
 import { toggleMobileNav } from "./components/navbar";
 import { makeLi } from "./helpers";
-
 import "../css/index.css";
 
 window.toggleMobileNav = toggleMobileNav;

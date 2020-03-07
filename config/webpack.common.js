@@ -7,11 +7,14 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
 
+// The path used in each rule is resolved starting from `context`.
+// GOTCHA: use path.resolve for the path to the source files, and path.join for
+// the output files.
 const rules = [
   // Rule for html documents and document fragments
   {
     test: /\.html$/,
-    include: [path.join(__dirname, "src", "html")],
+    include: [path.resolve("src", "html")],
     loader: "html-loader",
     options: {
       // Required to use expressions in HTML documents and fragments.
@@ -25,8 +28,8 @@ const rules = [
   // Rule for web workers
   {
     test: /\.js$/,
-    include: [path.join(__dirname, "src", "js", "workers")],
-    exclude: [path.join(__dirname, "node_modules")],
+    include: [path.resolve("src", "js", "workers")],
+    exclude: [path.resolve("node_modules")],
     use: [
       {
         loader: "worker-loader",
@@ -39,10 +42,10 @@ const rules = [
   // Rule for JS files (not web workers)
   {
     test: /\.(js|jsx)$/,
-    include: [path.join(__dirname, "src", "js")],
+    include: [path.resolve("src", "js")],
     exclude: [
-      path.join(__dirname, "node_modules"),
-      path.join(__dirname, "src", "js", "workers"),
+      path.resolve("node_modules"),
+      path.resolve("src", "js", "workers"),
     ],
     use: {
       loader: "babel-loader",
@@ -51,7 +54,7 @@ const rules = [
   // Rule for stylesheets (.sass, .scss, .css)
   {
     test: /\.(sa|sc|c)ss$/,
-    include: [path.join(__dirname, "src", "css")],
+    include: [path.resolve("src", "css")],
     use: [
       {
         loader: MiniCssExtractPlugin.loader,
@@ -74,10 +77,10 @@ const rules = [
       },
     ],
   },
-  // Rule for .ttf font files
+  // Rule for font files
   {
-    test: /\.(ttf)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-    include: [path.join(__dirname, "src", "fonts")],
+    test: /\.(ttf|woff|woff2)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+    include: [path.resolve("src", "fonts")],
     use: {
       loader: "file-loader",
       options: {
@@ -85,16 +88,10 @@ const rules = [
       },
     },
   },
-  // rule for .woff2 font files
-  {
-    test: /\.woff2?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-    include: [path.join(__dirname, "src", "fonts")],
-    use: "url-loader",
-  },
   // Rule for textures (images)
   {
     test: /.(jpe?g|png)$/i,
-    include: path.join(__dirname, "src", "textures"),
+    include: path.resolve("src", "textures"),
     loaders: [
       {
         loader: "file-loader",
@@ -137,24 +134,7 @@ const commonConfigFn = (env = {}, argv = {}) => {
   console.log(`Prepare ${argv.mode.toUpperCase()} build`);
 
   const APP_NAME = `Three.js ES6 Webpack 4 Project Starter (${argv.mode})`;
-  const author = "Giacomo Debidda";
   const PUBLIC_URL = env.publicUrl;
-  console.log("=== commonConfigFn -> PUBLIC_URL ===", PUBLIC_URL);
-  const pages = [
-    { name: "Home", href: `${PUBLIC_URL}/index.html` },
-    {
-      name: "OffscreenCanvas + bitmaprenderer",
-      href: `${PUBLIC_URL}/offscreen-bitmaprenderer.html`,
-    },
-    {
-      name: "OffscreenCanvas + webgl",
-      href: `${PUBLIC_URL}/offscreen-webgl.html`,
-    },
-    {
-      name: "About",
-      href: `${PUBLIC_URL}/about.html`,
-    },
-  ];
 
   // In production html-webpack-plugin should automatically minify HTML
   // documents with html-minifier-terser and these parameters, but it doesn't.
@@ -189,20 +169,18 @@ const commonConfigFn = (env = {}, argv = {}) => {
       verbose: true,
     }),
     new HtmlWebpackPlugin({
-      chunks: ["home", "styles"],
+      chunks: ["commons", "home", "runtime", "styles", "vendor"],
       filename: "index.html",
-      // hash: true,
-      // inject: false,
+      hash: false,
       minify,
-      template: path.join(__dirname, "src", "html", "documents", "index.html"),
+      template: path.resolve("src", "html", "documents", "index.html"),
     }),
     new HtmlWebpackPlugin({
-      chunks: ["bitmap-demo", "styles"],
+      chunks: ["bitmap-demo", "commons", "runtime", "styles", "vendor"],
       filename: "offscreen-bitmaprenderer.html",
-      // hash: true,
+      hash: false,
       minify,
-      template: path.join(
-        __dirname,
+      template: path.resolve(
         "src",
         "html",
         "documents",
@@ -210,12 +188,11 @@ const commonConfigFn = (env = {}, argv = {}) => {
       ),
     }),
     new HtmlWebpackPlugin({
-      chunks: ["transfer-demo", "styles"],
+      chunks: ["commons", "runtime", "styles", "transfer-demo", "vendor"],
       filename: "offscreen-webgl.html",
-      // hash: true,
+      hash: false,
       minify,
-      template: path.join(
-        __dirname,
+      template: path.resolve(
         "src",
         "html",
         "documents",
@@ -223,23 +200,28 @@ const commonConfigFn = (env = {}, argv = {}) => {
       ),
     }),
     new HtmlWebpackPlugin({
-      chunks: ["about", "styles"],
+      chunks: ["about", "commons", "runtime", "styles"],
       filename: "about.html",
+      hash: false,
       minify,
-      template: path.join(__dirname, "src", "html", "documents", "about.html"),
+      template: path.resolve("src", "html", "documents", "about.html"),
     }),
     new HtmlWebpackPlugin({
-      chunks: ["styles"],
+      chunks: ["404", "commons", "runtime", "styles"],
       filename: "404.html",
+      hash: false,
       minify,
-      template: path.join(__dirname, "src", "html", "documents", "404.html"),
+      template: path.resolve("src", "html", "documents", "404.html"),
     }),
     // html-webpack-plugin must come BEFORE favicons-webpack-plugin in the
     // plugins array.
     // https://github.com/jantimon/favicons-webpack-plugin#html-injection
     new FaviconsWebpackPlugin({
-      inject: true,
-      logo: path.join(__dirname, "src", "textures", "star.png"),
+      // `inject: true` seems not working, so I have a <head> document fragment
+      // where I manually reference the public path to the favicons.
+      inject: false,
+      logo: path.resolve("src", "textures", "star.png"),
+      prefix: "favicons/",
       title: APP_NAME,
     }),
     new MiniCssExtractPlugin({
@@ -249,22 +231,33 @@ const commonConfigFn = (env = {}, argv = {}) => {
   ];
 
   const config = {
-    context: __dirname,
+    context: path.resolve(__dirname, ".."),
+
+    // The path to each entry point is resolved starting from `context`.
     entry: {
-      about: path.resolve(__dirname, "src", "js", "about.js"),
-      "bitmap-demo": path.resolve(__dirname, "src", "js", "bitmap-demo.js"),
-      "transfer-demo": path.resolve(__dirname, "src", "js", "transfer-demo.js"),
-      home: path.resolve(__dirname, "src", "js", "index.js"),
+      "404": path.resolve("src", "js", "404.js"),
+      about: path.resolve("src", "js", "about.js"),
+      "bitmap-demo": path.resolve("src", "js", "bitmap-demo.js"),
+      home: path.resolve("src", "js", "index.js"),
+      "transfer-demo": path.resolve("src", "js", "transfer-demo.js"),
     },
     mode: argv.mode,
     module: {
       rules,
     },
     output: {
+      // For HTTP cache busting we want an hash to appear in the asset filename.
+      // We could use html-webpack-plugin `hash: true` to have the hash added as
+      // a query string. However, `some-file.some-hash.js` is a better idea than
+      // `some-file.js?some-hash`. Here is why:
+      // http://www.stevesouders.com/blog/2008/08/23/revving-filenames-dont-use-querystring/
+      // So we add the hash in the filename here and use `hash: false` with
+      // html-webpack-plugin.
       filename: "[name].[hash].js",
-      path: path.join(__dirname, "build"),
+      // The output path is resolved starting from `context`
+      path: path.resolve("build"),
       publicPath: "/",
-      sourceMapFilename: "[file].[hash].map",
+      sourceMapFilename: "[file].map",
     },
     plugins,
     performance: {
@@ -287,7 +280,7 @@ const commonConfigFn = (env = {}, argv = {}) => {
         // app. Use only if you're sure that all required versions are
         // compatible, at least in the context of your app
         // https://github.com/darrenscerri/duplicate-package-checker-webpack-plugin#resolving-duplicate-packages-in-your-bundle
-        three: path.resolve(__dirname, "node_modules", "three"),
+        three: path.resolve("node_modules", "three"),
       },
       extensions: [".js"],
     },

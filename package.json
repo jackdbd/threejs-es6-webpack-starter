@@ -12,7 +12,7 @@
     "node": ">=11.10.1"
   },
   "scripts": {
-    "build": "yarn prebuild && webpack --config webpack.prod.js",
+    "build": "yarn prebuild && webpack --config ./config/webpack.prod.js",
     "ci": "yarn test && yarn coverage && yarn build",
     "coverage": "codecov",
     "deploy": "gh-pages -d build",
@@ -24,7 +24,7 @@
     "nuke": "rimraf node_modules && rm yarn.lock",
     "prebuild": "yarn lint",
     "predeploy": "yarn test && yarn build",
-    "start": "webpack-dev-server --config webpack.dev.js",
+    "start": "webpack-dev-server --config ./config/webpack.dev.js",
     "static": "chromium-browser build/index.html",
     "stats": "webpack-bundle-analyzer build/stats.json --port 8888",
     "test": "yarn test:unit",
@@ -89,6 +89,7 @@
     "webpack-cli": "3.3.11",
     "webpack-dev-server": "3.10.3",
     "webpack-glsl-loader": "1.0.1",
+    "webpack-manifest-plugin": "2.2.0",
     "webpack-merge": "4.2.2",
     "worker-loader": "2.0.0"
   },
