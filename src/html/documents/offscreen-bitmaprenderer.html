@@ -9,7 +9,9 @@
           <figure class="no-margins">
             <div class="canvas-container-outer preserve-aspect-ratio">
               <div>
-                <canvas id="low-res-bitmap-canvas"></canvas>
+                <canvas
+                  id="${require('../../js/constants.js').CanvasIds.BITMAP_LOW_RES}"
+                ></canvas>
               </div>
             </div>
             <figcaption>Low Res</figcaption>
@@ -17,7 +19,9 @@
           <figure class="no-margins">
             <div class="canvas-container-outer preserve-aspect-ratio">
               <div>
-                <canvas id="medium-res-bitmap-canvas"></canvas>
+                <canvas
+                  id="${require('../../js/constants.js').CanvasIds.BITMAP_MEDIUM_RES}"
+                ></canvas>
               </div>
             </div>
             <figcaption>Medium Res</figcaption>
@@ -25,13 +29,18 @@
           <figure class="no-margins">
             <div class="canvas-container-outer preserve-aspect-ratio">
               <div>
-                <canvas id="high-res-bitmap-canvas"></canvas>
+                <canvas
+                  id="${require('../../js/constants.js').CanvasIds.BITMAP_HIGH_RES}"
+                ></canvas>
               </div>
             </div>
             <figcaption>High Res</figcaption>
           </figure>
         </div>
-        <ol class="messages"></ol>
+        <div class="messages">
+          <h3>Messages between main thread and web worker</h3>
+          <ol></ol>
+        </div>
       </div>
     </main>
     ${require('../fragments/footer.html')}

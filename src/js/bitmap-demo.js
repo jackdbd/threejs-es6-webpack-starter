@@ -1,16 +1,24 @@
-import { BitmapWorkerAction, MainThreadAction } from "./worker-actions";
+import { MainThreadAction, WorkerAction } from "./worker-actions";
 import { toggleMobileNav } from "./components/navbar";
 import { makeLi } from "./helpers";
+import { CanvasIds, unsupportedOffscreenCanvasAlertMessage } from "./constants";
 import "../css/index.css";
 
 window.toggleMobileNav = toggleMobileNav;
+
+if (
+  !document.getElementById(CanvasIds.BITMAP_LOW_RES).transferControlToOffscreen
+) {
+  alert(unsupportedOffscreenCanvasAlertMessage);
+}
 
 // TODO: preload the web worker script with resource hints. Or is it done automatically by webpack's worker-loader?
 // const workerUrl = document.querySelector("[rel=preload][as=script]").href;
 (function iife() {
   const NAME = "Main thread";
 
-  const bitmapWorker = new Worker("./workers/bitmap-worker.js", {
+  const worker = new Worker("./workers/bitmap-worker.js", {
+    name: "Dedicated worker global scope (bitmap worker)",
     type: "module",
   });
 
@@ -18,19 +26,19 @@ window.toggleMobileNav = toggleMobileNav;
   const bitmapsConfig = [
     {
       ctx: document
-        .getElementById("low-res-bitmap-canvas")
+        .getElementById(CanvasIds.BITMAP_LOW_RES)
         .getContext("bitmaprenderer"),
       resolution: { width: 160, height: 90 },
     },
     {
       ctx: document
-        .getElementById("medium-res-bitmap-canvas")
+        .getElementById(CanvasIds.BITMAP_MEDIUM_RES)
         .getContext("bitmaprenderer"),
       resolution: { width: 640, height: 480 },
     },
     {
       ctx: document
-        .getElementById("high-res-bitmap-canvas")
+        .getElementById(CanvasIds.BITMAP_HIGH_RES)
         .getContext("bitmaprenderer"),
       resolution: { width: 1024, height: 768 },
     },
@@ -44,7 +52,7 @@ window.toggleMobileNav = toggleMobileNav;
 
   let reqId;
 
-  const messages = document.querySelector(".messages");
+  const messages = document.querySelector(".messages ol");
 
   const onMessage = event => {
     const text = `[${NAME} <-- ${event.data.source}] - ${event.data.action}`;
@@ -55,22 +63,22 @@ window.toggleMobileNav = toggleMobileNav;
     messages.lastChild.scrollIntoView();
 
     switch (event.data.action) {
-      case BitmapWorkerAction.BITMAPS: {
+      case WorkerAction.BITMAPS: {
         const { bitmaps } = event.data.payload;
         bitmapsConfig.forEach((cfg, i) => {
           cfg.ctx.transferFromImageBitmap(bitmaps[i]);
         });
         break;
       }
-      case BitmapWorkerAction.TERMINATE_ME: {
-        bitmapWorker.terminate();
+      case WorkerAction.TERMINATE_ME: {
+        worker.terminate();
         console.warn(`${NAME} terminated ${event.data.source}`);
         // If the web worker is no longer listening, it makes no sense to keep
         // sending him messages in requestLoop;
         cancelAnimationFrame(reqId);
         break;
       }
-      case BitmapWorkerAction.NOTIFY: {
+      case WorkerAction.NOTIFY: {
         // we have already printed the message, so we simply break.
         break;
       }
@@ -89,8 +97,8 @@ window.toggleMobileNav = toggleMobileNav;
     errorInWorker = event;
   };
 
-  bitmapWorker.onmessage = onMessage;
-  bitmapWorker.onerror = onError;
+  worker.onmessage = onMessage;
+  worker.onerror = onError;
 
   const message = {
     action: MainThreadAction.INIT_WORKER_STATE,
@@ -101,7 +109,7 @@ window.toggleMobileNav = toggleMobileNav;
     payload: { width: 1024, height: 768, sceneName: "My Test Scene" },
     source: NAME,
   };
-  bitmapWorker.postMessage(message);
+  worker.postMessage(message);
 
   const li = makeLi({
     text: `[${NAME} --> worker] ${message.action}`,
@@ -115,7 +123,7 @@ window.toggleMobileNav = toggleMobileNav;
   // workarounds. Now I think it would be better to move requestAnimationFrame
   // to the web worker, so the main thread has less work to do.
   const requestLoop = tick => {
-    bitmapWorker.postMessage({
+    worker.postMessage({
       action: MainThreadAction.REQUEST_BITMAPS,
       payload: {
         resolutions,

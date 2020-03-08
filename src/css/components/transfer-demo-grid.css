@@ -1,0 +1,12 @@
+.transfer-demo-grid {
+  display: grid;
+  grid-row-gap: var(--geometry-space-medium);
+  grid-template-areas:
+    "buttons"
+    "scene"
+    "messages";
+}
+
+.transfer-demo-grid h3 {
+  color: var(--color-font-primary);
+}

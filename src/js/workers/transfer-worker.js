@@ -17,7 +17,7 @@ import {
   WebGLRenderer,
 } from "three";
 
-import * as action from "../actions";
+import { MainThreadAction, WorkerAction } from "../worker-actions";
 
 import { OBJLoader2 } from "../vendor/OBJLoader2";
 
@@ -137,48 +137,54 @@ const init = payload => {
   const { canvas, sceneName } = payload;
 
   postMessage({
-    action: action.NOTIFY,
+    action: WorkerAction.NOTIFY,
     payload: { info: `[${NAME}] - scene initialized` },
+    source: NAME,
   });
   const scene = makeScene(sceneName);
 
   postMessage({
-    action: action.NOTIFY,
+    action: WorkerAction.NOTIFY,
     payload: { info: `[${NAME}] - renderer inizialized` },
+    source: NAME,
   });
   const renderer = makeRenderer(canvas);
 
   postMessage({
-    action: action.NOTIFY,
+    action: WorkerAction.NOTIFY,
     payload: { info: `[${NAME}] - camera inizialized` },
+    source: NAME,
   });
   const camera = makeCamera(canvas, scene);
 
   const onManagerLoad = () => {
     postMessage({
-      action: action.NOTIFY,
+      action: WorkerAction.NOTIFY,
       payload: {
         info: `[${NAME}] - Loaded all items`,
       },
+      source: NAME,
     });
   };
 
   const onManagerProgress = (item, loaded, total) => {
     // console.log("LoadingManager progress:", item, loaded, total);
     postMessage({
-      action: action.NOTIFY,
+      action: WorkerAction.NOTIFY,
       payload: {
         info: `[${NAME}] - Loaded ${loaded} of ${total} items`,
       },
+      source: NAME,
     });
   };
 
   const onManagerStart = (url, itemsLoaded, itemsTotal) => {
     postMessage({
-      action: action.NOTIFY,
+      action: WorkerAction.NOTIFY,
       payload: {
         info: `[${NAME}] - started loading file ${url} (Loaded ${itemsLoaded} of ${itemsTotal} items)`,
       },
+      source: NAME,
     });
   };
 
@@ -212,10 +218,11 @@ const init = payload => {
     const name = object3D.name || "unnamed-object";
     const info = `[${NAME}] - Loaded ${name} (geometry: ${object3D.geometry.type}, material: ${object3D.material.type})`;
     postMessage({
-      action: action.NOTIFY,
+      action: WorkerAction.NOTIFY,
       payload: {
         info,
       },
+      source: NAME,
     });
     // object3D.traverse(function(child) {
     //   console.log("child", child);
@@ -232,10 +239,11 @@ const init = payload => {
     if (xhr.lengthComputable) {
       const percentComplete = Math.round((xhr.loaded / xhr.total) * 100);
       postMessage({
-        action: action.NOTIFY,
+        action: WorkerAction.NOTIFY,
         payload: {
           info: `[${NAME}] - downloading model (${percentComplete}%)`,
         },
+        source: NAME,
       });
     }
   };
@@ -257,10 +265,11 @@ const init = payload => {
   const onBitmapLoad = bitmap => {
     const info = `[${NAME}] - Loaded bitmap (${bitmap.width}x${bitmap.height})`;
     postMessage({
-      action: action.NOTIFY,
+      action: WorkerAction.NOTIFY,
       payload: {
         info,
       },
+      source: NAME,
     });
     const texture = new CanvasTexture(bitmap);
     const materialWithTexture = new MeshBasicMaterial({ map: texture });
@@ -354,8 +363,9 @@ const render = tick => {
   // worker. So basically the visible, onscreen canvas is just a proxy for the
   // offscreen canvas.
   postMessage({
-    action: action.NOTIFY,
+    action: WorkerAction.NOTIFY,
     payload: { info: `[${NAME}] - render loop` },
+    source: NAME,
   });
 };
 
@@ -368,18 +378,29 @@ let state = {
   scene: undefined,
 };
 
+const style = "color: red; font-weight: normal";
+
 const onMessage = event => {
-  console.log(`%c${event.data.action}`, "color: red");
+  // console.log(`%c${event.data.action}`, "color: red");
+  const text = `[${event.data.source} --> ${NAME}] - ${event.data.action}`;
+  console.log(`%c${text}`, style);
+
   switch (event.data.action) {
-    case action.INIT:
+    case MainThreadAction.INIT_WORKER_STATE: {
+      console.log("SELF NAME (DedicatedWorkerGlobalScope name)", self.name);
       init(event.data.payload);
       break;
-    case action.START_RENDER_LOOP: {
+    }
+    case MainThreadAction.START_RENDER_LOOP: {
       renderLoop();
       break;
     }
-    case action.STOP_RENDER_LOOP: {
+    case MainThreadAction.STOP_RENDER_LOOP: {
       cancelAnimationFrame(state.reqId);
+      break;
+    }
+    case MainThreadAction.GIVE_BACK_CANVAS: {
+      console.log("TODO?");
       break;
     }
     default: {
@@ -394,13 +415,14 @@ const renderLoop = tick => {
   render(tick);
   if (state.error) {
     postMessage({
-      action: action.NOTIFY,
+      action: WorkerAction.NOTIFY,
       payload: {
         info: `[${NAME}] - error: ${state.error.message}. Please terminate me.`,
       },
+      source: NAME,
     });
     cancelAnimationFrame(state.reqId);
-    postMessage({ action: action.KILL_ME });
+    postMessage({ action: WorkerAction.TERMINATE_ME, source: NAME });
   } else {
     state.reqId = requestAnimationFrame(renderLoop);
   }

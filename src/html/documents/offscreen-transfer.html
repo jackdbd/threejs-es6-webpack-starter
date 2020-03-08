@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  ${require('../fragments/head.html')}
+  <body class="site">
+    ${require('../fragments/navbar.html')}
+    <main class="box">
+      <div class="stack">
+        <div class="transfer-demo-grid">
+          <div style="grid-area: buttons;">
+            <div class="cluster">
+              <div>
+                <button
+                  id="${require('../../js/constants.js').ButtonIds.START_RENDER_LOOP}"
+                  type="button"
+                >
+                  Start
+                </button>
+                <button
+                  id="${require('../../js/constants.js').ButtonIds.STOP_RENDER_LOOP}"
+                  type="button"
+                >
+                  Stop
+                </button>
+                <button
+                  id="${require('../../js/constants.js').ButtonIds.TERMINATE_WORKER}"
+                  type="button"
+                >
+                  Terminate worker
+                </button>
+                <button
+                  id="${require('../../js/constants.js').ButtonIds.INSTANTIATE_WORKER}"
+                  type="button"
+                >
+                  Instantiate worker
+                </button>
+              </div>
+            </div>
+          </div>
+          <div style="grid-area: scene;">
+            <figure class="no-margins single-responsive-element">
+              <div class="preserve-aspect-ratio">
+                <div>
+                  <canvas
+                    id="${require('../../js/constants.js').CanvasIds.TRANSFER_CONTROL}"
+                  ></canvas>
+                </div>
+              </div>
+              <figcaption>Canvas Transfer</figcaption>
+            </figure>
+          </div>
+          <div class="messages">
+            <h3>Messages between main thread and web worker</h3>
+            <ol></ol>
+          </div>
+        </div>
+      </div>
+    </main>
+    ${require('../fragments/footer.html')}
+  </body>
+</html>

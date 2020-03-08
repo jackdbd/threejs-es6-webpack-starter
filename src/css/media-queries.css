@@ -56,4 +56,16 @@
   }
 }
 
+@media only screen and (min-width: 800px) {
+  .transfer-demo-grid {
+    grid-template-areas:
+      "buttons buttons"
+      "scene messages";
+    grid-template-columns: 1fr 1fr;
+  }
+  .transfer-demo-grid .messages {
+    max-height: 50vh;
+  }
+}
+
 /* stylelint-enable unit-whitelist */

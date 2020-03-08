@@ -1,0 +1,10 @@
+.messages {
+  grid-area: messages;
+}
+
+.messages ol {
+  background-color: white;
+  margin: 0;
+  max-height: 25vh;
+  overflow: auto;
+}

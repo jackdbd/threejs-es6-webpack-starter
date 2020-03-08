@@ -147,6 +147,7 @@ const commonConfigFn = (env = {}, argv = {}) => {
     }),
     new DefinePlugin({
       APP_NAME: JSON.stringify(APP_NAME),
+      AUTHOR: JSON.stringify("Giacomo Debidda"),
       PUBLIC_URL: JSON.stringify(PUBLIC_URL),
     }),
     new DuplicatePackageCheckerPlugin({
@@ -176,14 +177,14 @@ const commonConfigFn = (env = {}, argv = {}) => {
     }),
     new HtmlWebpackPlugin({
       chunks: ["commons", "runtime", "styles", "transfer-demo", "vendor"],
-      filename: "offscreen-webgl.html",
+      filename: "offscreen-transfer.html",
       hash: false,
       minify,
       template: path.resolve(
         "src",
         "html",
         "documents",
-        "offscreen-webgl.html"
+        "offscreen-transfer.html"
       ),
     }),
     new HtmlWebpackPlugin({

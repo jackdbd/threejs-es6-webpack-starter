@@ -1,6 +1,6 @@
 <nav class="box nav-grid">
   <div class="nav-grid-home">
-    <a class="ghost-button" href="/index.html">Home</a>
+    <a class="ghost-button" href="${PUBLIC_URL}/index.html">Home</a>
   </div>
   <div class="nav-grid-hamburger">
     <button onclick="toggleMobileNav()" type="button">
@@ -9,19 +9,15 @@
   </div>
   <ul class="nav-grid-pages">
     <li>
-      <a class="ghost-button" href="/offscreen-bitmaprenderer.html"
+      <a class="ghost-button" href="${PUBLIC_URL}/offscreen-bitmaprenderer.html"
         >OffscreenCanvas + bitmaprenderer</a
       >
     </li>
     <li>
-      <a class="ghost-button" href="/offscreen-webgl.html"
-        >OffscreenCanvas + webgl</a
+      <a class="ghost-button" href="${PUBLIC_URL}/offscreen-transfer.html"
+        >OffscreenCanvas + transfer</a
       >
     </li>
-    <li><a class="ghost-button" href="/about.html">About</a></li>
-    <li><a class="ghost-button" href="/404.html">404</a></li>
+    <li><a class="ghost-button" href="${PUBLIC_URL}/about.html">About</a></li>
   </ul>
 </nav>
-
-<!-- TODO: use href with PUBLIC_URL -->
-<!-- href="${PUBLIC_URL}/index.html -->

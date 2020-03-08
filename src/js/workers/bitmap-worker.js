@@ -12,7 +12,7 @@ import {
   WebGLRenderer,
 } from "three";
 
-import { BitmapWorkerAction, MainThreadAction } from "../worker-actions";
+import { MainThreadAction, WorkerAction } from "../worker-actions";
 
 const NAME = "bitmap-worker";
 
@@ -63,7 +63,7 @@ const initScene = ({ name = "Default Scene name", addAxesHelpers = true }) => {
 
   state.scene = scene;
   postMessage({
-    action: BitmapWorkerAction.NOTIFY,
+    action: WorkerAction.NOTIFY,
     payload: { info: `scene '${name}' initialized` },
     source: NAME,
   });
@@ -93,7 +93,7 @@ const initRenderer = () => {
   state.renderer.shadowMap.enabled = true;
 
   postMessage({
-    action: BitmapWorkerAction.NOTIFY,
+    action: WorkerAction.NOTIFY,
     payload: { info: "renderer initialized" },
     source: NAME,
   });
@@ -115,7 +115,7 @@ const initCamera = ({
   state.camera.lookAt(state.scene.position);
 
   postMessage({
-    action: BitmapWorkerAction.NOTIFY,
+    action: WorkerAction.NOTIFY,
     payload: { info: `camera '${state.camera.name}' initialized` },
     source: NAME,
   });
@@ -182,7 +182,7 @@ const render = resolutions => {
   // the Chrome Dev Tools Memory tab.
   if (state.counter > NUM_RENDER_FOR_DEMO) {
     state.scene.dispose();
-    postMessage({ action: BitmapWorkerAction.TERMINATE_ME, source: NAME });
+    postMessage({ action: WorkerAction.TERMINATE_ME, source: NAME });
   }
 
   // render the scene in a "source" OffscreenCanvas only once
@@ -204,7 +204,7 @@ const render = resolutions => {
   // `canvas.convertToBlob().then(blob => postMessage({ blob }, [blob]))`
 
   const message = {
-    action: BitmapWorkerAction.BITMAPS,
+    action: WorkerAction.BITMAPS,
     payload: { bitmaps },
     source: NAME,
   };
@@ -232,6 +232,7 @@ const onMessage = event => {
 
   switch (event.data.action) {
     case MainThreadAction.INIT_WORKER_STATE:
+      console.log("SELF NAME (DedicatedWorkerGlobalScope name)", self.name);
       initState(event.data.payload);
       break;
     case MainThreadAction.REQUEST_BITMAPS: {

@@ -1,7 +1,11 @@
-/* @font-face rules should be defined first in your main CSS file */
-
-/* https://alligator.io/css/font-face/ */
-
+/**
+ * CSS files for the application.
+ *
+ * @font-face rules should be defined first in your main CSS file
+ *
+ * @see
+ * https://alligator.io/css/font-face/
+ */
 @import "../css/font-face-rules.css";
 @import "../css/variables.css";
 @import "../css/typography.css";
@@ -10,10 +14,3 @@
 @import "../css/helpers.css";
 @import "../css/defaults.css";
 @import "../css/media-queries.css";
-
-.messages {
-  background-color: white;
-  /* stylelint-disable-next-line unit-whitelist */
-  height: 400px;
-  overflow: auto;
-}
