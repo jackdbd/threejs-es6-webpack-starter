@@ -1,6 +1,11 @@
 <nav class="box nav-grid">
   <div class="nav-grid-home">
-    <a class="ghost-button" href="${PUBLIC_URL}/index.html">Home</a>
+    <a
+      class="ghost-button"
+      datya-cy="link-to-home-page"
+      href="${PUBLIC_URL}/index.html"
+      >Home</a
+    >
   </div>
   <div class="nav-grid-hamburger">
     <button onclick="toggleMobileNav()" type="button">
@@ -18,6 +23,13 @@
         >OffscreenCanvas + transfer</a
       >
     </li>
-    <li><a class="ghost-button" href="${PUBLIC_URL}/about.html">About</a></li>
+    <li>
+      <a
+        class="ghost-button"
+        data-cy="link-to-about-page"
+        href="${PUBLIC_URL}/about.html"
+        >About</a
+      >
+    </li>
   </ul>
 </nav>

@@ -1,5 +1,18 @@
 import { Application } from "../src/js/application";
 
+const prepareDOM = () => {
+  const main = document.createElement("main");
+  const figure = document.createElement("figure");
+  const outerDiv = document.createElement("div");
+  outerDiv.classList.add("canvas-container-outer");
+  const innerDiv = document.createElement("div");
+  innerDiv.setAttribute("class", "canvas-container-inner");
+  outerDiv.appendChild(innerDiv);
+  figure.appendChild(outerDiv);
+  main.appendChild(figure);
+  document.body.appendChild(main);
+};
+
 describe("Three.js application", () => {
   let windowAlert;
 
@@ -10,9 +23,7 @@ describe("Three.js application", () => {
   });
 
   beforeEach(() => {
-    const div = document.createElement("div");
-    div.setAttribute("class", "app");
-    document.body.appendChild(div);
+    prepareDOM();
   });
 
   afterEach(() => {
@@ -24,42 +35,9 @@ describe("Three.js application", () => {
     }
   });
 
-  it("starts with an empty <div class='class' />", () => {
-    expect(document.querySelector("body > .app")).toBeEmpty();
-    expect(document.querySelector(".canvas-container")).not.toBeInTheDocument();
-  });
-
-  it("appends <div class='canvas-container' /> when creating the app", () => {
-    new Application();
-    const app = document.querySelector("body > .app");
-    expect(app.firstElementChild).toHaveClass("canvas-container");
-    expect(app.lastElementChild).toHaveClass("tooltip");
-    expect(document.querySelector(".canvas-container")).toBeInTheDocument();
-  });
-
-  it("uses the provided <div> container without creating a new one", () => {
-    const div = document.createElement("div");
-    const customClass = "pre-existing-container";
-    div.setAttribute("class", customClass);
-    const app = document.querySelector(".app");
-    app.appendChild(div);
-    new Application({ container: div });
-    expect(app.firstElementChild).toHaveClass(customClass);
-    expect(document.querySelector(`.${customClass}`)).toBeInTheDocument();
-    expect(document.querySelector(".canvas-container")).not.toBeInTheDocument();
-    expect(document.querySelector(".tooltip")).toBeInTheDocument();
-    expect(app.childElementCount).toBe(2);
-  });
-
-  it("creates a visible <div>", () => {
-    new Application();
-    const app = document.querySelector(".app");
-    expect(app.firstElementChild).toBeVisible();
-  });
-
   it("shows an error message when WebGL is not supported", () => {
     new Application();
-    const container = document.querySelector(".app > .canvas-container");
+    const container = document.querySelector("main .canvas-container-inner");
     const el = container.firstChild;
     expect(el.id).toBe("webgl-error-message");
     const message =
