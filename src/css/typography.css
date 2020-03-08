@@ -1,9 +1,32 @@
-/* https://fonts.googleapis.com/css?family=Nunito:400,700 */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--typography-font-family-headline);
+}
 
-* {
-  /* font-family: var(--typography-font-family-primary); */
+a,
+button,
+div,
+figcaption,
+li,
+main,
+p,
+span {
+  font-family: var(--typography-font-family-body);
+}
 
-  /* font-family: var(--typography-font-family-secondary); */
-
-  font-family: var(--typography-font-family-tertiary);
+button,
+figcaption,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span {
+  color: var(--color-font-primary);
 }

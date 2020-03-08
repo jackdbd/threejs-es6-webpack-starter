@@ -11,11 +11,8 @@
   --geometry-space-big: 3rem;
 
   /* TYPOGRAPHY */
+  --typography-font-family-headline: "Syne-Extra", sans-serif;
+  --typography-font-family-body: "Syne-Regular", sans-serif;
 
-  /* --typography-font-family-primary: "InknutAntiqua", sans-serif; */
-  --typography-font-family-primary: "Raleway";
-  --typography-font-family-secondary: "Raleway";
-  --typography-font-family-tertiary: "Raleway";
-
-  /* --typography-font-family-tertiary: "InknutAntiqua-ExtraBold"; */
+  /* --typography-font-family-body: "Raleway", sans-serif; */
 }

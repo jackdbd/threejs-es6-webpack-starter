@@ -11,32 +11,25 @@
   * A single font-family can have multiple fonts (e.g. for bold, italic).
   */
 @font-face {
-  font-family: "InknutAntiqua-ExtraBold";
+  font-family: "Syne-Extra";
   font-style: normal;
   font-weight: normal;
-  /* stylelint-disable */
-  src: url("../fonts/Inknut_Antiqua/InknutAntiqua-ExtraBold.woff2")
-      format("woff2"),
-    url("../fonts/Inknut_Antiqua/InknutAntiqua-ExtraBold.woff") format("woff"),
-    url("../fonts/Inknut_Antiqua/InknutAntiqua-ExtraBold.ttf")
-      format("truetype");
-  /* stylelint-enable */
+  /* stylelint-disable declaration-colon-newline-after */
+  src: url("../fonts/Syne/Syne-Extra.woff2") format("woff2"),
+    url("../fonts/Syne/Syne-Extra.woff") format("woff"),
+    url("../fonts/Syne/Syne-Extra.ttf") format("truetype");
+  /* stylelint-enable declaration-colon-newline-after */
 }
 
-/* @font-face {
-  font-family: InknutAntiqua;
+@font-face {
+  font-family: "Syne-Regular";
   font-style: normal;
   font-weight: normal;
-  src: url("../fonts/Inknut_Antiqua/InknutAntiqua-Regular.ttf")
-    format("truetype");
-} */
-
-/* @font-face {
-  font-family: InknutAntiqua;
-  font-style: normal;
-  font-weight: bold;
-  src: url("../fonts/Inknut_Antiqua/InknutAntiqua-ExtraBold.ttf")
-    format("truetype");
-} */
+  /* stylelint-disable declaration-colon-newline-after */
+  src: url("../fonts/Syne/Syne-Regular.woff2") format("woff2"),
+    url("../fonts/Syne/Syne-Regular.woff") format("woff"),
+    url("../fonts/Syne/Syne-Regular.ttf") format("truetype");
+  /* stylelint-enable declaration-colon-newline-after */
+}
 
 /* other cool fonts Syncopate, Quicksand, Aclonica */

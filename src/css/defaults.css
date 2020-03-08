@@ -1,14 +1,9 @@
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p,
-figcaption {
-  color: var(--color-font-primary);
-}
-
 canvas {
   outline: 0.1rem solid var(--color-highlighted);
+}
+
+button {
+  background: none;
+  border-color: var(--color-highlighted);
+  border-style: solid;
 }

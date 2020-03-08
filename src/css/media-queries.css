@@ -63,6 +63,7 @@
       "scene messages";
     grid-template-columns: 1fr 1fr;
   }
+
   .transfer-demo-grid .messages {
     max-height: 50vh;
   }
