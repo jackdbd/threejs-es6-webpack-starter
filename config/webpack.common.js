@@ -75,6 +75,17 @@ const rules = [
       },
     },
   },
+  // Rule for 3D model files
+  {
+    test: /\.(obj)$/,
+    include: [path.resolve("src", "models")],
+    use: {
+      loader: "file-loader",
+      options: {
+        name: path.join("models", "[name].[ext]"),
+      },
+    },
+  },
   // Rule for textures (images)
   {
     test: /.(jpe?g|png)$/i,

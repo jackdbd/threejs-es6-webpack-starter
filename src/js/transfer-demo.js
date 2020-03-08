@@ -115,7 +115,7 @@ window.toggleMobileNav = toggleMobileNav;
     });
     messages.appendChild(
       makeLi({
-        text: `[${NAME} --> worker] ${action.START_RENDER_LOOP}`,
+        text: `[${NAME} --> worker] ${MainThreadAction.START_RENDER_LOOP}`,
         style: styleFromWorker,
       })
     );
@@ -130,7 +130,7 @@ window.toggleMobileNav = toggleMobileNav;
     });
     messages.appendChild(
       makeLi({
-        text: `[${NAME} --> worker] ${action.STOP_RENDER_LOOP}`,
+        text: `[${NAME} --> worker] ${MainThreadAction.STOP_RENDER_LOOP}`,
         style: styleFromWorker,
       })
     );

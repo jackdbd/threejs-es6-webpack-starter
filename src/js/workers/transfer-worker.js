@@ -18,8 +18,8 @@ import {
 } from "three";
 
 import { MainThreadAction, WorkerAction } from "../worker-actions";
-
 import { OBJLoader2 } from "../vendor/OBJLoader2";
+import * as relativeURL from "../../models/male02.obj";
 
 // https://bwasty.github.io/gltf-loader-ts/index.html
 // https://github.com/KhronosGroup/glTF-Sample-Models/tree/master/2.0/
@@ -205,10 +205,15 @@ const init = payload => {
 
   const objLoader = new OBJLoader2(manager);
 
-  const objURL =
-    "https://raw.githubusercontent.com/mrdoob/three.js/master/examples/models/obj/male02/male02.obj";
+  // const objURL =
+  //   "https://raw.githubusercontent.com/mrdoob/three.js/master/examples/models/obj/male02/male02.obj";
+  const objURL = PUBLIC_URL.includes("https")
+    ? relativeURL
+    : `http://localhost:8080${relativeURL}`;
+
+  // console.log("=== objURL ===", objURL);
+
   objLoader.load(objURL, object3D => {
-    // console.log("=== object3D ===", object3D);
     object3D.name = "male02";
     scene.add(object3D);
   });
@@ -397,10 +402,6 @@ const onMessage = event => {
     }
     case MainThreadAction.STOP_RENDER_LOOP: {
       cancelAnimationFrame(state.reqId);
-      break;
-    }
-    case MainThreadAction.GIVE_BACK_CANVAS: {
-      console.log("TODO?");
       break;
     }
     default: {

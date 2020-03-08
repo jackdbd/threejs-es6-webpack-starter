@@ -1,6 +1,5 @@
 // Actions sent by main thread to the web worker
 export const MainThreadAction = Object.freeze({
-  GIVE_BACK_CANVAS: "give-back-canvas",
   INIT_WORKER_STATE: "initialize-worker-state",
   REQUEST_BITMAPS: "request-bitmaps",
   START_RENDER_LOOP: "start-render-loop",
