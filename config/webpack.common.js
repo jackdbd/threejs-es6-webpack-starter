@@ -265,7 +265,7 @@ const commonConfigFn = (env = {}, argv = {}) => {
       filename: "[name].[hash].js",
       // The output path is resolved starting from `context`
       path: path.resolve("build"),
-      publicPath: "/",
+      // publicPath: "/",
       sourceMapFilename: "[file].map",
     },
     plugins,
