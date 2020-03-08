@@ -205,13 +205,18 @@ const init = payload => {
 
   const objLoader = new OBJLoader2(manager);
 
-  // const objURL =
-  //   "https://raw.githubusercontent.com/mrdoob/three.js/master/examples/models/obj/male02/male02.obj";
-  const objURL = PUBLIC_URL.includes("https")
-    ? relativeURL
+  const objURL = PUBLIC_URL.includes("github.io")
+    ? `${PUBLIC_URL}/${relativeURL}`
     : `http://localhost:8080/${relativeURL}`;
 
-  console.log("=== objURL (3D model) ===", objURL);
+  console.log(
+    "=== PUBLIC_URL ===",
+    PUBLIC_URL,
+    "relativeURL",
+    relativeURL,
+    "objURL (3D model)",
+    objURL
+  );
 
   objLoader.load(objURL, object3D => {
     object3D.name = "male02";
