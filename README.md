@@ -35,7 +35,7 @@ Three.js ES6 starter project with a sane webpack configuration.
 ## Installation
 
 ```shell
-git clone git@github.com:jackdbd/threejs-es6-webpack-starter.git
+git clone https://github.com/jackdbd/threejs-es6-webpack-starter.git
 cd threejs-es6-webpack-starter
 yarn
 ```
