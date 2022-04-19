@@ -4,7 +4,7 @@
 
 Three.js ES6 starter project with a sane webpack configuration.
 
-![A GIF file showing a demo of the starter project](https://github.com/jackdbd/threejs-es6-webpack-starter/blob/master/demo.gif "A scene with a spotlight, a directional light, an ambient light, a particle system, a custom material and several helpers.")
+![A GIF file showing a demo of the starter project](https://github.com/jackdbd/threejs-es6-webpack-starter/blob/main/demo.gif?raw=true "A scene with a spotlight, a directional light, an ambient light, a particle system, a custom material and several helpers.")
 
 ## Features
 

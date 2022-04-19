@@ -1,8 +1,15 @@
 /build/*
 # unignore the favicon
 !/build/favicon.ico
-/coverage/
+
+# dependencies
 /node_modules/
+
+# tests results
+/coverage/
 /cypress/videos/
 
 *.log
+
+# environment variables
+.envrc
