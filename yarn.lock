@@ -13654,10 +13654,10 @@ text-table@^0.2.0:
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
 
-three.interaction@0.2.2:
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/three.interaction/-/three.interaction-0.2.2.tgz#01ce80ba7cacd24ada09dc57f1d64e9dd5d7a0b0"
-  integrity sha512-yWQ5L0SUl+TzxVGFRNZAf4hpRF84zYZVpcyGstzhO0vbRdUDobPiPV6QmUh0JZVS5gEUguAd09ONyNJEczMOyA==
+three.interaction@0.2.3:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/three.interaction/-/three.interaction-0.2.3.tgz#f7947b4e44649a822335b03b1dcc68c659d71c04"
+  integrity sha512-gipj4E9WSASSys3SC5uU8HPmHodTDYmggJqKN5yjl6S2vG966EkGLu67jkXQoyB/yvGx38C72vHwdjICAh+avg==
 
 three@0.113.2:
   version "0.113.2"
