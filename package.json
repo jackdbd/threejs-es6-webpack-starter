@@ -39,7 +39,7 @@
   "dependencies": {
     "gltf-loader-ts": "0.3.1",
     "orbit-controls-es6": "2.0.1",
-    "three": "0.113.2",
+    "three": "0.141.0",
     "three.interaction": "0.2.2"
   },
   "devDependencies": {
