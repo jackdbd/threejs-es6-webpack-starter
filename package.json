@@ -45,7 +45,7 @@
   "devDependencies": {
     "@babel/core": "7.8.6",
     "@babel/preset-env": "7.8.6",
-    "@hint/configuration-web-recommended": "8.0.2",
+    "@hint/configuration-web-recommended": "8.2.23",
     "@packtracker/webpack-plugin": "2.2.0",
     "@testing-library/jest-dom": "5.1.1",
     "babel-jest": "25.1.0",
