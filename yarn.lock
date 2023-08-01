@@ -2097,10 +2097,10 @@
     read-package-json-fast "^1.1.1"
     readdir-scoped-modules "^1.1.0"
 
-"@packtracker/webpack-plugin@2.2.0":
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/@packtracker/webpack-plugin/-/webpack-plugin-2.2.0.tgz#eee3e6aa23971208f33c7bd254ccf1b05df0b889"
-  integrity sha512-nue8/tGvqs2iecUfDiujTUs+1lpjtMOqxyehs5Iiot2GVqpL13JAImSRTBfeIPQYQxkSY8EwOabKl+jksYsrBg==
+"@packtracker/webpack-plugin@2.3.0":
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/@packtracker/webpack-plugin/-/webpack-plugin-2.3.0.tgz#a352e30f31e6b3c47c8ad54cc5166d9b11aab248"
+  integrity sha512-a+Aa3tHm81c/lYhIqTZMIgsALIaQQE27SJyL5zoRoDEOk2IVLoGpN8qgxjIMd4cwKyMgB3KvMTDQPQCJDnrotQ==
   dependencies:
     lodash "^4.17.15"
     minimist "^1.2.0"
